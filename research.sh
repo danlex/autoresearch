@@ -6,6 +6,12 @@ set -euo pipefail
 # Picks up accepted task Issues, runs Claude Code to research, opens PRs.
 # ============================================================================
 
+# --- Load .env if present ---
+if [[ -f "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.env" ]]; then
+  # shellcheck disable=SC1091
+  source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.env"
+fi
+
 # --- Configuration ---
 MAX_ITERATIONS="${MAX_ITERATIONS:-50}"
 RESEARCH_MODEL="${RESEARCH_MODEL:-claude-opus-4-5}"
