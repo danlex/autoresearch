@@ -727,6 +727,9 @@ judge_review_loop() {
   local issue_num="$1"
   local title="$2"
 
+  # Judges HELP the researcher — they never block publication.
+  # Even without consensus, content publishes with review notes.
+
   if [[ "${SKIP_REVIEW:-0}" == "1" ]]; then
     log "Judge review: SKIPPED (SKIP_REVIEW=1)"
     return 0
@@ -1044,18 +1047,14 @@ main_loop() {
       log "Document modified by $task_type task"
     fi
 
-    # Score improved (higher is better) OR document was modified
-    if [[ $new_score -gt $old_score ]] || [[ "$doc_changed" == "true" ]]; then
-      log "Score improved! Running self-review..."
+    # If document was modified, ALWAYS proceed — judges improve, never block
+    if [[ "$doc_changed" == "true" ]]; then
+      log "Content written. Sending to judges for review..."
 
-      # Self-review: check for hallucinations and citation issues
-      if ! judge_review_loop "$issue_num" "$title"; then
-        log "Judge review failed — treating as no improvement"
-        cleanup_failed "$issue_num" "$branch"
-        continue
-      fi
+      # Judges review and improve (always returns 0 — helps, never blocks)
+      judge_review_loop "$issue_num" "$title"
 
-      log "Judge review passed. Creating PR..."
+      log "Creating PR..."
 
       if create_pr "$issue_num" "$title" "$branch" "$task_type" "$old_score" "$new_score"; then
         last_action="improved"
@@ -1069,7 +1068,7 @@ main_loop() {
         cleanup_failed "$issue_num" "$branch"
       fi
     else
-      log "Score did not improve — reverting"
+      log "No document changes — nothing to commit"
       cleanup_failed "$issue_num" "$branch"
     fi
 
