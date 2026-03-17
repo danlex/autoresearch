@@ -5,7 +5,8 @@ set -euo pipefail
 # ============================================================================
 # watch.sh — Real-time research monitor
 # Usage:
-#   bash watch.sh          — Dashboard with auto-refresh every 5s
+#   bash watch.sh          — Dashboard with auto-refresh (default 15s)
+#   bash watch.sh dashboard 30 — Dashboard with 30s refresh
 #   bash watch.sh log      — Color-coded tail -f of research.log
 #   bash watch.sh status   — One-shot status display
 # ============================================================================
@@ -178,10 +179,12 @@ show_log() {
 }
 
 # ============================================================================
-# Mode: dashboard — Auto-refresh every 5s
+# Mode: dashboard — Auto-refresh (default 15s, configurable)
 # ============================================================================
 
 show_dashboard() {
+  local refresh_interval="${1:-15}"
+
   # Trap for clean exit
   # shellcheck disable=SC2059
   trap 'printf "\n${RESET}"; exit 0' INT TERM
@@ -212,8 +215,8 @@ show_dashboard() {
       printf '  %bNo log file yet.%b\n' "$DIM" "$RESET"
     fi
 
-    printf '\n%b  Refreshing every 5s — Ctrl+C to exit%b\n' "$DIM" "$RESET"
-    sleep 5
+    printf '\n%b  Refreshing every %ss — Ctrl+C to exit%b\n' "$DIM" "$refresh_interval" "$RESET"
+    sleep "$refresh_interval"
   done
 }
 
@@ -222,6 +225,7 @@ show_dashboard() {
 # ============================================================================
 
 mode="${1:-dashboard}"
+refresh="${2:-15}"
 
 case "$mode" in
   log)
@@ -231,10 +235,14 @@ case "$mode" in
     show_status
     ;;
   dashboard|"")
-    show_dashboard
+    show_dashboard "$refresh"
     ;;
   *)
-    echo "Usage: bash watch.sh [dashboard|log|status]"
+    echo "Usage: bash watch.sh [dashboard|log|status] [refresh_seconds]"
+    echo "  bash watch.sh                # dashboard, 15s refresh"
+    echo "  bash watch.sh dashboard 30   # dashboard, 30s refresh"
+    echo "  bash watch.sh log            # tail log with colors"
+    echo "  bash watch.sh status         # one-shot status"
     exit 1
     ;;
 esac
