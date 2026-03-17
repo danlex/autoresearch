@@ -757,7 +757,10 @@ If you found and fixed issues, edit document.md directly with corrections:
   FIXED: [one-line summary of what you corrected]
 
 Only reject if the content is fundamentally fabricated and unfixable:
-  FAIL: [why it cannot be salvaged]
+  FAIL:
+  REASONING: [detailed explanation of what is fabricated and why you cannot fix it]
+  EVIDENCE: [what you checked that confirms it's fabricated]
+  SUGGESTION: [what the researcher should do differently on the next attempt]
 
 GUIDELINES:
 - Be pragmatic. Minor gaps are fine — fix them, don't reject.
@@ -782,9 +785,14 @@ REVIEWEOF
     return 0
   else
     local fail_reason
-    fail_reason=$(echo "$review_result" | head -3)
-    log "Judge REJECTED: $fail_reason"
-    gh issue comment "$issue_num" --body "Judge rejected: $fail_reason" 2>/dev/null || true
+    fail_reason=$(echo "$review_result" | head -20)
+    log "Judge REJECTED: $(echo "$fail_reason" | head -1)"
+    gh issue comment "$issue_num" --body "## Judge Review — Rejected
+
+${fail_reason}
+
+---
+*Review for PR on Issue #${issue_num}: ${title}*" 2>/dev/null || true
     return 1
   fi
 }
