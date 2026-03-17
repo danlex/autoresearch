@@ -26,6 +26,7 @@ session_start=""
 goal_mtime=""
 model="$RESEARCH_MODEL"
 feedback=""
+subject=""
 
 # ============================================================================
 # Utility Functions
@@ -48,7 +49,7 @@ write_status() {
   "current_task": $(echo "$current_task" | jq -Rs .),
   "current_issue": $current_issue,
   "last_action": "$last_action",
-  "subject": $(head -5 "$SCRIPT_DIR/goal.md" | grep -i "^#" | head -1 | sed 's/^#* *//' | sed 's/ *—.*//' | jq -Rs .),
+  "subject": $(echo "$subject" | jq -Rs .),
   "model": "$model",
   "session_start": "$session_start"
 }
@@ -150,7 +151,7 @@ get_task_type() {
 get_section_from_body() {
   local body="$1"
   # Section value is on the line after "## Section"
-  echo "$body" | awk '/^##? *Section/{getline; print; exit}' | xargs
+  echo "$body" | grep -A1 "^## Section" | tail -1 | xargs
 }
 
 # ============================================================================
@@ -169,7 +170,14 @@ build_research_prompt() {
   if [[ -n "$section" ]]; then
     # Use fixed-string matching to avoid regex injection from section names
     local start_line
-    start_line=$(grep -n "^## ${section}$" "$SCRIPT_DIR/document.md" | head -1 | cut -d: -f1)
+    start_line=$(while IFS= read -r line_num_and_text; do
+      local lnum="${line_num_and_text%%:*}"
+      local ltext="${line_num_and_text#*:}"
+      if [[ "$ltext" == "## ${section}" ]]; then
+        echo "$lnum"
+        break
+      fi
+    done < <(grep -nF "## ${section}" "$SCRIPT_DIR/document.md"))
     if [[ -n "$start_line" ]]; then
       local end_line
       end_line=$(tail -n +"$((start_line + 1))" "$SCRIPT_DIR/document.md" | grep -n "^## " | head -1 | cut -d: -f1)
@@ -330,13 +338,14 @@ run_research() {
   # Write prompt to temp file to avoid ARG_MAX limits on large documents
   local prompt_file
   prompt_file=$(mktemp "$SCRIPT_DIR/.prompt-XXXXXX.txt")
-  echo "$prompt" > "$prompt_file"
+  printf '%s' "$prompt" > "$prompt_file"
 
-  claude -p "$(cat "$prompt_file")" \
+  # Pipe prompt via stdin to avoid shell ARG_MAX on large documents
+  cat "$prompt_file" | claude -p \
     --model "$model" \
     --allowedTools "$tools" \
     --max-turns "$max_turns" \
-    2>&1 | tee -a "$SCRIPT_DIR/research.log"
+    2>&1 | tee -a "$SCRIPT_DIR/research.log" || true
 
   rm -f "$prompt_file"
 }
@@ -513,6 +522,10 @@ startup() {
   score=$starting_score
   log "Initial score: $score"
 
+  # Parse subject from goal.md (cached, re-parsed on goal change)
+  subject=$(head -5 "$SCRIPT_DIR/goal.md" | grep -i "^#" | head -1 | sed 's/^#* *//' | sed 's/ *—.*//')
+  log "Subject: $subject"
+
   # Record goal.md mtime
   goal_mtime=$(stat -f %m "$SCRIPT_DIR/goal.md" 2>/dev/null || stat -c %Y "$SCRIPT_DIR/goal.md" 2>/dev/null || echo 0)
 
@@ -548,6 +561,8 @@ main_loop() {
     if [[ "$current_goal_mtime" != "$goal_mtime" ]]; then
       log "goal.md changed — goal-manager will handle sync"
       goal_mtime="$current_goal_mtime"
+      subject=$(head -5 "$SCRIPT_DIR/goal.md" | grep -i "^#" | head -1 | sed 's/^#* *//' | sed 's/ *—.*//')
+      log "Subject updated: $subject"
     fi
 
     # 4. Select next task

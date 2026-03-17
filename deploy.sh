@@ -21,7 +21,7 @@ if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
   echo ""
   export ANTHROPIC_API_KEY="$api_key"
   # Write to .env file (gitignored) instead of bashrc for security
-  echo "ANTHROPIC_API_KEY='$api_key'" > "$SCRIPT_DIR/.env"
+  echo "export ANTHROPIC_API_KEY='$api_key'" > "$SCRIPT_DIR/.env"
   chmod 600 "$SCRIPT_DIR/.env"
   echo "Key saved to .env (chmod 600). Source it with: source .env"
 fi
