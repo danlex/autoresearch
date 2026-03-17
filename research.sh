@@ -341,11 +341,16 @@ run_research() {
   prompt_file=$(mktemp "$SCRIPT_DIR/.prompt-XXXXXX.txt")
   printf '%s' "$prompt" > "$prompt_file"
 
+  # Build claude args — acceptEdits so Claude can write files without prompting
+  local -a claude_args=(-p --permission-mode acceptEdits --allowedTools "$tools" --max-turns "$max_turns")
+
+  # Only pass --model if using API key (OAuth tokens use their own model config)
+  if [[ -n "${ANTHROPIC_API_KEY:-}" && "$ANTHROPIC_API_KEY" != "dummy-for-check" ]]; then
+    claude_args+=(--model "$model")
+  fi
+
   # Pipe prompt via stdin to avoid shell ARG_MAX on large documents
-  cat "$prompt_file" | claude -p \
-    --model "$model" \
-    --allowedTools "$tools" \
-    --max-turns "$max_turns" \
+  cat "$prompt_file" | claude "${claude_args[@]}" \
     2>&1 | tee -a "$SCRIPT_DIR/research.log" || true
 
   rm -f "$prompt_file"
@@ -487,8 +492,8 @@ startup() {
     exit 1
   fi
 
-  if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
-    log "ERROR: ANTHROPIC_API_KEY not set"
+  if [[ -z "${ANTHROPIC_API_KEY:-}" && -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]]; then
+    log "ERROR: ANTHROPIC_API_KEY or CLAUDE_CODE_OAUTH_TOKEN must be set"
     exit 1
   fi
 
@@ -648,12 +653,11 @@ main_loop() {
     # 11-12. Handle result
     # For document/review tasks, score won't change (formula counts open tasks, not quality).
     # Check if document.md was actually modified instead.
+    # Check if document.md was modified (covers all task types, not just score changes)
     local doc_changed=false
-    if [[ "$task_type" != "research" ]]; then
-      if ! git diff --quiet document.md 2>/dev/null; then
-        doc_changed=true
-        log "Document modified by $task_type task"
-      fi
+    if ! git diff --quiet -- document.md 2>/dev/null; then
+      doc_changed=true
+      log "Document modified by $task_type task"
     fi
 
     if [[ $new_score -lt $old_score ]] || [[ "$doc_changed" == "true" ]]; then
