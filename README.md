@@ -215,24 +215,141 @@ You are always in control. The system never stops — you observe and intervene 
 
 ---
 
+## Research Files
+
+These markdown files are the knowledge backbone of the system. Claude reads and writes them. You own them.
+
+### `goal.md` — The Research Goal
+
+The only file you **must** edit. Everything starts here. It defines:
+
+- **Subject** — who or what to research (e.g., "Andrej Karpathy — AI researcher, educator, entrepreneur")
+- **Anchors** — known identifiers to ground the search (Twitter handle, GitHub, LinkedIn, career timeline)
+- **What I Want to Understand** — 3-7 specific areas of inquiry. Each becomes a section in `document.md` and drives task generation
+- **Completion Criteria** — what "done" looks like (e.g., "all tasks closed with HIGH confidence, zero contradictions, every finding backed by 2+ sources")
+- **Out of Scope** — explicit boundaries to prevent drift (e.g., "personal life, financial details")
+
+The system reads `goal.md` on every iteration. If you change it mid-session, `research.sh` detects the mtime change and adapts. The Goal Manager workflow (Phase 2) will version-tag changes and regenerate tasks automatically.
+
+**Rule:** `goal.md` holds intent only — no task checklists, no findings. Tasks live in GitHub Issues.
+
+### `document.md` — The Research Document
+
+The evolving output. Starts with section headers matching your "What I Want to Understand" areas, then fills up across merged PRs. Structure:
+
+```
+# Subject Name — Research Document
+Coverage: 42% | Tasks: 12/30 | Sources: 18 | Last updated: 2026-03-17
+
+## Intellectual Contributions
+[findings with inline confidence badges and source citations]
+
+## Education and Teaching
+[...]
+
+## Sources
+- [1] https://karpathy.github.io/... (Tier 1 — self-published)
+- [2] https://nytimes.com/... (Tier 2 — mainstream press)
+
+## Open Questions
+- What was the exact timeline of...
+```
+
+Every finding in the document carries:
+- **Confidence**: `HIGH` / `MEDIUM` / `LOW` — how certain the claim is based on source quality
+- **Depth**: `HIGH` / `MEDIUM` / `LOW` — how thoroughly the topic has been explored
+- **Source citations** with tier classification
+
+The header block (`Coverage`, `Tasks`, `Sources`, `Last updated`) is updated automatically by the verdict workflow after each merge. `research.sh` and Claude never edit the header directly — they only add content to sections.
+
+**Rule:** Claude adds to this file. You read it. Judges verify it. Nobody deletes sourced claims.
+
+### `coverage.md` — Coverage Analysis
+
+Written by the Goal Manager workflow (Phase 2). Maps every aspect of `goal.md` to existing GitHub Issues and identifies:
+- **Gaps** — areas with no tasks
+- **Partial coverage** — areas with tasks but incomplete findings
+- **Overlaps** — duplicate or conflicting tasks
+- **Orphans** — tasks that don't map to any goal area
+
+Currently a placeholder. When the Goal Manager runs, it produces a full report and creates new proposed Issues for any gaps it finds.
+
+### `changelog.md` — Research Changelog
+
+Append-only log of every merged PR. Written by the verdict workflow after a successful 3/3 merge. Each entry records:
+- Date and Issue number
+- What was researched or synthesized
+- Score delta (before → after)
+- Sources added
+
+Gives you a chronological view of how the research document was built, complementing `document.md` which shows the current state.
+
+### `model-versions.md` — Fine-Tune Model Versions
+
+Tracks each QLoRA fine-tune of the Qwen3.5-4B expert model (Phase 5). After a milestone completes and training runs on Hetzner, this file gets a new row:
+
+```
+| Version | Date | Score | Coverage | Base Model |
+|---------|------|-------|----------|------------|
+| v1      | 2026-03-20 | 82.4 | 35% | Qwen3.5-4B |
+| v2      | 2026-03-25 | 87.1 | 58% | Qwen3.5-4B |
+```
+
+Each version corresponds to a LoRA adapter pushed to HuggingFace Hub. The llama-server on Hetzner loads the latest adapter for inference.
+
+Currently a placeholder — populated when the fine-tuning pipeline is implemented.
+
+### Runtime Files (gitignored)
+
+These files are created and consumed by `research.sh` at runtime. They are **not committed** to the repo.
+
+**`status.json`** — Live snapshot of the research loop state. Written every iteration.
+```json
+{
+  "running": true,
+  "iteration": 7,
+  "max_iterations": 50,
+  "score": 30,
+  "starting_score": 50,
+  "current_task": "Research Karpathy's role at OpenAI",
+  "current_issue": 2,
+  "last_action": "improved",
+  "subject": "Andrej Karpathy",
+  "model": "claude-opus-4-5",
+  "session_start": "2026-03-17T08:00:00Z"
+}
+```
+The NestJS backend reads this file and serves it at `GET /api/status`.
+
+**`research.log`** — Append-only session log. Every action, score change, error, and Claude output gets timestamped here. Survives across sessions. The backend tails it at `GET /api/log`.
+
+**`feedback.md`** — Write text here to inject guidance into the next iteration. `research.sh` reads it, includes the content in the next Claude prompt, then deletes the file. Use it for things like: "focus on primary sources for the Tesla section" or "the Stanford dates seem wrong, re-verify".
+
+**`pause.flag`** — Touch this file to pause the loop. `research.sh` polls every 5 seconds and resumes when the file is removed. The backend's `POST /api/pause` toggles this.
+
+---
+
 ## Repository Structure
 
 ```
 autoresearch/
-├── goal.md                 ← research subject (you edit this)
+├── goal.md                 ← YOU EDIT THIS — research subject and goals
 ├── document.md             ← accumulated findings (built by Claude)
-├── autoresearch.sh         ← score calculator
-├── research.sh             ← main orchestration loop
-├── seed-tasks.sh           ← bootstrap labels + starter Issues
-├── deploy.sh               ← one-command setup
-├── stop.sh                 ← generated by deploy.sh
-├── coverage.md             ← coverage analysis
-├── changelog.md            ← research changelog
+├── coverage.md             ← gap/overlap analysis (by Goal Manager)
+├── changelog.md            ← append-only merge log
 ├── model-versions.md       ← fine-tune model tracking
-├── status.json             ← live state (gitignored)
+│
+├── research.sh             ← main orchestration loop
+├── autoresearch.sh         ← score calculator
+├── seed-tasks.sh           ← bootstrap labels + starter Issues
+├── deploy.sh               ← one-command setup for Codespaces
+├── stop.sh                 ← generated by deploy.sh
+│
+├── status.json             ← live loop state (gitignored)
 ├── research.log            ← session log (gitignored)
+├── feedback.md             ← human → loop guidance (gitignored)
 ├── pause.flag              ← pause control (gitignored)
-├── feedback.md             ← feedback to loop (gitignored)
+│
 └── backend/
     ├── src/
     │   ├── main.ts
