@@ -57,6 +57,13 @@ write_status() {
 STATUSEOF
 }
 
+capitalize() {
+  local first rest
+  first=$(echo "${1:0:1}" | tr '[:lower:]' '[:upper:]')
+  rest="${1:1}"
+  echo "${first}${rest}"
+}
+
 slugify() {
   echo "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//' | cut -c1-50
 }
@@ -385,7 +392,8 @@ create_pr() {
   local new_score="$6"
 
   git add document.md goal.md coverage.md changelog.md 2>/dev/null || true
-  git commit -m "research(#${issue_num}): ${title}" || {
+  git -c user.name="Autoresearch Researcher" -c user.email="researcher@autoresearch" \
+    commit -m "research(#${issue_num}): ${title}" || {
     log "ERROR: Nothing to commit"
     return 1
   }
@@ -530,7 +538,7 @@ post_merge() {
   # 4. Commit post-merge updates
   git add document.md changelog.md coverage.md 2>/dev/null || true
   if ! git diff --cached --quiet 2>/dev/null; then
-    git -c user.name="Alexandru DAN" -c user.email="dan_lex@yahoo.com" \
+    git -c user.name="Autoresearch System" -c user.email="system@autoresearch" \
       commit -m "chore: post-merge update header + changelog (#${issue_num})" 2>/dev/null || true
     git push origin main 2>/dev/null || true
     log "Post-merge commit pushed"
@@ -665,7 +673,7 @@ PROPEOF
       gh issue create \
         --title "$ftitle" \
         --body "## Type
-${ftype^}
+$(capitalize "$ftype")
 
 ## Section
 ${fsection}

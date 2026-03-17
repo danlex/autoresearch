@@ -147,7 +147,7 @@ for i in $(seq 0 $((task_count - 1))); do
 
   # Build issue body
   issue_body="## Type
-${task_type^}
+$(echo "${task_type:0:1}" | tr '[:lower:]' '[:upper:]')${task_type:1}
 
 ## Section
 ${section}
