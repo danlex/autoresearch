@@ -524,7 +524,10 @@ post_merge() {
   # 2. Append to changelog
   update_changelog "$issue_num" "$pr_num"
 
-  # 3. Commit post-merge updates
+  # 3. Propose follow-up tasks based on what was just researched
+  propose_followup_tasks "$issue_num"
+
+  # 4. Commit post-merge updates
   git add document.md changelog.md coverage.md 2>/dev/null || true
   if ! git diff --cached --quiet 2>/dev/null; then
     git -c user.name="Alexandru DAN" -c user.email="dan_lex@yahoo.com" \
@@ -590,6 +593,97 @@ CLEOF
 # ============================================================================
 # Self-Review (lightweight hallucination check before merge)
 # ============================================================================
+
+propose_followup_tasks() {
+  local issue_num="$1"
+
+  log "Proposing follow-up tasks from Issue #${issue_num}..."
+
+  local issue_title
+  issue_title=$(gh issue view "$issue_num" --json title --jq '.title' 2>/dev/null || echo "")
+  local doc_content
+  doc_content=$(cat "$SCRIPT_DIR/document.md")
+  local goal_content
+  goal_content=$(cat "$SCRIPT_DIR/goal.md")
+
+  local proposal_file
+  proposal_file=$(mktemp "$SCRIPT_DIR/.propose-XXXXXX.txt")
+
+  cat > "$proposal_file" <<PROPEOF
+Given that we just completed research on: "${issue_title}"
+
+RESEARCH GOAL:
+${goal_content}
+
+CURRENT DOCUMENT:
+${doc_content}
+
+Based on the findings, what 1-3 NEW research questions should we investigate next?
+Only propose questions that:
+- Are NOT already answered in the document
+- Directly follow from what was just discovered
+- Map to an existing section in the document
+
+OUTPUT FORMAT — JSON array only, no markdown, no explanation:
+[{"title": "Short question", "section": "Section Name", "type": "research", "priority": "medium", "body": "Why this matters"}]
+
+If no follow-up questions are needed, output: []
+PROPEOF
+
+  local -a claude_args=(-p --permission-mode acceptEdits --allowedTools "Read" --max-turns 3)
+
+  local raw
+  raw=$(cat "$proposal_file" | claude "${claude_args[@]}" 2>/dev/null || echo "[]")
+  rm -f "$proposal_file"
+
+  # Extract JSON
+  local json
+  json=$(echo "$raw" | sed -n '/^\[/,/^\]/p' | head -100)
+  if [[ -z "$json" ]]; then
+    # shellcheck disable=SC2016
+    json=$(echo "$raw" | sed -n '/```json/,/```/p' | sed '1d;$d')
+  fi
+  [[ -z "$json" ]] && json="[]"
+
+  local count
+  count=$(echo "$json" | jq 'length' 2>/dev/null || echo 0)
+
+  if [[ "$count" -gt 0 ]]; then
+    log "Proposing $count follow-up tasks..."
+    for i in $(seq 0 $((count - 1))); do
+      local ftitle
+      ftitle=$(echo "$json" | jq -r ".[$i].title")
+      local fsection
+      fsection=$(echo "$json" | jq -r ".[$i].section")
+      local ftype
+      ftype=$(echo "$json" | jq -r ".[$i].type // \"research\"")
+      local fpriority
+      fpriority=$(echo "$json" | jq -r ".[$i].priority // \"medium\"")
+      local fbody
+      fbody=$(echo "$json" | jq -r ".[$i].body // \"\"")
+
+      gh issue create \
+        --title "$ftitle" \
+        --body "## Type
+${ftype^}
+
+## Section
+${fsection}
+
+## Why needed
+${fbody}
+
+## Generated from
+Follow-up from Issue #${issue_num}: ${issue_title}" \
+        --label "task,proposed,ai-proposed,type-${ftype},priority-${fpriority}" \
+        2>/dev/null || true
+
+      log "  Proposed: $ftitle"
+    done
+  else
+    log "No follow-up tasks proposed"
+  fi
+}
 
 self_review() {
   local issue_num="$1"
