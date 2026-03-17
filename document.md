@@ -1,5 +1,5 @@
 # Andrej Karpathy — Research Document
-Coverage: 20% | Tasks: 1/1 | Sources: 25 | Last updated: 2026-03-17
+Coverage: 35% | Tasks: 1/1 | Sources: 29 | Last updated: 2026-03-17
 
 ## Intellectual Contributions
 
@@ -7,7 +7,7 @@ Coverage: 20% | Tasks: 1/1 | Sources: 25 | Last updated: 2026-03-17
 
 **Confidence: MEDIUM | Depth: HIGH**
 
-> **Review note:** Confidence downgraded from HIGH to MEDIUM. Key dates rely on Tier 2/3 press sources only (June 2017 Tesla start, Eureka Labs announcement), two date conflicts are unresolved (Feb 13 vs Feb 14 2024; Eureka Labs 2023 vs July 2024), and the rationale for the 2017 OpenAI→Tesla transition has no Tier 1 primary source. Depth remains HIGH — coverage within what is documented is thorough.
+> **Review note:** Confidence remains MEDIUM. Key dates rely on Tier 2/3 press sources only (June 2017 Tesla start), the Feb 13 vs Feb 14 2024 departure date conflict is unresolved, and the rationale for the 2017 OpenAI→Tesla transition has no Tier 1 primary source. Eureka Labs date conflict resolved — July 2024 confirmed by [26][27]. Depth remains HIGH — coverage within what is documented is thorough.
 
 Andrej Karpathy was one of OpenAI's founding members, joining in December 2015 as a Research Scientist alongside Sam Altman, Elon Musk, Ilya Sutskever, Greg Brockman, and others. His first stint (2015–2017) focused on deep learning applied to computer vision, generative modeling, and reinforcement learning.
 
@@ -22,7 +22,7 @@ He left OpenAI a second time on February 13, 2024. In his own words: "nothing 'h
 **Uncertainty:**
 - Why Karpathy left OpenAI in 2017 to join Tesla has no primary source explanation. The "June 2017" departure month is sourced from press only (Tier 2/3); no Tier 1 primary source confirms the exact month.
 - **Date conflict (Feb 13 vs 14 2024):** The body text states "February 13, 2024" for his second departure, but the source label in the Sources section reads "Feb 14 2024". Cannot resolve without revisiting the primary tweet.
-- **Eureka Labs date conflict:** The task issue description references "Eureka Labs 2023" but the document states "July 2024". These cannot both be correct — needs resolution against Karpathy's own announcement (no Tier 1 source is currently cited for this date).
+- **Eureka Labs date conflict:** ~~RESOLVED~~ July 2024 confirmed by Tier 1 sources [26][27]. See Eureka Labs section.
 - His specific individual contributions to particular model releases during his second stint are not publicly attributed.
 
 ## Education and Teaching
@@ -48,6 +48,34 @@ Karpathy's educational output spans four major public artifacts: **cs231n** (Sta
 ## Views on AI Future
 
 ## Eureka Labs
+
+**Confidence: HIGH | Depth: MEDIUM**
+
+Karpathy announced Eureka Labs on July 16, 2024 via a detailed post on X/Twitter [26], describing it as "a new kind of school that is AI native." The company name derives from the ancient Greek "I have found it," chosen to reflect the discovery moment when a concept crystallizes for a learner [26][28].
+
+### The Pedagogical Model
+
+The core operating principle is what Karpathy calls **"Teacher + AI symbiosis"**: a human expert designs high-quality course materials, and an AI Teaching Assistant is layered on top to guide students through them [26][27]. The AI assistant does not replace the instructor's curriculum design role — rather, it scales the instructor's reach. Karpathy's founding vision articulates the problem directly: "subject matter experts who are deeply passionate, great at teaching, infinitely patient and fluent in all of the world's languages are also very scarce and cannot personally tutor all 8 billion of us on demand." [26] With generative AI progress, the ideal of having a Feynman-like tutor for every learner — "who is there to guide you every step of the way" — becomes tractable [26][27].
+
+The intended outcome is to expand education in two dimensions simultaneously: in **reach** (many more people accessing instruction) and in **extent** (any one person learning more subjects than would be possible today, unassisted) [27][28].
+
+Human instructor responsibilities: design the curriculum, author course materials, provide the pedagogical structure. AI assistant responsibilities: delivery and guidance — answering questions, providing patient on-demand support in any language, helping students through the instructor-designed materials at their own pace [26][27].
+
+**Uncertainty:** As of March 2026, no working interactive AI tutor product has been publicly demonstrated. The Eureka Labs website describes the model in aspirational terms; the specific interaction modality (chat interface, embedded exercises, etc.) has not been publicly detailed [27]. The Dwarkesh Patel 2025 podcast interview, referenced on karpathy.ai, likely contains more detailed elaboration of the model but the education section of the transcript was not accessible in this research pass [17].
+
+### LLM101n — The First Course
+
+The only course publicly announced is **LLM101n: "Let's build a Storyteller"** [26][29]. It is described as an undergraduate-level class that guides students through training their own AI language model — "a smaller version of the AI teaching assistant itself" — building a ChatGPT-like web application from scratch using Python, C, and CUDA [27][29].
+
+The 17-chapter syllabus progresses from first principles to production: bigram language models, backpropagation (building on Karpathy's earlier micrograd), n-gram architectures, attention mechanisms, transformers, tokenization, initialization, AdamW optimization, distributed training, mixed precision, quantization, dataset curation, kv-cache inference, supervised fine-tuning, reinforcement learning, deployment, and multimodal capabilities (VQVAE, diffusion transformers) [29]. The organizing principle — "What I cannot create, I do not understand" — is a direct continuation of the first-principles construction approach that defines all of Karpathy's educational work [29].
+
+Delivery is planned in three formats: online self-paced materials, digital cohorts, and physical cohorts [27]. Course materials are distributed via GitHub (github.com/karpathy/LLM101n). The repository was archived and still under active construction as of March 2026; no specific completion timeline was published [29].
+
+### Personal Motivation
+
+Karpathy described Eureka Labs as "the culmination of my passion in both AI and education over ~2 decades" and noted that all his prior educational work — cs231n, micrograd, nanoGPT, Zero to Hero — had been "part-time, as side quests to my 'real job.'" Eureka Labs represents his first professional full-time commitment to the combination [26]. In October 2024 he released **nanochat**, a full-stack minimal LLM-like-ChatGPT implementation described as "building a ramp to knowledge," which appears to be a companion artifact to LLM101n [1].
+
+> Note: The July 2024 founding date is confirmed by two Tier 1 sources (Karpathy's announcement tweet [26] and the Eureka Labs website [27]). This resolves the date conflict flagged in Open Questions — the "Eureka Labs 2023" reference in the task issue was incorrect.
 
 ## Key Relationships and Collaborations
 
@@ -87,6 +115,9 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - [9] [Microsoft Build 2023 — State of GPT session](https://build.microsoft.com/en-US/sessions/db3f4859-cd30-4445-a0cd-553c3304f8e2)
 - [10] [X/Twitter — Karpathy departure from Tesla, Jul 13 2022](https://x.com/karpathy/status/1547332300186066944)
 - [11] [X/Twitter — Musk farewell to Karpathy, Jul 13 2022](https://x.com/elonmusk/status/1547332709025861632)
+- [26] [X/Twitter — Karpathy announces Eureka Labs, Jul 16 2024](https://x.com/karpathy/status/1813263734707790301)
+- [27] [Eureka Labs official website — eurekalabs.ai](https://eurekalabs.ai/)
+- [29] [GitHub — karpathy/LLM101n repository (README)](https://github.com/karpathy/LLM101n)
 
 ### Tier 2 (Mainstream press / Wikipedia)
 - [12] [Wikipedia — Andrej Karpathy](https://en.wikipedia.org/wiki/Andrej_Karpathy)
@@ -102,20 +133,21 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - [22] [Yahoo Finance — Musk disputes Karpathy's balanced Tesla vs Waymo view, Dec 2025](https://finance.yahoo.com/news/elon-musk-not-pleased-former-180030136.html)
 - [23] [CleanTechnica — Tesla Autonomy Day 2019 recap, Apr 23 2019](https://cleantechnica.com/2019/04/23/tesla-autonomy-day-what-we-learned/)
 - [25] [TechTimes — Elon Musk confirms Karpathy on 4-month sabbatical, Mar 28 2022](https://www.techtimes.com/articles/273570/20220328/elon-musk-tesla-ai-director-elon-musk-tesla-ai-director-4-month-leave.htm)
+- [28] [TechCrunch — Karpathy's startup aims to apply AI assistants to education, Jul 16 2024](https://techcrunch.com/2024/07/16/after-tesla-and-openai-andrej-karpathys-startup-aims-to-apply-ai-assistants-to-education/)
 
 ### Tier 3 (Blogs / Fan Transcripts)
 - [24] [Elon Musk Interviews — Tesla AI Day 2021 presentation transcript (Part I)](https://elonmuskinterviews.wordpress.com/2021/08/31/tesla-ai-day-the-presentation-i/) — WordPress fan blog; not mainstream press. Quote used in body ("building a synthetic animal...") requires verification against official Tesla AI Day video.
 
 ## Open Questions
 
-- **[UNRESOLVED] Eureka Labs date:** Task issue description says "Eureka Labs 2023" but the document states "July 2024." These cannot both be correct. Resolve against a Tier 1 source (Karpathy's announcement tweet or blog post). No such source is currently cited.
+- **[RESOLVED] Eureka Labs date:** July 2024 confirmed by two Tier 1 sources: Karpathy's announcement tweet [26] (July 16, 2024) and the Eureka Labs website [27]. The task issue's "2023" reference was incorrect.
 - **[UNRESOLVED] Feb 13 vs Feb 14 2024 departure:** Body text says "February 13, 2024"; source label says "Feb 14 2024." Note: the TechCrunch source URL contains `/2024/02/13/`, consistent with Feb 13 — but tweet timezone could explain the discrepancy. Must verify the tweet timestamp directly to resolve.
 - **[UNRESOLVED] OpenAI first departure month:** "June 2017" is stated in the body but only press sources cover this transition. No Tier 1 confirmation of the exact month exists in the document.
 - **[GAP] Stanford PhD and academic timeline:** The Education section is empty. The career timeline assumes a Stanford PhD but no dates, degree details, or advisor are documented anywhere. This is a required chain link before OpenAI 2015.
 - **[PARTIAL] Key Relationships and Collaborations:** Karpathy–Musk professional relationship (2017–2022) is now documented with Tier 1+2 sources. Remaining gaps: OpenAI co-founders (Ilya Sutskever, Greg Brockman), academic collaborators (Percy Liang, Tianlin Shi), and OpenAI second-stint colleagues are unresearched. Career timeline cross-check via collaborator timelines is therefore still incomplete.
-- **[CONFLICT] Task issue timeline vs document:** The task issue itself uses "Eureka Labs 2023" in the career timeline description, while the document body states "July 2024." The task's own framing is therefore inconsistent with the document. This reinforces the existing Eureka Labs date conflict — neither the task issue nor the document has a Tier 1 citation for this date.
+- **[RESOLVED] Task issue timeline vs document:** Eureka Labs founding confirmed as July 2024 via Tier 1 sources [26][27]. The task issue's "2023" reference was incorrect. Conflict resolved.
 - **[GAP] Views on AI Future:** Section is empty. Karpathy has made documented public statements on AI safety, LLMs, and the future of software (Dwarkesh 2025, Lex Fridman #333, State of GPT talk are all already cited sources that cover this). No content has been synthesized from them.
-- **[GAP] Eureka Labs section:** Section is empty and no Tier 1 source (announcement tweet or blog post) is cited anywhere in the document. The body mentions "July 2024" but this date is unsourced at Tier 1 level and conflicts with the task issue's "2023" reference.
+- **[FILLED] Eureka Labs section:** Section now populated with founding vision, pedagogical model, LLM101n course details, and delivery formats. July 2024 date confirmed via Tier 1 sources [26][27]. Gap remaining: interactive AI tutor product not yet publicly demonstrated; Dwarkesh 2025 podcast education section inaccessible.
 - **[UNVERIFIED] "December 2015" OpenAI founding date:** The body states Karpathy joined "in December 2015" but no source explicitly cited as providing this specific month. The karpathy.ai bio is listed as a Tier 1 source for "OpenAI roles" — it is unclear whether it specifies December or only the year. If the month comes from Wikipedia (Tier 2), this needs a Tier 1 confirmation. The month matters for sequencing against the Stanford PhD completion.
 - **[RESOLVED] Tesla departure (July 2022) — Tier 1 source added:** Karpathy's departure tweet [10] and Musk's farewell reply [11] are now cited as Tier 1 sources. July 13, 2022 is confirmed as the departure date.
 - **[BLOCKED] Task acceptance criteria cannot be met in current document state:** The task requires (1) exact dates for each career transition confirmed against primary source, (2) date conflicts identified and resolved, and (3) final timeline consistent across all sections. Criteria 1 and 3 are structurally unachievable: Education, Key Relationships, Eureka Labs, and Views on AI Future are all empty, meaning no multi-section consistency check is possible and no collaborator timelines exist to cross-verify transition dates. Criterion 2 is partially met — conflicts are identified but none are resolved. The task cannot be closed as complete without filling at least the Education and Key Relationships sections.
