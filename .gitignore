@@ -5,3 +5,5 @@ pause.flag
 node_modules/
 .env
 *.pdf
+backend/dist/
+backend/node_modules/
