@@ -732,7 +732,7 @@ self_review() {
   review_file=$(mktemp "$SCRIPT_DIR/.review-XXXXXX.txt")
 
   cat > "$review_file" <<REVIEWEOF
-You are a hallucination detector. Review ONLY the new content below.
+You are a research judge. Review the new content and either approve or fix it.
 
 NEW CONTENT (just written by the researcher):
 ${added_lines}
@@ -740,43 +740,51 @@ ${added_lines}
 AVAILABLE SOURCES:
 ${sources_section}
 
-YOUR ONLY JOB: detect fabricated facts. Check for:
-1. HALLUCINATIONS: Are any facts, dates, quotes, or claims likely fabricated?
-   - Specific numbers without citation (e.g., "150 lines of code") — suspicious
-   - Exact dates without citation — suspicious if very specific
-   - Direct quotes without attribution — suspicious
-   - Named people, papers, or events that may not exist
-2. PHANTOM CITATIONS: Do any [N] references point to sources that don't exist?
+FULL DOCUMENT (for context):
+$(cat "$SCRIPT_DIR/document.md")
 
-DO NOT flag:
-- Missing citations (that's a style issue, not hallucination)
-- Formatting problems
-- Confidence level mismatches
-- Issues in pre-existing content
+YOUR JOB:
+1. Check for HALLUCINATIONS: fabricated facts, dates, quotes, papers, people
+2. Check for PHANTOM CITATIONS: [N] references to non-existent sources
+3. Check for CONTRADICTIONS with existing content
+4. If you find issues — FIX THEM. Don't just flag, propose the corrected text.
 
-OUTPUT (one line only):
-PASS — if no hallucinations detected
-FAIL: [one-sentence description of the fabricated content]
+OUTPUT FORMAT:
+If everything looks good:
+  PASS
 
-Be pragmatic. Real research with minor gaps should PASS.
-Only FAIL if you find content that is likely FABRICATED.
+If you found and fixed issues, edit document.md directly with corrections:
+  FIXED: [one-line summary of what you corrected]
+
+Only reject if the content is fundamentally fabricated and unfixable:
+  FAIL: [why it cannot be salvaged]
+
+GUIDELINES:
+- Be pragmatic. Minor gaps are fine — fix them, don't reject.
+- Missing [N] citations? Add them if the source exists.
+- Unsourced specific claim? Add a note like "(date unverified)" or remove it.
+- Wrong date? Correct it if you can verify, flag if you can't.
+- Your goal is to IMPROVE the research, not block it.
+
+WORKING DIRECTORY: ${SCRIPT_DIR}
+You may edit: document.md
 REVIEWEOF
 
-  local -a claude_args=(-p --permission-mode acceptEdits --allowedTools "Read" --max-turns 2)
+  local -a claude_args=(-p --permission-mode acceptEdits --allowedTools "Bash,Read,Write" --max-turns 5)
 
   local review_result
   review_result=$(cat "$review_file" | claude "${claude_args[@]}" 2>/dev/null || echo "PASS")
   rm -f "$review_file"
 
   # Parse result
-  if echo "$review_result" | grep -qi "^PASS"; then
-    log "Judge PASSED: no hallucinations detected"
+  if echo "$review_result" | grep -qi "^PASS\|^FIXED"; then
+    log "Judge: $(echo "$review_result" | head -1)"
     return 0
   else
     local fail_reason
     fail_reason=$(echo "$review_result" | head -3)
-    log "Judge FAILED: $fail_reason"
-    gh issue comment "$issue_num" --body "Judge review: $fail_reason" 2>/dev/null || true
+    log "Judge REJECTED: $fail_reason"
+    gh issue comment "$issue_num" --body "Judge rejected: $fail_reason" 2>/dev/null || true
     return 1
   fi
 }
