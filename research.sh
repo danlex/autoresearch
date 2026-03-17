@@ -699,102 +699,160 @@ Follow-up from Issue #${issue_num}: ${issue_title}" \
   fi
 }
 
-self_review() {
+# ============================================================================
+# Three-Judge Review with Feedback Loop
+# 3 judges (evidence, consistency, completeness) review the diff.
+# Researcher incorporates feedback, judges review again.
+# Max 3 rounds. If no 2/3 consensus, publish with notes.
+# ============================================================================
+
+run_judge() {
+  local judge_name="$1"
+  local focus="$2"
+  local prompt_body="$3"
+  local judge_file
+  judge_file=$(mktemp)
+  printf '%s' "$prompt_body" > "$judge_file"
+
+  local -a claude_args=(-p --permission-mode acceptEdits --allowedTools "Bash,Read,Write" --max-turns 5)
+  local result
+  result=$(cat "$judge_file" | claude "${claude_args[@]}" 2>/dev/null || echo "APPROVE")
+  rm -f "$judge_file"
+
+  log "  $judge_name ($focus): $(echo "$result" | head -1)"
+  echo "$result"
+}
+
+judge_review_loop() {
   local issue_num="$1"
   local title="$2"
 
-  # Skip self-review if SKIP_REVIEW=1 (for testing)
   if [[ "${SKIP_REVIEW:-0}" == "1" ]]; then
-    log "Self-review: SKIPPED (SKIP_REVIEW=1)"
+    log "Judge review: SKIPPED (SKIP_REVIEW=1)"
     return 0
   fi
 
-  log "Running self-review (judge) for Issue #${issue_num}..."
-
-  # Review only NEW/CHANGED content, not the entire document
   local diff_content
   diff_content=$(git diff -- document.md 2>/dev/null || echo "")
-
   if [[ -z "$diff_content" ]]; then
-    log "Self-review: no changes to document.md — PASS"
+    log "Judge review: no changes — PASS"
     return 0
   fi
 
-  # Extract added lines and sources section
-  local added_lines
-  added_lines=$(echo "$diff_content" | grep "^+" | grep -v "^+++" | sed 's/^+//')
+  local max_rounds=3
+  local round=1
 
-  local sources_section
-  sources_section=$(sed -n '/^## Sources/,$ p' "$SCRIPT_DIR/document.md")
+  while [[ $round -le $max_rounds ]]; do
+    log "Judge review round $round/$max_rounds for Issue #${issue_num}..."
 
-  # --- Claude Judge Call (one per task, focused on hallucinations) ---
-  local review_file
-  review_file=$(mktemp "$SCRIPT_DIR/.review-XXXXXX.txt")
+    local added_lines
+    added_lines=$(git diff -- document.md 2>/dev/null | grep "^+" | grep -v "^+++" | sed 's/^+//')
+    local doc_content
+    doc_content=$(cat "$SCRIPT_DIR/document.md")
+    local sources
+    sources=$(sed -n '/^## Sources/,$ p' "$SCRIPT_DIR/document.md")
 
-  cat > "$review_file" <<REVIEWEOF
-You are a research judge. Review the new content and either approve or fix it.
-
-NEW CONTENT (just written by the researcher):
+    local base_context="
+NEW/CHANGED CONTENT:
 ${added_lines}
 
-AVAILABLE SOURCES:
-${sources_section}
+SOURCES SECTION:
+${sources}
 
-FULL DOCUMENT (for context):
-$(cat "$SCRIPT_DIR/document.md")
-
-YOUR JOB:
-1. Check for HALLUCINATIONS: fabricated facts, dates, quotes, papers, people
-2. Check for PHANTOM CITATIONS: [N] references to non-existent sources
-3. Check for CONTRADICTIONS with existing content
-4. If you find issues — FIX THEM. Don't just flag, propose the corrected text.
-
-OUTPUT FORMAT:
-If everything looks good:
-  PASS
-
-If you found and fixed issues, edit document.md directly with corrections:
-  FIXED: [one-line summary of what you corrected]
-
-Only reject if the content is fundamentally fabricated and unfixable:
-  FAIL:
-  REASONING: [detailed explanation of what is fabricated and why you cannot fix it]
-  EVIDENCE: [what you checked that confirms it's fabricated]
-  SUGGESTION: [what the researcher should do differently on the next attempt]
-
-GUIDELINES:
-- Be pragmatic. Minor gaps are fine — fix them, don't reject.
-- Missing [N] citations? Add them if the source exists.
-- Unsourced specific claim? Add a note like "(date unverified)" or remove it.
-- Wrong date? Correct it if you can verify, flag if you can't.
-- Your goal is to IMPROVE the research, not block it.
+FULL DOCUMENT:
+${doc_content}
 
 WORKING DIRECTORY: ${SCRIPT_DIR}
-You may edit: document.md
-REVIEWEOF
+You may edit: document.md"
 
-  local -a claude_args=(-p --permission-mode acceptEdits --allowedTools "Bash,Read,Write" --max-turns 5)
+    # --- Judge 1: Evidence ---
+    local j1_result
+    j1_result=$(run_judge "Judge 1" "Evidence" "You are an evidence judge. Be strict about facts.
+${base_context}
 
-  local review_result
-  review_result=$(cat "$review_file" | claude "${claude_args[@]}" 2>/dev/null || echo "PASS")
-  rm -f "$review_file"
+CHECK: Are any facts, dates, quotes likely fabricated? Do [N] citations point to real sources?
+If you find issues, fix them in document.md (add citations, mark unverified, remove fabrications).
+OUTPUT: APPROVE, FIXED: [summary], or FEEDBACK: [what needs fixing]")
 
-  # Parse result
-  if echo "$review_result" | grep -qi "^PASS\|^FIXED"; then
-    log "Judge: $(echo "$review_result" | head -1)"
-    return 0
-  else
-    local fail_reason
-    fail_reason=$(echo "$review_result" | head -20)
-    log "Judge REJECTED: $(echo "$fail_reason" | head -1)"
-    gh issue comment "$issue_num" --body "## Judge Review — Rejected
+    # --- Judge 2: Consistency ---
+    local j2_result
+    j2_result=$(run_judge "Judge 2" "Consistency" "You are a consistency judge. Check for contradictions.
+${base_context}
 
-${fail_reason}
+CHECK: Does new content contradict existing content? Are dates/names consistent? Is confidence level appropriate?
+If you find issues, fix them in document.md.
+OUTPUT: APPROVE, FIXED: [summary], or FEEDBACK: [what needs fixing]")
 
+    # --- Judge 3: Completeness ---
+    local j3_result
+    j3_result=$(run_judge "Judge 3" "Completeness" "You are a completeness judge. Was the question answered?
+TASK: ${title}
+${base_context}
+
+CHECK: Does the content answer the question? Obvious gaps? Sources diverse? What would a skeptic question?
+If you find issues, fix them in document.md.
+OUTPUT: APPROVE, FIXED: [summary], or FEEDBACK: [what needs fixing]")
+
+    # --- Count votes ---
+    local approvals=0
+    local feedback=""
+    for result_var in "$j1_result" "$j2_result" "$j3_result"; do
+      if echo "$result_var" | grep -qi "^APPROVE\|^FIXED"; then
+        approvals=$((approvals + 1))
+      else
+        feedback="${feedback}
 ---
-*Review for PR on Issue #${issue_num}: ${title}*" 2>/dev/null || true
-    return 1
-  fi
+$(echo "$result_var" | head -10)"
+      fi
+    done
+
+    log "Round $round votes: $approvals/3 approved"
+
+    # 2/3 approve — pass
+    if [[ $approvals -ge 2 ]]; then
+      log "Judge review PASSED ($approvals/3, round $round)"
+      return 0
+    fi
+
+    # Not enough — researcher incorporates feedback
+    if [[ $round -lt $max_rounds ]]; then
+      log "Researcher incorporating judge feedback (round $round)..."
+      local fix_file
+      fix_file=$(mktemp)
+      cat > "$fix_file" <<FIXEOF
+You are the researcher. The judges reviewed your work and gave feedback. Fix the issues in document.md.
+
+JUDGE FEEDBACK:
+${feedback}
+
+WORKING DIRECTORY: ${SCRIPT_DIR}
+Edit document.md to address the feedback. Be precise.
+FIXEOF
+      local -a fix_args=(-p --permission-mode acceptEdits --allowedTools "Bash,Read,Write" --max-turns 5)
+      cat "$fix_file" | claude "${fix_args[@]}" 2>/dev/null || true
+      rm -f "$fix_file"
+      log "Researcher revised document"
+    fi
+
+    round=$((round + 1))
+  done
+
+  # After 3 rounds without consensus — publish with notes
+  log "No consensus after $max_rounds rounds — publishing with review notes"
+  {
+    echo ""
+    echo "### Unresolved Review Notes (Issue #${issue_num})"
+    echo ""
+    echo "After $max_rounds review rounds, these concerns were not fully resolved:"
+    echo "$feedback" | head -30
+    echo ""
+  } >> "$SCRIPT_DIR/document.md"
+
+  gh issue comment "$issue_num" --body "## Published with Review Notes
+After $max_rounds rounds, $approvals/3 approved. Unresolved feedback appended to Open Questions.
+${feedback}" 2>/dev/null || true
+
+  return 0
 }
 
 # ============================================================================
@@ -991,13 +1049,13 @@ main_loop() {
       log "Score improved! Running self-review..."
 
       # Self-review: check for hallucinations and citation issues
-      if ! self_review "$issue_num" "$title"; then
-        log "Self-review failed — treating as no improvement"
+      if ! judge_review_loop "$issue_num" "$title"; then
+        log "Judge review failed — treating as no improvement"
         cleanup_failed "$issue_num" "$branch"
         continue
       fi
 
-      log "Self-review passed. Creating PR..."
+      log "Judge review passed. Creating PR..."
 
       if create_pr "$issue_num" "$title" "$branch" "$task_type" "$old_score" "$new_score"; then
         last_action="improved"

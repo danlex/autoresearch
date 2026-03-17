@@ -179,7 +179,31 @@ show_log() {
 }
 
 # ============================================================================
-# Mode: dashboard — Auto-refresh (default 15s, configurable)
+# Mode: live — Status header + streaming log (best for following Claude)
+# ============================================================================
+
+show_live() {
+  printf '%b%b' "$BOLD" "$CYAN"
+  printf '  ╔══════════════════════════════════════════╗\n'
+  printf '  ║       AUTORESEARCH — LIVE                ║\n'
+  printf '  ╚══════════════════════════════════════════╝%b\n\n' "$RESET"
+
+  show_status
+
+  printf '\n%b  ── Live Output ─────────────────────────────────%b\n\n' "$DIM" "$RESET"
+
+  if [[ ! -f "$LOG_FILE" ]]; then
+    printf '  %bWaiting for research.log...%b\n' "$DIM" "$RESET"
+    while [[ ! -f "$LOG_FILE" ]]; do sleep 1; done
+  fi
+
+  tail -f "$LOG_FILE" | while IFS= read -r line; do
+    colorize_log_line "$line"
+  done
+}
+
+# ============================================================================
+# Mode: dashboard — Auto-refresh (default 30s, configurable)
 # ============================================================================
 
 show_dashboard() {
@@ -228,6 +252,9 @@ mode="${1:-dashboard}"
 refresh="${2:-30}"
 
 case "$mode" in
+  live)
+    show_live
+    ;;
   log)
     show_log
     ;;
@@ -238,10 +265,11 @@ case "$mode" in
     show_dashboard "$refresh"
     ;;
   *)
-    echo "Usage: bash watch.sh [dashboard|log|status] [refresh_seconds]"
+    echo "Usage: bash watch.sh [live|dashboard|log|status] [refresh_seconds]"
+    echo "  bash watch.sh live           # status + streaming output (recommended)"
     echo "  bash watch.sh                # dashboard, 30s refresh"
-    echo "  bash watch.sh dashboard 30   # dashboard, 30s refresh"
-    echo "  bash watch.sh log            # tail log with colors"
+    echo "  bash watch.sh dashboard 60   # dashboard, custom refresh"
+    echo "  bash watch.sh log            # raw log tail with colors"
     echo "  bash watch.sh status         # one-shot status"
     exit 1
     ;;
