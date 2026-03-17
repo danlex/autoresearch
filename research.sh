@@ -33,7 +33,8 @@ subject=""
 # ============================================================================
 
 log() {
-  local msg="[$(date -u '+%Y-%m-%dT%H:%M:%SZ')] $*"
+  local msg
+  msg="[$(date -u '+%Y-%m-%dT%H:%M:%SZ')] $*"
   echo "$msg"
   echo "$msg" >> "$SCRIPT_DIR/research.log"
 }
