@@ -5,7 +5,7 @@ set -euo pipefail
 # ============================================================================
 # watch.sh — Real-time research monitor
 # Usage:
-#   bash watch.sh          — Dashboard with auto-refresh (default 15s)
+#   bash watch.sh          — Dashboard with auto-refresh (default 30s)
 #   bash watch.sh dashboard 30 — Dashboard with 30s refresh
 #   bash watch.sh log      — Color-coded tail -f of research.log
 #   bash watch.sh status   — One-shot status display
@@ -225,7 +225,7 @@ show_dashboard() {
 # ============================================================================
 
 mode="${1:-dashboard}"
-refresh="${2:-15}"
+refresh="${2:-30}"
 
 case "$mode" in
   log)
@@ -239,7 +239,7 @@ case "$mode" in
     ;;
   *)
     echo "Usage: bash watch.sh [dashboard|log|status] [refresh_seconds]"
-    echo "  bash watch.sh                # dashboard, 15s refresh"
+    echo "  bash watch.sh                # dashboard, 30s refresh"
     echo "  bash watch.sh dashboard 30   # dashboard, 30s refresh"
     echo "  bash watch.sh log            # tail log with colors"
     echo "  bash watch.sh status         # one-shot status"
