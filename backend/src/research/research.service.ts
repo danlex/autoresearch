@@ -2,13 +2,18 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { readFileSync, writeFileSync, existsSync, unlinkSync } from 'fs';
 import { execSync, spawn } from 'child_process';
-import { join } from 'path';
+import { join, resolve } from 'path';
 
 @Injectable()
 export class ResearchService {
   private readonly logger = new Logger(ResearchService.name);
-  private readonly rootDir = join(__dirname, '..', '..', '..');
+  private readonly rootDir: string;
   private researchProcess: ReturnType<typeof spawn> | null = null;
+
+  constructor() {
+    // Use ROOT_DIR env var if set, otherwise resolve relative to dist/
+    this.rootDir = process.env.ROOT_DIR || resolve(__dirname, '..', '..', '..');
+  }
 
   private resolvePath(file: string): string {
     return join(this.rootDir, file);
@@ -19,7 +24,12 @@ export class ResearchService {
     if (!existsSync(path)) {
       return { running: false, iteration: 0, score: 0, message: 'No session yet' };
     }
-    return JSON.parse(readFileSync(path, 'utf-8'));
+    try {
+      return JSON.parse(readFileSync(path, 'utf-8'));
+    } catch (e) {
+      this.logger.warn(`Failed to parse status.json: ${e.message}`);
+      return { running: false, iteration: 0, score: 0, message: 'status.json malformed' };
+    }
   }
 
   readDocument(): string {

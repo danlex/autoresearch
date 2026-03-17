@@ -48,7 +48,7 @@ write_status() {
   "current_task": $(echo "$current_task" | jq -Rs .),
   "current_issue": $current_issue,
   "last_action": "$last_action",
-  "subject": "Andrej Karpathy",
+  "subject": $(head -5 "$SCRIPT_DIR/goal.md" | grep -i "^#" | head -1 | sed 's/^#* *//' | sed 's/ *—.*//' | jq -Rs .),
   "model": "$model",
   "session_start": "$session_start"
 }
@@ -149,7 +149,8 @@ get_task_type() {
 
 get_section_from_body() {
   local body="$1"
-  echo "$body" | grep -i "^##\? *Section" | head -1 | sed 's/^##\? *Section[: ]*//' | xargs
+  # Section value is on the line after "## Section"
+  echo "$body" | awk '/^##? *Section/{getline; print; exit}' | xargs
 }
 
 # ============================================================================
@@ -166,7 +167,18 @@ build_research_prompt() {
 
   local doc_section=""
   if [[ -n "$section" ]]; then
-    doc_section=$(awk "/^## ${section}/,/^## [^#]/" "$SCRIPT_DIR/document.md" | head -100)
+    # Use fixed-string matching to avoid regex injection from section names
+    local start_line
+    start_line=$(grep -n "^## ${section}$" "$SCRIPT_DIR/document.md" | head -1 | cut -d: -f1)
+    if [[ -n "$start_line" ]]; then
+      local end_line
+      end_line=$(tail -n +"$((start_line + 1))" "$SCRIPT_DIR/document.md" | grep -n "^## " | head -1 | cut -d: -f1)
+      if [[ -n "$end_line" ]]; then
+        doc_section=$(sed -n "${start_line},$((start_line + end_line - 1))p" "$SCRIPT_DIR/document.md")
+      else
+        doc_section=$(tail -n +"$start_line" "$SCRIPT_DIR/document.md")
+      fi
+    fi
   fi
 
   local feedback_block=""
@@ -315,11 +327,18 @@ run_research() {
 
   log "Running Claude Code: type=$task_type, model=$model, max_turns=$max_turns"
 
-  claude -p "$prompt" \
+  # Write prompt to temp file to avoid ARG_MAX limits on large documents
+  local prompt_file
+  prompt_file=$(mktemp "$SCRIPT_DIR/.prompt-XXXXXX.txt")
+  echo "$prompt" > "$prompt_file"
+
+  claude -p "$(cat "$prompt_file")" \
     --model "$model" \
     --allowedTools "$tools" \
     --max-turns "$max_turns" \
     2>&1 | tee -a "$SCRIPT_DIR/research.log"
+
+  rm -f "$prompt_file"
 }
 
 # ============================================================================
@@ -470,6 +489,24 @@ startup() {
 
   # Ensure we're on main
   git checkout main 2>/dev/null || git checkout -b main
+  git pull origin main 2>/dev/null || true
+
+  # Clean up stale in-progress labels from previous crashed sessions
+  local stale_issues
+  stale_issues=$(gh issue list --label "in-progress" --state open --json number --jq '.[].number' 2>/dev/null || true)
+  if [[ -n "$stale_issues" ]]; then
+    log "Cleaning up stale in-progress labels..."
+    for stale_num in $stale_issues; do
+      gh issue edit "$stale_num" --remove-label "in-progress" 2>/dev/null || true
+      log "  Removed in-progress from Issue #$stale_num"
+    done
+  fi
+
+  # Clean up orphaned task branches
+  for orphan_branch in $(git branch --list 'task/*' 2>/dev/null); do
+    git branch -D "$orphan_branch" 2>/dev/null || true
+    log "  Deleted orphaned branch $orphan_branch"
+  done
 
   # Compute initial score
   starting_score=$(compute_score)
@@ -593,15 +630,26 @@ main_loop() {
     log "Score: $old_score -> $new_score (delta: $((old_score - new_score)))"
 
     # 11-12. Handle result
-    if [[ $new_score -lt $old_score ]]; then
+    # For document/review tasks, score won't change (formula counts open tasks, not quality).
+    # Check if document.md was actually modified instead.
+    local doc_changed=false
+    if [[ "$task_type" != "research" ]]; then
+      if ! git diff --quiet document.md 2>/dev/null; then
+        doc_changed=true
+        log "Document modified by $task_type task"
+      fi
+    fi
+
+    if [[ $new_score -lt $old_score ]] || [[ "$doc_changed" == "true" ]]; then
       log "Score improved! Creating PR..."
 
       if create_pr "$issue_num" "$title" "$branch" "$task_type" "$old_score" "$new_score"; then
         last_action="improved"
         write_status true
         handle_pr_verdict "$issue_num" "$branch"
-        # Return to main after PR handling
+        # Return to main and pull latest (includes the just-merged PR)
         git checkout main 2>/dev/null || true
+        git pull origin main 2>/dev/null || true
       else
         log "PR creation failed — cleaning up"
         cleanup_failed "$issue_num" "$branch"

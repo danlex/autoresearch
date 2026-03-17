@@ -17,10 +17,13 @@ echo "=========================================="
 if [[ -z "${ANTHROPIC_API_KEY:-}" ]]; then
   echo ""
   echo "ANTHROPIC_API_KEY is not set."
-  read -rp "Paste your Anthropic API key: " api_key
+  read -rsp "Paste your Anthropic API key (input hidden): " api_key
+  echo ""
   export ANTHROPIC_API_KEY="$api_key"
-  echo "export ANTHROPIC_API_KEY='$api_key'" >> ~/.bashrc
-  echo "Key saved to ~/.bashrc"
+  # Write to .env file (gitignored) instead of bashrc for security
+  echo "ANTHROPIC_API_KEY='$api_key'" > "$SCRIPT_DIR/.env"
+  chmod 600 "$SCRIPT_DIR/.env"
+  echo "Key saved to .env (chmod 600). Source it with: source .env"
 fi
 
 # --- Install system dependencies ---

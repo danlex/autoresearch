@@ -5,5 +5,7 @@ pause.flag
 node_modules/
 .env
 *.pdf
+.prompt-*.txt
+backend.log
 backend/dist/
 backend/node_modules/
