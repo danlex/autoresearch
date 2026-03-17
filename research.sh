@@ -703,13 +703,13 @@ self_review() {
   local issue_num="$1"
   local title="$2"
 
-  # Skip self-review if SKIP_REVIEW=1 (for testing or budget control)
+  # Skip self-review if SKIP_REVIEW=1 (for testing)
   if [[ "${SKIP_REVIEW:-0}" == "1" ]]; then
     log "Self-review: SKIPPED (SKIP_REVIEW=1)"
     return 0
   fi
 
-  log "Running self-review for Issue #${issue_num}..."
+  log "Running self-review (judge) for Issue #${issue_num}..."
 
   # Review only NEW/CHANGED content, not the entire document
   local diff_content
@@ -720,50 +720,65 @@ self_review() {
     return 0
   fi
 
-  # Quick local checks first (no Claude call needed)
+  # Extract added lines and sources section
   local added_lines
   added_lines=$(echo "$diff_content" | grep "^+" | grep -v "^+++" | sed 's/^+//')
 
-  # Count added substantive lines (>50 chars, not headers/metadata)
-  local added_paragraphs=0
-  local cited_paragraphs=0
-  while IFS= read -r line; do
-    [[ ${#line} -le 50 ]] && continue
-    [[ "$line" =~ ^## ]] && continue
-    [[ "$line" =~ ^### ]] && continue
-    [[ "$line" =~ ^\*\*Confidence ]] && continue
-    [[ "$line" =~ ^\*\*Uncertainty ]] && continue
-    [[ -z "$line" ]] && continue
-    added_paragraphs=$((added_paragraphs + 1))
-    if echo "$line" | grep -qE '\[[0-9]+\]'; then
-      cited_paragraphs=$((cited_paragraphs + 1))
-    fi
-  done <<< "$added_lines"
+  local sources_section
+  sources_section=$(sed -n '/^## Sources/,$ p' "$SCRIPT_DIR/document.md")
 
-  if [[ $added_paragraphs -eq 0 ]]; then
-    log "Self-review: no substantive content added — PASS"
+  # --- Claude Judge Call (one per task, focused on hallucinations) ---
+  local review_file
+  review_file=$(mktemp "$SCRIPT_DIR/.review-XXXXXX.txt")
+
+  cat > "$review_file" <<REVIEWEOF
+You are a hallucination detector. Review ONLY the new content below.
+
+NEW CONTENT (just written by the researcher):
+${added_lines}
+
+AVAILABLE SOURCES:
+${sources_section}
+
+YOUR ONLY JOB: detect fabricated facts. Check for:
+1. HALLUCINATIONS: Are any facts, dates, quotes, or claims likely fabricated?
+   - Specific numbers without citation (e.g., "150 lines of code") — suspicious
+   - Exact dates without citation — suspicious if very specific
+   - Direct quotes without attribution — suspicious
+   - Named people, papers, or events that may not exist
+2. PHANTOM CITATIONS: Do any [N] references point to sources that don't exist?
+
+DO NOT flag:
+- Missing citations (that's a style issue, not hallucination)
+- Formatting problems
+- Confidence level mismatches
+- Issues in pre-existing content
+
+OUTPUT (one line only):
+PASS — if no hallucinations detected
+FAIL: [one-sentence description of the fabricated content]
+
+Be pragmatic. Real research with minor gaps should PASS.
+Only FAIL if you find content that is likely FABRICATED.
+REVIEWEOF
+
+  local -a claude_args=(-p --permission-mode acceptEdits --allowedTools "Read" --max-turns 2)
+
+  local review_result
+  review_result=$(cat "$review_file" | claude "${claude_args[@]}" 2>/dev/null || echo "PASS")
+  rm -f "$review_file"
+
+  # Parse result
+  if echo "$review_result" | grep -qi "^PASS"; then
+    log "Judge PASSED: no hallucinations detected"
     return 0
+  else
+    local fail_reason
+    fail_reason=$(echo "$review_result" | head -3)
+    log "Judge FAILED: $fail_reason"
+    gh issue comment "$issue_num" --body "Judge review: $fail_reason" 2>/dev/null || true
+    return 1
   fi
-
-  # Calculate citation rate
-  local citation_rate=0
-  if [[ $added_paragraphs -gt 0 ]]; then
-    citation_rate=$(( (cited_paragraphs * 100) / added_paragraphs ))
-  fi
-
-  log "Self-review: $cited_paragraphs/$added_paragraphs paragraphs cited (${citation_rate}%)"
-
-  # PASS if >=50% of new paragraphs have citations (pragmatic threshold)
-  # This avoids blocking good research that has some uncited context paragraphs
-  if [[ $citation_rate -ge 50 ]]; then
-    log "Self-review PASSED (${citation_rate}% citation rate)"
-    return 0
-  fi
-
-  # FAIL but log specific issues — no expensive Claude call
-  log "Self-review FAILED: only ${citation_rate}% of new paragraphs have [N] citations"
-  gh issue comment "$issue_num" --body "Self-review: ${cited_paragraphs}/${added_paragraphs} new paragraphs have inline [N] citations (${citation_rate}%). Need >=50%." 2>/dev/null || true
-  return 1
 }
 
 # ============================================================================
