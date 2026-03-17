@@ -1,0 +1,7 @@
+status.json
+research.log
+feedback.md
+pause.flag
+node_modules/
+.env
+*.pdf
