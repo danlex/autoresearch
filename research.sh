@@ -216,7 +216,7 @@ ${doc_section:-No existing content yet.}
 TASK: ${title}
 ${body}
 
-CURRENT SCORE: ${score} (lower is better, 0 = done)
+CURRENT SCORE: ${score}% (higher is better, 100% = done)
 ${feedback_block}
 ${comment_block}
 
@@ -226,15 +226,31 @@ INSTRUCTIONS:
    - Tier 1: Self-published content (subject's own blog/tweets/talks), official docs, institutional pages
    - Tier 2: Mainstream press, Wikipedia with citations
    - Tier 3: Blogs, aggregators — never rely on Tier 3 alone
-3. Update the relevant section in document.md with your findings.
-4. For each finding, note:
-   - Confidence: HIGH / MEDIUM / LOW
-   - Depth: HIGH / MEDIUM / LOW
-   - Sources with tier classification
-5. Add all sources to the ## Sources section of document.md with URLs.
-6. Be precise. Only state what sources confirm. Flag uncertainties.
-7. Do NOT modify sections outside your assigned area unless adding to Sources.
-8. Write findings as clear, factual prose — not bullet dumps.
+
+3. CITATION FORMAT — MANDATORY:
+   Every factual claim MUST have an inline citation using numbered references.
+   Format: "Karpathy joined OpenAI in December 2015 [1][2]."
+   Add each source to the ## Sources section as:
+   - [N] Description (Tier X) — URL
+
+   Example paragraph:
+   "Karpathy completed his PhD at Stanford under Fei-Fei Li [1]. His thesis
+   focused on visual recognition using convolutional neural networks [1][2].
+   He later joined OpenAI as a founding research scientist in December 2015 [3]."
+
+   EVERY paragraph of findings must have at least one [N] citation.
+   Paragraphs without citations will be flagged and scored as unreliable.
+
+4. For each subsection, add a metadata line:
+   **Confidence: HIGH/MEDIUM/LOW | Depth: HIGH/MEDIUM/LOW**
+   - HIGH confidence = 2+ Tier 1 sources agree
+   - MEDIUM confidence = 1 Tier 1 + Tier 2 sources
+   - LOW confidence = only Tier 2/3 sources
+
+5. Be precise. Only state what sources confirm. Flag uncertainties with **Uncertainty:** blocks.
+6. Do NOT modify sections outside your assigned area unless adding to Sources.
+7. Write findings as clear, factual prose — not bullet dumps.
+8. Never fabricate sources. If you cannot find a source, say so explicitly.
 
 WORKING DIRECTORY: ${SCRIPT_DIR}
 Edit the file: document.md
@@ -381,7 +397,7 @@ create_pr() {
 
 **Task:** #${issue_num} — ${title}
 **Type:** ${task_type}
-**Score:** ${old_score} -> ${new_score} (delta: $((old_score - new_score)))
+**Score:** ${old_score}% -> ${new_score}% (+$((new_score - old_score))%)
 
 ### Changes
 - Updated document.md with research findings
@@ -415,6 +431,9 @@ handle_pr_verdict() {
       gh issue edit "$issue_num" --add-label "implemented" --remove-label "awaiting-review"
       log "PR #${pr_num} auto-merged, Issue #${issue_num} closed"
       last_action="merged"
+
+      # Post-merge: update header, changelog, score
+      post_merge "$issue_num" "$pr_num"
     fi
     return
   fi
@@ -465,7 +484,172 @@ cleanup_failed() {
   git checkout main 2>/dev/null || true
   git branch -D "$branch" 2>/dev/null || true
   gh issue edit "$issue_num" --remove-label "in-progress" 2>/dev/null || true
+
+  # Track retry attempts via issue comments
+  local attempts
+  attempts=$(gh issue view "$issue_num" --json comments --jq '[.comments[].body | select(startswith("Attempt #"))] | length' 2>/dev/null || echo 0)
+  attempts=$((attempts + 1))
+  gh issue comment "$issue_num" --body "Attempt #${attempts}: Score did not improve. Reverting." 2>/dev/null || true
+
+  if [[ $attempts -ge 5 ]]; then
+    log "Issue #${issue_num} failed $attempts times — marking unanswerable"
+    gh issue edit "$issue_num" --add-label "unanswerable" --remove-label "accepted" 2>/dev/null || true
+    gh issue close "$issue_num" --comment "Marked unanswerable after $attempts failed attempts." 2>/dev/null || true
+  elif [[ $attempts -ge 3 ]]; then
+    log "Issue #${issue_num} failed $attempts times — marking hard-task"
+    gh issue edit "$issue_num" --add-label "hard-task" 2>/dev/null || true
+    gh issue comment "$issue_num" --body "Hard task: $attempts attempts. Retrying with extended search." 2>/dev/null || true
+  fi
+
   last_action="no_change"
+}
+
+# ============================================================================
+# Post-Merge Actions
+# ============================================================================
+
+post_merge() {
+  local issue_num="$1"
+  local pr_num="$2"
+
+  log "Post-merge: updating header, changelog, score..."
+
+  # Pull latest main (includes the merge)
+  git checkout main 2>/dev/null || true
+  git pull origin main 2>/dev/null || true
+
+  # 1. Update document.md header block
+  update_doc_header
+
+  # 2. Append to changelog
+  update_changelog "$issue_num" "$pr_num"
+
+  # 3. Commit post-merge updates
+  git add document.md changelog.md coverage.md 2>/dev/null || true
+  if ! git diff --cached --quiet 2>/dev/null; then
+    git -c user.name="Alexandru DAN" -c user.email="dan_lex@yahoo.com" \
+      commit -m "chore: post-merge update header + changelog (#${issue_num})" 2>/dev/null || true
+    git push origin main 2>/dev/null || true
+    log "Post-merge commit pushed"
+  fi
+}
+
+update_doc_header() {
+  local doc="$SCRIPT_DIR/document.md"
+  [[ -f "$doc" ]] || return
+
+  # Count sources
+  local source_count
+  source_count=$(grep -c '^\- \[' "$doc" 2>/dev/null || echo 0)
+
+  # Count total tasks and completed tasks
+  local total_tasks
+  total_tasks=$(gh issue list --label "task" --state all --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
+  total_tasks=${total_tasks:-0}
+  local done_tasks
+  done_tasks=$(gh issue list --label "task,implemented" --state closed --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
+  done_tasks=${done_tasks:-0}
+
+  # Compute coverage percentage
+  local coverage=0
+  if [[ "$total_tasks" -gt 0 ]]; then
+    coverage=$(( (done_tasks * 100) / total_tasks ))
+  fi
+
+  local today
+  today=$(date -u '+%Y-%m-%d')
+
+  # Replace the header line (line 2)
+  local new_header="Coverage: ${coverage}% | Tasks: ${done_tasks}/${total_tasks} | Sources: ${source_count} | Last updated: ${today}"
+  sed -i.bak "2s/.*/$new_header/" "$doc" && rm -f "$doc.bak"
+
+  log "Header updated: $new_header"
+}
+
+update_changelog() {
+  local issue_num="$1"
+  local pr_num="$2"
+  local changelog="$SCRIPT_DIR/changelog.md"
+
+  local title
+  title=$(gh issue view "$issue_num" --json title --jq '.title' 2>/dev/null || echo "Unknown task")
+  local today
+  today=$(date -u '+%Y-%m-%d')
+
+  cat >> "$changelog" <<CLEOF
+
+### ${today} — #${issue_num}: ${title}
+- PR: #${pr_num}
+- Score: ${score}
+- Action: merged
+CLEOF
+
+  log "Changelog appended: #${issue_num}"
+}
+
+# ============================================================================
+# Self-Review (lightweight hallucination check before merge)
+# ============================================================================
+
+self_review() {
+  local issue_num="$1"
+  local title="$2"
+  local doc_content
+  doc_content=$(cat "$SCRIPT_DIR/document.md")
+
+  log "Running self-review for Issue #${issue_num}..."
+
+  local review_prompt
+  review_prompt=$(cat <<REVIEWEOF
+You are a fact-checking reviewer. Analyze the document below for hallucinations and citation issues.
+
+DOCUMENT:
+${doc_content}
+
+CHECK EACH PARAGRAPH FOR:
+1. Does every factual claim have an inline citation [N]?
+   - If not, list the uncited claims.
+2. Do the cited source numbers [N] exist in the Sources section?
+   - If not, flag phantom citations.
+3. Are any claims suspiciously specific without a source?
+   (exact dates, quotes, numbers that seem fabricated)
+4. Does the confidence level match the source quality?
+   - HIGH requires 2+ Tier 1 sources
+   - MEDIUM requires 1 Tier 1
+   - LOW for Tier 2/3 only
+
+OUTPUT FORMAT (strict):
+PASS: [number of paragraphs checked]
+or
+FAIL: [list of specific issues, one per line]
+
+Be strict. If in doubt, FAIL.
+REVIEWEOF
+)
+
+  local review_file
+  review_file=$(mktemp "$SCRIPT_DIR/.review-XXXXXX.txt")
+  printf '%s' "$review_prompt" > "$review_file"
+
+  local -a claude_args=(-p --permission-mode acceptEdits --allowedTools "Read" --max-turns 3)
+  if [[ -n "${ANTHROPIC_API_KEY:-}" && "$ANTHROPIC_API_KEY" != "dummy-for-check" ]]; then
+    claude_args+=(--model "$model")
+  fi
+
+  local review_result
+  review_result=$(cat "$review_file" | claude "${claude_args[@]}" 2>/dev/null || echo "FAIL: review error")
+
+  rm -f "$review_file"
+
+  if echo "$review_result" | grep -q "^PASS"; then
+    log "Self-review PASSED"
+    return 0
+  else
+    log "Self-review FAILED: $review_result"
+    # Post review feedback as issue comment for next attempt
+    gh issue comment "$issue_num" --body "Self-review failed:\n${review_result}" 2>/dev/null || true
+    return 1
+  fi
 }
 
 # ============================================================================
@@ -648,20 +832,27 @@ main_loop() {
     new_score=$(compute_score)
     score=$new_score
 
-    log "Score: $old_score -> $new_score (delta: $((old_score - new_score)))"
+    log "Score: ${old_score}% -> ${new_score}% (delta: +$((new_score - old_score))%)"
 
-    # 11-12. Handle result
-    # For document/review tasks, score won't change (formula counts open tasks, not quality).
-    # Check if document.md was actually modified instead.
-    # Check if document.md was modified (covers all task types, not just score changes)
+    # Check if document.md was modified (covers all task types)
     local doc_changed=false
     if ! git diff --quiet -- document.md 2>/dev/null; then
       doc_changed=true
       log "Document modified by $task_type task"
     fi
 
-    if [[ $new_score -lt $old_score ]] || [[ "$doc_changed" == "true" ]]; then
-      log "Score improved! Creating PR..."
+    # Score improved (higher is better) OR document was modified
+    if [[ $new_score -gt $old_score ]] || [[ "$doc_changed" == "true" ]]; then
+      log "Score improved! Running self-review..."
+
+      # Self-review: check for hallucinations and citation issues
+      if ! self_review "$issue_num" "$title"; then
+        log "Self-review failed — treating as no improvement"
+        cleanup_failed "$issue_num" "$branch"
+        continue
+      fi
+
+      log "Self-review passed. Creating PR..."
 
       if create_pr "$issue_num" "$title" "$branch" "$task_type" "$old_score" "$new_score"; then
         last_action="improved"

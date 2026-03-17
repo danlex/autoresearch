@@ -1,0 +1,24 @@
+{
+  "name": "Autoresearch",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "postStartCommand": "bash deploy.sh",
+  "secrets": {
+    "ANTHROPIC_API_KEY": {
+      "description": "Anthropic API key for Claude Code CLI"
+    },
+    "CLAUDE_CODE_OAUTH_TOKEN": {
+      "description": "Alternative: Claude Code OAuth token (from claude setup-token)"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "timonwong.shellcheck"
+      ]
+    }
+  }
+}

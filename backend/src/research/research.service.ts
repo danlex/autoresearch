@@ -122,11 +122,11 @@ export class ResearchService {
   handleHourlyCron() {
     this.logger.log('Hourly cron: checking if research should run...');
     const score = this.getScore();
-    if (score > 0 && !this.isRunning()) {
-      this.logger.log(`Score is ${score}, starting research iteration`);
+    if (score < 100 && !this.isRunning()) {
+      this.logger.log(`Score is ${score}%, starting research iteration`);
       this.startResearch(3);
-    } else if (score === 0) {
-      this.logger.log('Score is 0 — all tasks complete');
+    } else if (score >= 100) {
+      this.logger.log('Score is 100% — all tasks complete');
     } else {
       this.logger.log('Research already running, skipping');
     }
