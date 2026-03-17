@@ -9,3 +9,8 @@
 - PR: #43
 - Score: 23
 - Action: merged
+
+### 2026-03-17 — #24: What specific products or curricula has Eureka Labs shipped?
+- PR: #47
+- Score: 29
+- Action: merged
