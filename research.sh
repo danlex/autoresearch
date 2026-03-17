@@ -367,7 +367,7 @@ run_research() {
 
   # Write prompt to temp file to avoid ARG_MAX limits on large documents
   local prompt_file
-  prompt_file=$(mktemp "$SCRIPT_DIR/.prompt-XXXXXX.txt")
+  prompt_file=$(mktemp "${TMPDIR:-/tmp}/autoresearch-prompt-XXXXXX")
   printf '%s' "$prompt" > "$prompt_file"
 
   # Build claude args — acceptEdits so Claude can write files without prompting
