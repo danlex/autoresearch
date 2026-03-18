@@ -1,5 +1,5 @@
 # Andrej Karpathy — Research Document
-Coverage: 65% | Tasks: 2/2 | Sources: 63 | Last updated: 2026-03-18
+Coverage: 68% | Tasks: 3/3 | Sources: 65 | Last updated: 2026-03-18
 
 ## Intellectual Contributions
 
@@ -49,6 +49,29 @@ On November 11, 2017, while serving as Tesla's Director of AI and Autopilot Visi
 - The exact clap count and view count for the original Medium post are not accessible; Medium returns a 403 on direct fetch. No secondary source documents these metrics.
 - The Spark+AI Summit 2018 talk video (YouTube ID y57wwucbXR8 per Tenstorrent [62]) was not independently verified against Databricks' official conference archive in this research pass.
 - The publication date of November 11, 2017 is sourced from the announcement tweet timestamp [56] and secondary coverage; the Medium post itself was not directly fetchable to confirm the internal datestamp.
+
+### Stanford PhD: Connecting Images and Natural Language (2016)
+
+**Confidence: HIGH | Depth: HIGH**
+
+Karpathy completed his PhD in the Stanford Computer Science Department in 2016, having enrolled in 2011. His dissertation, **"Connecting Images and Natural Language,"** is formally archived in the Stanford Digital Repository under a persistent URL [64] and catalogued in Stanford's SearchWorks library system [65]. The primary advisor was **Fei-Fei Li** of the Stanford Vision Lab; the thesis committee also included **Percy Liang** and **Christopher D. Manning** [64][65]. During the first-year rotation program he additionally worked with Daphne Koller, Andrew Ng, Sebastian Thrun, and Vladlen Koltun [1].
+
+**Core thesis.** The dissertation addresses bridging visual perception and linguistic communication through neural networks. Its organizing problem is enabling machines to move bidirectionally between images and language: generating text descriptions from images, and localizing image regions corresponding to textual queries [64]. Karpathy's approach used **hybrid convolutional-recurrent (CNN+RNN) architectures** rather than explicit rule-based pipelines — a design that generalized across multiple task formulations — and optimized them through unified end-to-end loss functions [64].
+
+**Key technical contributions.** The dissertation made four interrelated contributions [64]:
+
+1. **Multimodal embedding space.** A model that embeds both images and sentences into a shared vector space, enabling bidirectional retrieval — given an image, retrieve matching sentences; given a sentence, retrieve matching images.
+2. **Image captioning.** A model that generates novel sentence descriptions for images without relying on predefined template sets — generative, not retrieval-based.
+3. **Region localization and description.** A system that localizes all salient parts of an image and provides textual explanations for each; the inverse operation (locating image regions for a given concept across a collection) is also functional.
+4. **Unified end-to-end training.** All three capabilities implemented as differentiable architectures optimized through unified loss functions, enabling joint rather than pipeline-staged training.
+
+**Published work from the dissertation.** The thesis drew on and extended a sequence of conference papers: "Grounded Compositional Semantics for Finding and Describing Images with Sentences" (TACL 2013), "Deep Fragment Embeddings for Bidirectional Image-Sentence Mapping" (NeurIPS 2014, with Armand Joulin and Fei-Fei Li), "Large-Scale Video Classification with Convolutional Neural Networks" (CVPR 2014 Oral), and "Deep Visual-Semantic Alignments for Generating Image Descriptions" (CVPR 2015 Oral, with Fei-Fei Li) [1]. The final paper in the sequence, **"DenseCap: Fully Convolutional Localization Networks for Dense Captioning"** (CVPR 2016 Oral, with Justin Johnson and Fei-Fei Li), introduced the "dense captioning" task as a direct extension of the region-description contribution and appeared after the dissertation was submitted [1].
+
+**Significance.** The dissertation was completed at the intersection of computer vision and NLP at a moment when the two fields were largely separate research communities. The hybrid CNN+RNN architecture Karpathy formalized for image captioning — combining a convolutional feature extractor with a recurrent language decoder — was not yet the canonical approach when the work began; it subsequently became standard. The multimodal embedding framing and the generative captioning model contributed direct intellectual lineage to the image-captioning and visual question answering (VQA) subfields that emerged as active research areas by 2016–2017.
+
+**Uncertainty:**
+- The enrolled period "2011–2015" is reported on the karpathy.ai bio [1]; the dissertation is formally dated 2016 in the Stanford Digital Repository [64][65], consistent with a late-enrollment-year filing. The precise defense date is not documented in sources retrieved.
+- The karpathy.ai bio states working with Koller, Ng, Thrun, and Koltun during "the first year rotation program" but does not specify the nature or duration of each rotation.
 
 ## Education and Teaching
 
@@ -305,6 +328,8 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - [52] [GitHub — cs231n/cs231n.github.io (course notes repository)](https://github.com/cs231n/cs231n.github.io) — Official course notes repository; creation date January 5, 2015 visible in repository metadata; star/fork counts accessed March 2026
 - [53] [karpathy.github.io/neuralnets — "Hacker's Guide to Neural Networks"](http://karpathy.github.io/neuralnets/) — Karpathy self-published tutorial; states intent to avoid "full-page, dense derivations" in favor of code and "physical intuitions"; notes it was suspended to redirect energy toward teaching cs231n
 - [54] [cs231n.stanford.edu — course archive (all offerings)](https://cs231n.stanford.edu/) — Stanford official cs231n homepage; lists offerings from Winter 2015 through Spring 2025; Spring 2017 instructor listing (Fei-Fei Li, Justin Johnson, Serena Yeung) confirms Karpathy's absence after 2016
+- [64] [Stanford Digital Repository — "Connecting images and natural language" (Karpathy PhD dissertation, 2016)](https://purl.stanford.edu/wf528qt3314) — Tier 1; persistent university archive record; confirms title, year 2016, advisors Fei-Fei Li, Percy Liang, Christopher D. Manning, and abstract of core contributions
+- [65] [Stanford SearchWorks catalog — "Connecting images and natural language [electronic resource]"](https://searchworks.stanford.edu/view/11849345) — Tier 1; Stanford library catalog record; confirms title, year 2016, degree-granting institution Stanford University, Computer Science Department, same committee as [64]
 
 ### Tier 2 (Mainstream press / Wikipedia)
 - [12] [Wikipedia — Andrej Karpathy](https://en.wikipedia.org/wiki/Andrej_Karpathy)
@@ -337,7 +362,7 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - **[RESOLVED] Eureka Labs date:** July 2024 confirmed by two Tier 1 sources: Karpathy's announcement tweet [26] (July 16, 2024) and the Eureka Labs website [27]. The task issue's "2023" reference was incorrect.
 - **[UNRESOLVED] Feb 13 vs Feb 14 2024 departure:** Body text says "February 13, 2024"; source label says "Feb 14 2024." Note: the TechCrunch source URL contains `/2024/02/13/`, consistent with Feb 13 — but tweet timezone could explain the discrepancy. Must verify the tweet timestamp directly to resolve.
 - **[UNRESOLVED] OpenAI first departure month:** "June 2017" is stated in the body but only press sources cover this transition. No Tier 1 confirmation of the exact month exists in the document.
-- **[GAP] Stanford PhD and academic timeline:** The Education section is empty. The career timeline assumes a Stanford PhD but no dates, degree details, or advisor are documented anywhere. This is a required chain link before OpenAI 2015.
+- **[RESOLVED] Stanford PhD and academic timeline:** Dissertation title ("Connecting Images and Natural Language"), year (2016), advisor (Fei-Fei Li), and committee (Percy Liang, Christopher D. Manning) confirmed via two Tier 1 sources [64][65]. Core contributions documented. New subsection added to Intellectual Contributions. The "December 2015" OpenAI join date still requires a Tier 1 primary-source check to confirm sequencing against the 2016 formal dissertation filing date.
 - **[PARTIAL] Key Relationships and Collaborations:** Karpathy–Musk professional relationship (2017–2022) is now documented with Tier 1+2 sources. Remaining gaps: OpenAI co-founders (Ilya Sutskever, Greg Brockman), academic collaborators (Percy Liang, Tianlin Shi), and OpenAI second-stint colleagues are unresearched. Career timeline cross-check via collaborator timelines is therefore still incomplete.
 - **[RESOLVED] Task issue timeline vs document:** Eureka Labs founding confirmed as July 2024 via Tier 1 sources [26][27]. The task issue's "2023" reference was incorrect. Conflict resolved.
 - **[FILLED] Views on AI Future:** Section now populated with six subsections covering: early safety engagement (2015 blog story), philosophical cosmological frame (Lex Fridman #333, 2022), AGI timeline arc 2012–2025 (historical synthesis with [37][38]), AGI timeline skepticism detail (Dwarkesh 2025), near-term concrete risks (slopacolypse and Moltbook tweets, 2026), and safety spectrum characterization. Sourced from 6 Tier 1 primary sources [31][32][33][34][37][38] and 2 Tier 2 sources [17][35]. Confidence HIGH on most subsections; MEDIUM on Lex Fridman quotes pending official transcript verification.
