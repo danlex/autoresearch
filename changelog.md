@@ -39,3 +39,8 @@
 - PR: #67
 - Score: 47
 - Action: merged
+
+### 2026-03-18 — #7: What was Karpathy's PhD thesis title and core contributions?
+- PR: #71
+- Score: 49
+- Action: merged
