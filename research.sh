@@ -235,12 +235,16 @@ ${comment_block}
 
 INSTRUCTIONS:
 
-TURN BUDGET: You have 25 tool calls. Plan them:
-- Turns 1-12: Search (WebSearch + WebFetch)
-- Turns 13-15: Read document.md to see current content
-- Turns 16-25: Write findings to document.md + add sources
-ALWAYS write to document.md before you run out of turns.
-If at turn 15 you haven't written yet, STOP searching and WRITE NOW.
+WORKFLOW — Write incrementally, not at the end:
+1. Read document.md first to see existing content
+2. Search for ONE aspect of the question
+3. WRITE what you found to document.md immediately
+4. Search for the NEXT aspect
+5. WRITE again (append/update your section)
+6. Repeat until done or running low on turns
+
+NEVER save all writing for the end. Write after every 2-3 searches.
+You have 25 tool calls. If you reach turn 20 without writing, STOP and WRITE.
 
 1. Use WebSearch and WebFetch to find information about this specific question.
 2. Find at minimum 2 sources, with at least 1 Tier 1 source.
@@ -722,7 +726,7 @@ run_judge() {
   judge_file=$(mktemp)
   printf '%s' "$prompt_body" > "$judge_file"
 
-  local -a claude_args=(-p --permission-mode acceptEdits --allowedTools "Bash,Read,Write" --max-turns 5)
+  local -a claude_args=(-p --permission-mode acceptEdits --allowedTools "Bash,Read,Write" --max-turns 8)
   local result
   result=$(cat "$judge_file" | claude "${claude_args[@]}" 2>/dev/null || echo "APPROVE")
   rm -f "$judge_file"
