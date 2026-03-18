@@ -34,3 +34,8 @@
 - PR: #63
 - Score: 44
 - Action: merged
+
+### 2026-03-18 — #8: What is the 'Software 2.0' thesis and its industry impact?
+- PR: #67
+- Score: 47
+- Action: merged
