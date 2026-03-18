@@ -1,5 +1,5 @@
 # Andrej Karpathy — Research Document
-Coverage: 55% | Tasks: 1/1 | Sources: 36 | Last updated: 2026-03-17
+Coverage: 60% | Tasks: 1/1 | Sources: 38 | Last updated: 2026-03-18
 
 ## Intellectual Contributions
 
@@ -76,6 +76,36 @@ He described advanced AGI as potentially "completely inert" to humans — appear
 These observations are framed as philosophical speculation rather than warnings. He does not propose interventions and does not align with EA/longtermist framing of catastrophic risk.
 
 **Uncertainty:** The specific quotes from Lex Fridman Podcast #333 above were accessed via a third-party transcript service (podscripts.co — Tier 3). The underlying podcast [18] is the primary source; these quotes are confirmed consistent by multiple secondary sources but were not verified against an official transcript. Confidence is MEDIUM pending direct transcript verification.
+
+### AGI Timeline Views: From Early Pessimism to the Decade Estimate (2012–2025)
+
+**Confidence: HIGH | Depth: HIGH**
+
+Karpathy's stated views on AGI timelines span thirteen years of public record and show a distinctive arc: from indefinite pessimism (2012) to philosophical avoidance of specific dates (2022) to a concrete, anchored, and deliberately conservative ~decade estimate (2025). The arc does not follow the expected trajectory — his views grew *more* specific as AI capabilities accelerated, but plateaued at a calibrated "decade" rather than converging with the industry's increasingly compressed predictions.
+
+**2012: "Very, Very Far Away"**
+
+The earliest traceable timeline statement is his October 22, 2012 blog post titled "The state of Computer Vision and AI: we are really, really far away" [37]. Writing as a computer vision researcher, Karpathy argued that true scene understanding requires integrating 3D physics, social reasoning, and contextual knowledge in ways 2012 AI could not approach: "we are very, very far and this depresses me" [37]. He named fundamental gaps — embodiment, structured temporal experience, the absence of a conceptual roadmap — and concluded: "the road ahead is long, uncertain and unclear" [37]. No year estimate is offered; the implication is that AGI lies at an indefinite distance beyond any predictable horizon.
+
+**2022: Philosophical Engagement, No Specific Dates**
+
+By 2022, Karpathy's engagement with AGI had shifted from skeptical distance to speculative engagement — but still without year estimates. In Lex Fridman Podcast #333 (October 29, 2022), he offered expansive cosmological speculation about AI's eventual dominance without attaching timelines to any of it [18]. The framing was evolutionary and philosophical ("biological bootloader," "next stage of development") rather than predictive. He did not offer a decade estimate or a year for AGI arrival in that conversation, and he consistently declined to anchor speculation to a concrete benchmark — making precise timeline commitments structurally unavailable [18].
+
+**2025: "A Decade Away" — Specific, Anchored, Deliberately Conservative**
+
+The transition to a concrete estimate arrives in 2025. In the Dwarkesh Patel interview (October 2025) — whose episode title is itself "AGI is still a decade away" — Karpathy grounded his prediction in fifteen years of accumulated experience: "The problems are tractable, they're surmountable, but they're still difficult. If I just average it out, it just feels like a decade to me." [17] He used OpenAI's original operational definition — "a system you could go to that can do any economically valuable task at human performance or better" [17] — as his benchmark, enabling the timeline commitment he had previously declined to make. Obstacles he named as unsolved include continual learning, multimodality, computer use, and the broader cluster of "cognitive deficits" that make current models brittle autonomous agents [17].
+
+In a follow-up post on X after the interview, Karpathy made the conservative positioning explicit: "Ten years should otherwise be a very bullish timeline for AGI." [38] He described his view as approximately "5–10x pessimistic" relative to Silicon Valley consensus — framing himself as neither a denier nor a fellow traveler with the most accelerated predictions [35][38]. The contrast is stark: Sam Altman predicted AI surpassing any human in any specialty by 2030; Dario Amodei predicted AI "better than almost all humans at almost all things" by 2026–2027; Elon Musk predicted AGI "either this year or the next" [35]. Karpathy's decade estimate is an explicit correction to what he characterized as industry "hype productivity theater" [35].
+
+**The Definitional Shift**
+
+The transition from 2022's definitional agnosticism to 2025's concrete timeline reveals a methodological change. Without an agreed benchmark, no timeline prediction is coherent; Karpathy's adoption of OpenAI's original operational definition in 2025 was both a necessary precondition for the estimate and a substantive commitment he had previously withheld. The decade estimate is thus doubly informative: it states both his timeline belief and his chosen AGI benchmark.
+
+| Year | View | Source |
+|---|---|---|
+| 2012 | "Very, very far away" — indefinite, no year given | [37] |
+| 2022 | Philosophical/cosmological framing — avoids specific dates | [18] |
+| 2025 | "A decade away" — ~10 years, explicitly conservative vs. peers | [17][38] |
 
 ### AGI Timelines and Skepticism of Industry Hype (2025)
 
@@ -204,6 +234,8 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - [32] [X/Twitter — Karpathy "slopacolypse" / Claude coding thread (Jan 27, 2026)](https://x.com/karpathy/status/2015883857489522876)
 - [33] [X/Twitter — Karpathy Moltbook "dumpster fire" thread (Jan 30, 2026)](https://x.com/karpathy/status/2017442712388309406)
 - [34] [X/Twitter — Karpathy Moltbook initial reaction / "sci-fi takeoff-adjacent" (Jan 30, 2026)](https://x.com/karpathy/status/2017296988589723767)
+- [37] [karpathy.github.io — "The state of Computer Vision and AI: we are really, really far away" (Oct 22, 2012)](http://karpathy.github.io/2012/10/22/state-of-computer-vision/)
+- [38] [X/Twitter — Karpathy post-Dwarkesh: "Ten years should otherwise be a very bullish timeline for AGI" (~Oct 21–22, 2025)](https://x.com/karpathy/status/1979644538185752935)
 
 ### Tier 2 (Mainstream press / Wikipedia)
 - [12] [Wikipedia — Andrej Karpathy](https://en.wikipedia.org/wiki/Andrej_Karpathy)
@@ -234,7 +266,7 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - **[GAP] Stanford PhD and academic timeline:** The Education section is empty. The career timeline assumes a Stanford PhD but no dates, degree details, or advisor are documented anywhere. This is a required chain link before OpenAI 2015.
 - **[PARTIAL] Key Relationships and Collaborations:** Karpathy–Musk professional relationship (2017–2022) is now documented with Tier 1+2 sources. Remaining gaps: OpenAI co-founders (Ilya Sutskever, Greg Brockman), academic collaborators (Percy Liang, Tianlin Shi), and OpenAI second-stint colleagues are unresearched. Career timeline cross-check via collaborator timelines is therefore still incomplete.
 - **[RESOLVED] Task issue timeline vs document:** Eureka Labs founding confirmed as July 2024 via Tier 1 sources [26][27]. The task issue's "2023" reference was incorrect. Conflict resolved.
-- **[FILLED] Views on AI Future:** Section now populated with five subsections covering: early safety engagement (2015 blog story), philosophical cosmological frame (Lex Fridman #333, 2022), AGI timeline skepticism (Dwarkesh 2025), near-term concrete risks (slopacolypse and Moltbook tweets, 2026), and safety spectrum characterization. Sourced from 4 Tier 1 primary sources [31][32][33][34] and 2 Tier 2 sources [17][35]. Confidence HIGH on most subsections; MEDIUM on Lex Fridman quotes pending official transcript verification.
+- **[FILLED] Views on AI Future:** Section now populated with six subsections covering: early safety engagement (2015 blog story), philosophical cosmological frame (Lex Fridman #333, 2022), AGI timeline arc 2012–2025 (historical synthesis with [37][38]), AGI timeline skepticism detail (Dwarkesh 2025), near-term concrete risks (slopacolypse and Moltbook tweets, 2026), and safety spectrum characterization. Sourced from 6 Tier 1 primary sources [31][32][33][34][37][38] and 2 Tier 2 sources [17][35]. Confidence HIGH on most subsections; MEDIUM on Lex Fridman quotes pending official transcript verification.
 - **[FILLED] Eureka Labs section:** Section now populated with founding vision, pedagogical model, LLM101n course details, execution status, and nanochat. July 2024 date confirmed via Tier 1 sources [26][27]. LLM101n confirmed unshipped as of March 2026 [29]. nanochat (Oct 2025) is the only concrete released artifact traceable to the Eureka Labs mission [30]. No AI tutor product, beta users, or partnerships publicly announced.
 - **[UNVERIFIED] "December 2015" OpenAI founding date:** The body states Karpathy joined "in December 2015" but no source explicitly cited as providing this specific month. The karpathy.ai bio is listed as a Tier 1 source for "OpenAI roles" — it is unclear whether it specifies December or only the year. If the month comes from Wikipedia (Tier 2), this needs a Tier 1 confirmation. The month matters for sequencing against the Stanford PhD completion.
 - **[RESOLVED] Tesla departure (July 2022) — Tier 1 source added:** Karpathy's departure tweet [10] and Musk's farewell reply [11] are now cited as Tier 1 sources. July 13, 2022 is confirmed as the departure date.
