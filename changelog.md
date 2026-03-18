@@ -24,3 +24,8 @@
 - PR: #55
 - Score: 32
 - Action: merged
+
+### 2026-03-18 — #15: What is nanoGPT and why did it become a reference implementation?
+- PR: #59
+- Score: 43
+- Action: merged
