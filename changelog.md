@@ -44,3 +44,8 @@
 - PR: #71
 - Score: 49
 - Action: merged
+
+### 2026-03-18 — #1: Research Karpathy's academic work at Stanford
+- PR: #75
+- Score: 50
+- Action: merged
