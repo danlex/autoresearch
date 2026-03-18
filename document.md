@@ -1,5 +1,5 @@
 # Andrej Karpathy — Research Document
-Coverage: 65% | Tasks: 2/2 | Sources: 48 | Last updated: 2026-03-18
+Coverage: 65% | Tasks: 2/2 | Sources: 54 | Last updated: 2026-03-18
 
 ## Intellectual Contributions
 
@@ -29,7 +29,7 @@ He left OpenAI a second time on February 13, 2024. In his own words: "nothing 'h
 
 **Confidence: MEDIUM | Depth: MEDIUM**
 
-> **Review note:** nanoGPT is now fully sourced with multiple Tier 1 primary sources (GitHub README, tweets, companion video announcements) and Tier 2 academic citations — see the dedicated subsection below. The broader pedagogical principles section draws on those nanoGPT sources but cs231n, micrograd, and the Zero to Hero series remain without independent primary-source citations. Confidence has been upgraded from LOW to MEDIUM reflecting nanoGPT's full documentation; the section ceiling is HIGH once cs231n and micrograd receive equivalent treatment. The already-cited Lex Fridman Podcast #333 [18] and Dwarkesh Patel 2025 interview [17] remain natural candidates for first-person pedagogical-philosophy statements and have not yet been mined for this section.
+> **Review note:** nanoGPT and cs231n are now fully sourced with Tier 1 primary sources — see their dedicated subsections below. The broader pedagogical principles section draws on those sources but micrograd and the Zero to Hero series remain without independent primary-source citations. Confidence remains MEDIUM; the section ceiling is HIGH once micrograd and Zero to Hero receive equivalent treatment. The already-cited Lex Fridman Podcast #333 [18] and Dwarkesh Patel 2025 interview [17] remain natural candidates for first-person pedagogical-philosophy statements and have not yet been mined for this section.
 
 Karpathy's educational output spans four major public artifacts: **cs231n** (Stanford's Convolutional Neural Networks for Visual Recognition course, which he co-created and taught), **micrograd** (a minimalist autograd engine implemented in roughly 150 lines of pure Python), **nanoGPT** (a minimal, readable GPT-2 implementation created December 2022 [39]), and the **Zero to Hero** YouTube series (a video lecture series on building neural networks from scratch). The consistency across these four formats — lecture course, open-source library, reference implementation, video series — is itself diagnostic: all four are organized around the same three mutually reinforcing pedagogical principles.
 
@@ -57,9 +57,24 @@ nanoGPT was created by Karpathy and first committed to GitHub on **December 28, 
 
 **Why it became a reference implementation.** Three properties coexisted in nanoGPT that rarely appear together: (1) radical simplicity (two ~300-line files, no unnecessary abstractions), (2) verified performance against a known benchmark (GPT-2 at 124M parameters, reproducible on standard hardware), and (3) a companion lecture narrating the construction in full. Most open-source implementations trade simplicity for coverage; most educational implementations trade performance for legibility. nanoGPT refused both tradeoffs. A researcher or student could read the entire codebase in an afternoon, run it on accessible hardware, and trust the results against a published benchmark — qualities that made it the natural starting point for both teaching and research modification [39][40][41][47].
 
+### cs231n: Convolutional Neural Networks for Visual Recognition
+
+**Confidence: HIGH | Depth: HIGH**
+
+cs231n was first offered in **Winter 2015** at Stanford University as an entirely new class. The Stanford course website FAQ for the 2015 offering explicitly states: "Yes, this is an entirely new class designed to introduce students to deep learning in context of Computer Vision" [49]. The course GitHub notes repository (cs231n/cs231n.github.io) was created on **January 5, 2015**, coinciding with the first lecture [52].
+
+**Instructors and teaching tenure.** The 2015 offering was taught by **Fei-Fei Li** and **Andrej Karpathy**, with teaching assistants Justin Johnson, Yuke Zhu, Brett Kuprel, and Ben Poole [49]. In the 2016 offering (Winter 2015/2016), the division of labor became explicit: Karpathy was credited for class notes and lectures, Justin Johnson for assignments, and Fei-Fei Li for course administration [50]. Karpathy's teaching tenure spans exactly two offerings: Winter 2015 and Winter 2016. He is absent from the Spring 2017 instructors listing — Fei-Fei Li, Justin Johnson, and Serena Yeung — consistent with his June 2017 departure to Tesla [54].
+
+**Curriculum structure.** The course is organized around three modules. Module 0 covers software setup and Python/NumPy fundamentals. Module 1 (Neural Networks) covers image classification and data-driven approaches, k-nearest neighbor, linear classification via SVM and Softmax, optimization including stochastic gradient descent, backpropagation, neural network architecture and training strategies including activation functions, weight initialization, batch normalization, and hyperparameter optimization. Module 2 (Convolutional Neural Networks) covers convolution and pooling operations, CNN architectures with case studies (AlexNet, ZFNet, VGGNet), visualization techniques, transfer learning, and fine-tuning [52]. The 2016 offering extended coverage to include: spatial localization and object detection, adversarial examples and artistic style transfer, recurrent neural networks and LSTMs for image captioning, segmentation, attention models, spatial transformer networks, video convnets, and unsupervised learning — with an invited lecture by Jeff Dean [50]. The original 2015 syllabus covers a similar scope, with lectures spanning image classification through RNNs and attention models [51].
+
+**Pedagogical design.** Karpathy's approach in cs231n is consistent with his broader educational philosophy: intuition before formalism, construction before consumption. His "Hacker's Guide to Neural Networks" — an independent tutorial he suspended to redirect energy toward teaching cs231n — states his explicit intent to avoid "full-page, dense derivations" in favor of code and "physical intuitions," noting: "everything became much clearer when I started writing code" [53]. The course assigns require students to implement forward and backward passes of each layer in raw NumPy before any high-level framework is introduced, reflecting the same first-principles construction principle that would later characterize micrograd and nanoGPT. The course notes at cs231n.github.io are credited to Karpathy in the 2016 syllabus [50] and remain the primary public-facing artifact of his teaching tenure.
+
+**Online adoption.** The course notes repository (cs231n/cs231n.github.io) has accumulated **10,800 stars and 4,200 forks** on GitHub as of March 2026 [52]. The Stanford course website archives offerings from Winter 2015 through Spring 2025, confirming continuous delivery for over a decade [54]. The 2016 lecture recordings were posted to YouTube [playlist URL documented but not independently confirmed — see Uncertainty below]; the course is widely referenced in the ML education community as a foundational online resource for deep learning and computer vision, predating most MOOC-format alternatives by several years.
+
 **Uncertainty:**
-- Primary sources for cs231n (syllabi), micrograd (GitHub README), and the Zero to Hero YouTube series are not yet cited in this document. The characterizations of those artifacts derive from the task specification rather than independently verified research. nanoGPT is fully sourced as of this research pass.
+- Primary sources for micrograd (GitHub README) and the Zero to Hero YouTube series are not yet cited in this document. The characterizations of those artifacts derive from the task specification rather than independently verified research. cs231n and nanoGPT are fully sourced as of this research pass.
 - Lex Fridman Podcast #333 [18] and the Dwarkesh Patel 2025 interview [17] are already-cited sources that likely contain first-person statements about the broader pedagogical principles and should be reviewed to upgrade the overall section confidence to HIGH.
+- YouTube view counts for the 2016 cs231n lecture recordings could not be independently verified; the playlist URL is documented but view statistics are not cited.
 
 ## Views on AI Future
 
@@ -259,6 +274,12 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - [43] [GitHub — karpathy/build-nanogpt + YouTube "Let's reproduce GPT-2 (124M)" (Jun 2024)](https://github.com/karpathy/build-nanogpt)
 - [44] [X/Twitter — Karpathy nanoGPT retrospective and deprecation notice, 2025](https://x.com/karpathy/status/1939709449956126910)
 - [48] [X/Twitter — Karpathy endorses nanoGPT speedrun benchmark, Oct 2024](https://x.com/karpathy/status/1846790537262571739)
+- [49] [cs231n.stanford.edu — 2015 course FAQ (first offering)](https://cs231n.stanford.edu/2015/) — Stanford official course page; FAQ confirms "entirely new class designed to introduce students to deep learning in context of Computer Vision"; instructor listing for Winter 2015
+- [50] [cs231n.stanford.edu — 2016 syllabus/course page](https://cs231n.stanford.edu/2016/) — Stanford official; credits Karpathy for class notes and lectures, Justin Johnson for assignments, Fei-Fei Li for administration; 2016 extended syllabus topics
+- [51] [cs231n.stanford.edu — 2015 syllabus](https://cs231n.stanford.edu/2015/syllabus) — Stanford official; 2015 lecture schedule spanning image classification through RNNs and attention models
+- [52] [GitHub — cs231n/cs231n.github.io (course notes repository)](https://github.com/cs231n/cs231n.github.io) — Official course notes repository; creation date January 5, 2015 visible in repository metadata; star/fork counts accessed March 2026
+- [53] [karpathy.github.io/neuralnets — "Hacker's Guide to Neural Networks"](http://karpathy.github.io/neuralnets/) — Karpathy self-published tutorial; states intent to avoid "full-page, dense derivations" in favor of code and "physical intuitions"; notes it was suspended to redirect energy toward teaching cs231n
+- [54] [cs231n.stanford.edu — course archive (all offerings)](https://cs231n.stanford.edu/) — Stanford official cs231n homepage; lists offerings from Winter 2015 through Spring 2025; Spring 2017 instructor listing (Fei-Fei Li, Justin Johnson, Serena Yeung) confirms Karpathy's absence after 2016
 
 ### Tier 2 (Mainstream press / Wikipedia)
 - [12] [Wikipedia — Andrej Karpathy](https://en.wikipedia.org/wiki/Andrej_Karpathy)
