@@ -234,6 +234,14 @@ ${feedback_block}
 ${comment_block}
 
 INSTRUCTIONS:
+
+TURN BUDGET: You have 25 tool calls. Plan them:
+- Turns 1-12: Search (WebSearch + WebFetch)
+- Turns 13-15: Read document.md to see current content
+- Turns 16-25: Write findings to document.md + add sources
+ALWAYS write to document.md before you run out of turns.
+If at turn 15 you haven't written yet, STOP searching and WRITE NOW.
+
 1. Use WebSearch and WebFetch to find information about this specific question.
 2. Find at minimum 2 sources, with at least 1 Tier 1 source.
    - Tier 1: Self-published content (subject's own blog/tweets/talks), official docs, institutional pages
@@ -351,15 +359,15 @@ run_research() {
   case "$task_type" in
     research)
       tools="Bash,Read,Write,WebSearch,WebFetch"
-      max_turns=15
+      max_turns=25
       ;;
     document)
       tools="Bash,Read,Write"
-      max_turns=8
+      max_turns=12
       ;;
     review)
       tools="Bash,Read,Write"
-      max_turns=6
+      max_turns=8
       ;;
   esac
 
