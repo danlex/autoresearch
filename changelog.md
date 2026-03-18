@@ -29,3 +29,8 @@
 - PR: #59
 - Score: 43
 - Action: merged
+
+### 2026-03-18 — #13: What is the full curriculum and pedagogical design of cs231n?
+- PR: #63
+- Score: 44
+- Action: merged
