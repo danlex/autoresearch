@@ -14,3 +14,8 @@
 - PR: #47
 - Score: 29
 - Action: merged
+
+### 2026-03-18 — #19: What has Karpathy said about AI safety and existential risk?
+- PR: #51
+- Score: 30
+- Action: merged
