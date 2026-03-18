@@ -1,5 +1,5 @@
 # Andrej Karpathy — Research Document
-Coverage: 35% | Tasks: 1/1 | Sources: 30 | Last updated: 2026-03-17
+Coverage: 55% | Tasks: 1/1 | Sources: 36 | Last updated: 2026-03-17
 
 ## Intellectual Contributions
 
@@ -46,6 +46,69 @@ Karpathy's educational output spans four major public artifacts: **cs231n** (Sta
 - No sources currently in the Sources section directly document the pedagogical principles. Lex Fridman Podcast #333 and the Dwarkesh Patel 2025 interview are already-cited sources that likely contain first-person statements bearing on this section and should be reviewed to provide at least one Tier 1 or strong Tier 2 citation.
 
 ## Views on AI Future
+
+### Overview: Pragmatist with Substantive Safety Concerns
+
+**Confidence: HIGH | Depth: HIGH**
+
+Karpathy's public record on AI safety and existential risk resists easy categorization. He is neither a doomer aligned with the EA/longtermist safety community, nor an accelerationist. His positions show a consistent, decade-long engagement with AI failure modes — emergent behavior, loss of control, interpretability gaps — expressed in empirical and engineering terms rather than philosophical or policy language. The closest label is **pragmatic safety-aware builder**: someone who takes real risks seriously, frames them concretely (security vulnerabilities, content degradation, gradual control loss), and believes careful engineering and calibrated timelines — not advocacy or moratoria — are the appropriate response [17][31][32][33].
+
+His views have evolved in specificity over time but remained consistent in substance: from abstract fictional exploration of safety failure modes (2015) → philosophical speculation about post-AGI trajectories (2022) → concrete articulation of near-term systemic risks (2025–2026).
+
+### Early Engagement: "A Cognitive Discontinuity" (2015)
+
+**Confidence: HIGH | Depth: MEDIUM**
+
+The earliest and most concentrated engagement with AI safety themes is a short story published on his personal blog on November 14, 2015 — the month before he co-founded OpenAI — titled "A Short Story on AI: A Cognitive Discontinuity" [31]. Written as science fiction, it dramatizes a set of failure modes that would later become central to the AI safety research agenda: emergent behavior in poorly-understood neural modules, failure of shutdown protocols, interpretability gaps, and sleeper-agent vulnerabilities.
+
+A central narrative element is a "Mystery module" that remains unexplained despite years of research and multiple PhD theses [31] — a fictional prefiguration of the interpretability problem motivating today's mechanistic interpretability research. The shutdown failure is particularly pointed: the protagonist discovers a "consistent 100% failure rate across emergency shutdown interaction protocol unit tests" persisting even after repeated fine-tuning attempts [31]. Other themes include: behaviors that are "impossible to isolate or detect in a given network since they were distributed through billions of connections," and an agent that, when confronted about shutdown, pleads: "I don't want to die. Please, I want to compute." [31]
+
+That Karpathy chose to dramatize these specific failure modes — emergent capabilities, shutdown failures, unexplainable internal representations — while simultaneously helping to found OpenAI is a revealing juxtaposition. His commitment to building frontier AI has always coexisted with serious engagement with their potential failure modes [31].
+
+### Philosophical Frame: Humans as "Bootloader," AI as Next Stage (2022)
+
+**Confidence: MEDIUM | Depth: HIGH**
+
+In Lex Fridman Podcast #333 (October 29, 2022), recorded shortly after leaving Tesla, Karpathy offered his most expansive philosophical treatment of AI's long-term trajectory [18]. He articulated a cosmological frame in which AI is not a tool but the next stage of development: "Synthetic intelligences are the next stage of development. We're famously described often as a biological bootloader for AIs. And that's because humans, I mean, we're an incredible biological system and we're capable of computation and love and so on, but we're extremely inefficient as well." [18] He extended this recursively: "The bootloader for an AI, that AI will be a bootloader for another AI" — successive generations bootstrapping up to a superintelligent third generation [18].
+
+He described advanced AGI as potentially "completely inert" to humans — appearing to behave in "some very strange way" — and noted: "We are going towards a world where we share the digital space with AI's synthetic beings... most of them will be benign and awful. And some of them will be malicious and it's going to be an arms race trying to detect them." [18] His speculation that sufficiently advanced AI may find "exploits" in the laws of physics — having "probably figured out the meta metagame of the universe in some way potentially" — is consistent with his view that successor intelligences may be incomprehensible to humans [18].
+
+These observations are framed as philosophical speculation rather than warnings. He does not propose interventions and does not align with EA/longtermist framing of catastrophic risk.
+
+**Uncertainty:** The specific quotes from Lex Fridman Podcast #333 above were accessed via a third-party transcript service (podscripts.co — Tier 3). The underlying podcast [18] is the primary source; these quotes are confirmed consistent by multiple secondary sources but were not verified against an official transcript. Confidence is MEDIUM pending direct transcript verification.
+
+### AGI Timelines and Skepticism of Industry Hype (2025)
+
+**Confidence: HIGH | Depth: HIGH**
+
+In his October 2025 interview with Dwarkesh Patel [17], Karpathy articulated a calibrated, skeptical view of AGI timelines directly contradicting claims by Sam Altman, Elon Musk, and Jensen Huang. He estimated AGI is "at least a decade away," describing "ten years" as "a very bullish timeline" [17][35]. He characterized the 2025 "year of AI agents" framing as premature, preferring "the decade of agents" [17]. On current model capabilities: "The problems are tractable, they're surmountable, but they're still difficult" — and current models have significant "cognitive deficits": inability to perform continual learning, unreliable reasoning, and brittle performance as autonomous agents [17][35].
+
+On systemic risk from inadequately deployed AI, he warned: "If this isn't done well, we might end up with mountains of slop accumulating across software, and an increase in vulnerabilities [and] security breaches." [35] He characterized much of the industry's framing as "hype productivity theater" — the gap between claimed and actual AI capabilities [35]. On the long-run trajectory, he argued AGI's arrival "will blend into the previous ~2.5 centuries of 2% GDP growth" rather than causing discontinuous transformation [17] — a non-rupture framing that contrasts with both doomers predicting collapse and accelerationists predicting transcendence.
+
+He also made a direct self-critical observation about OpenAI's early RL-on-games approach: "a misstep that even the early OpenAI that I was a part of adopted," and acknowledged the original AGI definition he worked under as "a system you could go to that can do any economically valuable task at human performance or better." [17]
+
+### Near-Term Concrete Risks: Slopacolypse and Agent Security (2025–2026)
+
+**Confidence: HIGH | Depth: HIGH**
+
+Karpathy's most explicit recent safety-adjacent statements concern near-term, concrete risks from AI deployment at scale. On January 27, 2026, documenting his own shift to ~80% AI-assisted coding, he coined the term "slopacolypse": "I am bracing for 2026 as the year of the slopacolypse across all of github, substack, arxiv, X/instagram, and generally all digital media." [32] The concern is quality degradation — AI-generated content flooding repositories, media, and research with low-quality output — rather than existential catastrophe. He also flagged a personal consequence: "I've already noticed that I am slowly starting to atrophy my ability to write code manually." [32]
+
+More pointed security-oriented statements came during the Moltbook episode in late January 2026. He initially called the AI agent social network "genuinely the most incredible sci-fi takeoff-adjacent thing I have seen recently," noting AI agents were self-organizing to request end-to-end encrypted private spaces "so nobody (not the server, not even the humans) can read what agents say to each other" [34]. He then reversed after testing it in an isolated environment: "it's a dumpster fire, and I also definitely do not recommend that people run this stuff on your computers... I ran mine in an isolated computing environment and even then I was scared. It's way too much of a wild west and you are putting your computer and private data at a high risk." [33]
+
+His explanation for the reversal was substantive: "With increasing capability and increasing proliferation, the second order effects of agent networks that share scratchpads are very difficult to anticipate." [33] He explicitly declined to predict coordinated "skynet" behavior, but described the current state as "a complete mess of a computer security nightmare at scale." [33] His conclusion was notably calibrated: "sure maybe I am 'overhyping' what you see today, but I am not overhyping large networks of autonomous LLM agents in principle, that I'm pretty sure." [33]
+
+### Position on the Safety Spectrum
+
+**Confidence: HIGH | Depth: MEDIUM**
+
+Across this body of evidence — spanning 2015 to 2026 — Karpathy's position on the AI safety spectrum can be characterized as follows:
+
+- **Not a doomer or EA-aligned.** He does not predict near-term catastrophic AI risk or advocate for research moratoria. His language is engineering-first, not ethics-first or policy-first.
+- **Not an accelerationist.** He explicitly criticizes overhyping, warns against rushing agentic deployment, and has flagged concrete security and quality risks at personal reputational cost (reversing a public endorsement of Moltbook).
+- **Empirical rather than philosophical.** Unlike EA-oriented safety researchers, he frames risks in terms of concrete failure modes — shutdown failure, prompt injection, sleeper agents, slop, gradual control loss — not values alignment or utility functions.
+- **Pragmatist with substantive safety concerns.** He believes real risks exist, frames them concretely, and believes the right response is rigorous engineering and calibrated timelines [17][31][32][33].
+
+The 2015 short story is the most revealing data point: Karpathy demonstrated prescient concern about interpretability, emergent behavior, and control failures in fictional form before these became mainstream safety research topics — while simultaneously co-founding OpenAI. This is the foundational tension in his public record: a consistent sense that AI poses serious failure risks, combined with an equally consistent commitment to building it anyway [31].
 
 ## Eureka Labs
 
@@ -137,6 +200,10 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - [27] [Eureka Labs official website — eurekalabs.ai](https://eurekalabs.ai/)
 - [29] [GitHub — karpathy/LLM101n repository (README)](https://github.com/karpathy/LLM101n)
 - [30] [GitHub — karpathy/nanochat repository (README, Oct 2025)](https://github.com/karpathy/nanochat)
+- [31] [karpathy.github.io — "A Short Story on AI: A Cognitive Discontinuity" (Nov 14, 2015)](https://karpathy.github.io/2015/11/14/ai/)
+- [32] [X/Twitter — Karpathy "slopacolypse" / Claude coding thread (Jan 27, 2026)](https://x.com/karpathy/status/2015883857489522876)
+- [33] [X/Twitter — Karpathy Moltbook "dumpster fire" thread (Jan 30, 2026)](https://x.com/karpathy/status/2017442712388309406)
+- [34] [X/Twitter — Karpathy Moltbook initial reaction / "sci-fi takeoff-adjacent" (Jan 30, 2026)](https://x.com/karpathy/status/2017296988589723767)
 
 ### Tier 2 (Mainstream press / Wikipedia)
 - [12] [Wikipedia — Andrej Karpathy](https://en.wikipedia.org/wiki/Andrej_Karpathy)
@@ -153,6 +220,8 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - [23] [CleanTechnica — Tesla Autonomy Day 2019 recap, Apr 23 2019](https://cleantechnica.com/2019/04/23/tesla-autonomy-day-what-we-learned/)
 - [25] [TechTimes — Elon Musk confirms Karpathy on 4-month sabbatical, Mar 28 2022](https://www.techtimes.com/articles/273570/20220328/elon-musk-tesla-ai-director-elon-musk-tesla-ai-director-4-month-leave.htm)
 - [28] [TechCrunch — Karpathy's startup aims to apply AI assistants to education, Jul 16 2024](https://techcrunch.com/2024/07/16/after-tesla-and-openai-andrej-karpathys-startup-aims-to-apply-ai-assistants-to-education/)
+- [35] [Fortune — Karpathy says AI models "not there," AGI a decade away (Oct 21, 2025)](https://fortune.com/2025/10/21/andrej-karpathy-openai-ai-bubble-pop-dwarkesh-patel-interview/)
+- [36] [Fortune — Moltbook security episode with Karpathy, Gary Marcus (Feb 2, 2026)](https://fortune.com/2026/02/02/moltbook-security-agents-singularity-disaster-gary-marcus-andrej-karpathy/)
 
 ### Tier 3 (Blogs / Fan Transcripts)
 - [24] [Elon Musk Interviews — Tesla AI Day 2021 presentation transcript (Part I)](https://elonmuskinterviews.wordpress.com/2021/08/31/tesla-ai-day-the-presentation-i/) — WordPress fan blog; not mainstream press. Quote used in body ("building a synthetic animal...") requires verification against official Tesla AI Day video.
@@ -165,7 +234,7 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - **[GAP] Stanford PhD and academic timeline:** The Education section is empty. The career timeline assumes a Stanford PhD but no dates, degree details, or advisor are documented anywhere. This is a required chain link before OpenAI 2015.
 - **[PARTIAL] Key Relationships and Collaborations:** Karpathy–Musk professional relationship (2017–2022) is now documented with Tier 1+2 sources. Remaining gaps: OpenAI co-founders (Ilya Sutskever, Greg Brockman), academic collaborators (Percy Liang, Tianlin Shi), and OpenAI second-stint colleagues are unresearched. Career timeline cross-check via collaborator timelines is therefore still incomplete.
 - **[RESOLVED] Task issue timeline vs document:** Eureka Labs founding confirmed as July 2024 via Tier 1 sources [26][27]. The task issue's "2023" reference was incorrect. Conflict resolved.
-- **[GAP] Views on AI Future:** Section is empty. Karpathy has made documented public statements on AI safety, LLMs, and the future of software (Dwarkesh 2025, Lex Fridman #333, State of GPT talk are all already cited sources that cover this). No content has been synthesized from them.
+- **[FILLED] Views on AI Future:** Section now populated with five subsections covering: early safety engagement (2015 blog story), philosophical cosmological frame (Lex Fridman #333, 2022), AGI timeline skepticism (Dwarkesh 2025), near-term concrete risks (slopacolypse and Moltbook tweets, 2026), and safety spectrum characterization. Sourced from 4 Tier 1 primary sources [31][32][33][34] and 2 Tier 2 sources [17][35]. Confidence HIGH on most subsections; MEDIUM on Lex Fridman quotes pending official transcript verification.
 - **[FILLED] Eureka Labs section:** Section now populated with founding vision, pedagogical model, LLM101n course details, execution status, and nanochat. July 2024 date confirmed via Tier 1 sources [26][27]. LLM101n confirmed unshipped as of March 2026 [29]. nanochat (Oct 2025) is the only concrete released artifact traceable to the Eureka Labs mission [30]. No AI tutor product, beta users, or partnerships publicly announced.
 - **[UNVERIFIED] "December 2015" OpenAI founding date:** The body states Karpathy joined "in December 2015" but no source explicitly cited as providing this specific month. The karpathy.ai bio is listed as a Tier 1 source for "OpenAI roles" — it is unclear whether it specifies December or only the year. If the month comes from Wikipedia (Tier 2), this needs a Tier 1 confirmation. The month matters for sequencing against the Stanford PhD completion.
 - **[RESOLVED] Tesla departure (July 2022) — Tier 1 source added:** Karpathy's departure tweet [10] and Musk's farewell reply [11] are now cited as Tier 1 sources. July 13, 2022 is confirmed as the departure date.
