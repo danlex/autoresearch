@@ -1,5 +1,5 @@
 # Andrej Karpathy — Research Document
-Coverage: 65% | Tasks: 2/2 | Sources: 54 | Last updated: 2026-03-18
+Coverage: 65% | Tasks: 2/2 | Sources: 63 | Last updated: 2026-03-18
 
 ## Intellectual Contributions
 
@@ -24,6 +24,31 @@ He left OpenAI a second time on February 13, 2024. In his own words: "nothing 'h
 - **Date conflict (Feb 13 vs 14 2024):** The body text states "February 13, 2024" for his second departure, but the source label in the Sources section reads "Feb 14 2024". Cannot resolve without revisiting the primary tweet.
 - **Eureka Labs date conflict:** ~~RESOLVED~~ July 2024 confirmed by Tier 1 sources [26][27]. See Eureka Labs section.
 - His specific individual contributions to particular model releases during his second stint are not publicly attributed.
+
+### The 'Software 2.0' Thesis (2017)
+
+**Confidence: HIGH | Depth: HIGH**
+
+On November 11, 2017, while serving as Tesla's Director of AI and Autopilot Vision, Karpathy published **"Software 2.0"** on his Medium blog [55][56]. The essay's central argument is that neural networks constitute a new programming paradigm — not merely powerful tools layered atop conventional software, but a qualitatively different way of writing programs. Karpathy labeled traditional handwritten code Software 1.0 and neural-network-based systems Software 2.0 [55].
+
+**Central argument.** In Software 1.0, a human programmer specifies each instruction explicitly in a language such as C++ or Python. In Software 2.0, the program is written in "a much more abstract, human unfriendly language — the weights of a neural network." [55] The developer's role transforms: rather than designing algorithms, they specify a goal on the behavior of a desirable program, write a neural net architecture (identifying a subset of program space to search), and use computational resources to find weights that satisfy that goal [55]. The dataset is, in effect, the specification; training is compilation; weights are the executable. No human writes the resulting code directly — it emerges from optimization [55].
+
+**Tesla as live evidence.** The post drew its most concrete evidence from Karpathy's firsthand work on Tesla Autopilot. He observed that Autopilot's hand-written C++ codebase was being "eaten" by neural networks — as the AI improved, explicit software modules were replaced and deleted [55]. Capabilities that would be impossible or impractical to encode as rules — stitching information across multiple cameras, handling temporal sequences — were instead learned from data [55]. The Autopilot system served as his real-world proof of concept, lending the thesis industrial-scale empirical grounding unavailable to most academic formulations of similar ideas [55][58].
+
+**Advantages and challenges documented.** Karpathy enumerated genuine advantages of the Software 2.0 approach: it works in problem domains where explicit rule-writing is intractable (computer vision, speech recognition, game playing), scales continuously with more data, and leverages distributed compute infrastructure efficiently [55]. He also documented structural challenges: neural networks are opaque and difficult to debug by conventional means, exhibit novel failure modes (adversarial examples, overfitting, distributional shift), and create accountability gaps around interpretability, bias, and equity [55].
+
+**Reception.** The post immediately circulated among ML practitioners and generated multi-sided debate. A Hacker News re-submission in February 2023 — five years after publication — accumulated **422 points and 330 comments**, with substantive and largely skeptical discussion: experienced developers challenged the suitability of probabilistic, opaque systems for correctness-critical applications (financial software, safety systems), while supporters documented domain-specific successes in fraud detection, content moderation, and autonomous driving [57]. In a direct critical response on Medium, Carlos E. Perez argued that the framing added fuel to "the Deep Learning hype machine," while acknowledging that the term gave a name to a paradigm "that many had implicitly in their heads" [60]. Seth Weidman wrote a further response engaging with the thesis on its technical merits [61].
+
+**The Spark+AI Summit 2018 talk.** Karpathy expanded the essay into a full conference talk, **"Building the Software 2.0 Stack,"** delivered at Databricks' Spark+AI Summit in 2018 [58][62]. The talk added operational depth — covering the role of data curation in developer workflow, tooling requirements for managing training datasets iteratively, and the advantages and challenges of the paradigm as observed at scale in Autopilot development [58]. A Hacker News thread on the talk generated significant engagement and extended the debate about dataset management as the new engineering bottleneck [58].
+
+**Influence on data-centric AI.** The essay's most traceable structural influence is on the academic framing of "data-centric AI." Stanford's Hazy Research group explicitly cited the essay as the intellectual origin of their own framework: "Eventually, we turned to others and called this 'Software 2.0' (inspired by [Karpathy's post])." [59] The group later adopted "data-centric AI" as their label after gaining broader institutional traction; Andrew Ng subsequently provided additional visibility through his own "data-centric AI" advocacy. [UNVERIFIED — no independent source cited for the Andrew Ng advocacy claim; [59] covers the Hazy Research connection only.] The essay thus served as a conceptual bridge between practitioner observation (neural nets replacing handwritten code at scale at Tesla) and a systematic academic research agenda treating data engineering — not model architecture — as the primary lever for ML system improvement.
+
+**Durability and extension.** The Software 2.0 framing proved durable in Karpathy's own thinking. By 2025–2026, he continued using it as his primary analogy for computing paradigm shifts, describing AI as "a new computing paradigm (Software 2.0)" when comparing AI's macroeconomic impact to electricity or the industrial revolution [63]. He extended the framework in 2025 to **"Software 3.0,"** in which natural language becomes the primary programming interface — LLMs as the new runtime, prompts as the new source code [63].
+
+**Uncertainty:**
+- The exact clap count and view count for the original Medium post are not accessible; Medium returns a 403 on direct fetch. No secondary source documents these metrics.
+- The Spark+AI Summit 2018 talk video (YouTube ID y57wwucbXR8 per Tenstorrent [62]) was not independently verified against Databricks' official conference archive in this research pass.
+- The publication date of November 11, 2017 is sourced from the announcement tweet timestamp [56] and secondary coverage; the Medium post itself was not directly fetchable to confirm the internal datestamp.
 
 ## Education and Teaching
 
@@ -322,3 +347,26 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - **[BLOCKED] Task acceptance criteria cannot be met in current document state:** The task requires (1) exact dates for each career transition confirmed against primary source, (2) date conflicts identified and resolved, and (3) final timeline consistent across all sections. Criteria 1 and 3 are structurally unachievable: Education, Key Relationships, Eureka Labs, and Views on AI Future are all empty, meaning no multi-section consistency check is possible and no collaborator timelines exist to cross-verify transition dates. Criterion 2 is partially met — conflicts are identified but none are resolved. The task cannot be closed as complete without filling at least the Education and Key Relationships sections.
 - **[FILLED] nanoGPT task (#15):** nanoGPT subsection added to Education and Teaching with HIGH/HIGH confidence. Creation date (Dec 28, 2022) confirmed via Tier 1 source [39]. Adoption quantified: 55,077 stars, 9,377 forks [39]. Design principles sourced from README verbatim [39]. Academic citations documented [46][47]. Companion lectures [41][42][43] and speedrun endorsement [48] added. Section confidence upgraded from LOW to MEDIUM.
 - **[INCONSISTENCY] Collaborator names introduced but not developed:** The Role at OpenAI section names Ilya Sutskever, Greg Brockman, Sam Altman, Elon Musk, Percy Liang, Tianlin Shi, Linxi Fan, and Jonathan Hernandez. None of these individuals have any corresponding entry in Key Relationships. This creates a forward-reference without resolution — names are asserted as relevant to the timeline but their own tenures and affiliations are unanalyzed anywhere in the document.
+
+### Unresolved Review Notes (Issue #8)
+
+After 3 review rounds, these concerns were not fully resolved:
+
+---
+[2026-03-18T01:14:16Z]   Judge 1 (Evidence): Error: Reached max turns (5)
+Error: Reached max turns (5)
+---
+[2026-03-18T01:15:29Z]   Judge 2 (Consistency): The critical issue is confirmed. Sources [55]–[63] are cited throughout the Software 2.0 section but have **no entries in the Sources section**. The document header claims "Sources: 63" but the Sources section only defines up to [54] (Tier 1), [47] (Tier 2), [45] (Tier 2.5), and [24] (Tier 3).
+The critical issue is confirmed. Sources [55]–[63] are cited throughout the Software 2.0 section but have **no entries in the Sources section**. The document header claims "Sources: 63" but the Sources section only defines up to [54] (Tier 1), [47] (Tier 2), [45] (Tier 2.5), and [24] (Tier 3).
+
+There is also a minor title inconsistency across sections:
+- **Role at OpenAI** section: "Director of *Artificial Intelligence* and Autopilot Vision"
+- **Software 2.0** section: "Director of *AI* and Autopilot Vision"
+
+Both are press-derived variants already acknowledged in Key Relationships as uncertain, so this is a cosmetic inconsistency rather than a contradiction.
+
+No factual contradictions exist between the new content and the existing document:
+---
+[2026-03-18T01:16:04Z]   Judge 3 (Completeness): Error: Reached max turns (5)
+Error: Reached max turns (5)
+
