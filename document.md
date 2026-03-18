@@ -1,5 +1,5 @@
 # Andrej Karpathy — Research Document
-Coverage: 75% | Tasks: 3/3 | Sources: 68 | Last updated: 2026-03-18
+Coverage: 75% | Tasks: 3/3 | Sources: 72 | Last updated: 2026-03-18
 
 ## Intellectual Contributions
 
@@ -49,6 +49,37 @@ On November 11, 2017, while serving as Tesla's Director of AI and Autopilot Visi
 - The exact clap count and view count for the original Medium post are not accessible; Medium returns a 403 on direct fetch. No secondary source documents these metrics.
 - The Spark+AI Summit 2018 talk video (YouTube ID y57wwucbXR8 per Tenstorrent [62]) was not independently verified against Databricks' official conference archive in this research pass.
 - The publication date of November 11, 2017 is sourced from the announcement tweet timestamp [56] and secondary coverage; the Medium post itself was not directly fetchable to confirm the internal datestamp.
+
+### Tesla Autopilot: The Vision-Only Approach (2017–2022)
+
+**Confidence: HIGH | Depth: HIGH**
+
+Karpathy served as **Director of Artificial Intelligence and Autopilot Vision** at Tesla from June 2017 to July 13, 2022 — approximately five years [10][11][19]. He reported directly to Elon Musk and led the team responsible for computer vision, neural network architecture, data infrastructure, and the core Autopilot and Full Self-Driving (FSD) pipeline [19][24].
+
+**The vision-only strategic bet.** The defining technical commitment of Karpathy's tenure was Tesla's pivot to a camera-only perception system, eliminating radar and LiDAR in favor of pure neural network processing from eight cameras. In his **CVPR 2021 Workshop on Autonomous Vehicles keynote** (June 20, 2021), Karpathy stated: "Gave a talk at CVPR over the weekend on our recent work at Tesla Autopilot to estimate very accurate depth, velocity, acceleration with neural nets from vision. Necessary ingredients include: 1M car fleet data engine, strong AI team and a Supercomputer." [69] The CVPR talk demonstrated that vision-only neural networks could match or exceed radar-fused systems for depth, velocity, and acceleration estimation — the core sensing tasks for autonomous driving — at fleet scale [69][72]. Tesla formally removed the forward-facing radar from the Autopilot algorithm during Karpathy's tenure, betting that the combination of scale (approximately 1 million vehicles equipped with eight cameras [69]; 1.5 million per the later AI Day 2021 transcript [24]), data infrastructure, and neural network capacity would outperform sensor-fusion approaches that had remained difficult to generalize beyond mapped environments [72].
+
+**Tesla AI Day 2021 (August 19, 2021).** Karpathy gave the centerpiece technical presentation at Tesla's first public AI Day, providing a detailed end-to-end account of the Autopilot neural network stack [24][73]. His organizing metaphor: "We are effectively building a synthetic animal from the ground up." [24] The presentation documented four interrelated architectural components:
+
+1. **HydraNet architecture:** A shared backbone (RegNet residual network for feature extraction, BiFPN for multi-scale feature fusion) with multiple task-specific heads, enabling approximately 50 engineers to work in parallel on specialized capabilities before backbone retraining [24].
+2. **Temporal processing:** A feature queue combined with a spatial recurrent neural network, maintaining memory of road geometry and occluded objects across frames [24].
+3. **Multi-camera fusion:** Transformer modules enabling the network to reason about objects that span multiple camera views simultaneously [24].
+4. **Processing pipeline:** Eight cameras at 1280×960 pixel resolution, 12-bit integer image data, 36 Hz processing rate, converting raw image data into a 3D "vector space" representing lanes, curbs, traffic signs, vehicles, and their spatial relationships [24].
+
+**The Tesla Data Engine.** A central operational contribution Karpathy documented at both CVPR 2021 and Tesla AI Day was the **iterative data engine** — the closed-loop infrastructure linking the deployed fleet to training data collection. The dataset presented at CVPR 2021 comprised **1.5 petabytes**, **6 billion labeled objects**, and **1 million 10-second videos** [70]. Tesla deployed **221 manually-implemented triggers** across its fleet to identify specific training scenarios — edge cases, rare events, failure modes — enabling targeted data collection at scale [70]. For the Autopilot release covered at CVPR, this training loop ran **seven complete cycles** [70]. The approach treated the million-car fleet not merely as a product but as a continuously improving data-generating instrument, with data collection precisely steered by engineering decisions.
+
+**Tesla Autonomy Day 2019.** Karpathy also participated in Tesla's earlier **Autonomy Day** (April 22, 2019), where the company publicly presented its custom Full Self-Driving computer chip and the broader FSD AI architecture [23]. The event was Tesla's first comprehensive public disclosure of its autonomous driving system design and marked the debut of its in-house neural processing hardware.
+
+**Departure (July 13, 2022).** Karpathy announced his departure on July 13, 2022, following a four-month sabbatical that had begun in late March 2022 [10][25]. His departure tweet stated: "It's been a great pleasure to help Tesla towards its goals over the last 5 years and a difficult decision to part ways." [10] In subsequent public statements, he cited a desire to pursue personal projects in AI, open source, and education, saying he had "no concrete plans for what's next" but intended to "revisit my long-term passions around technical work." [14][15] Musk responded the same day: "Thanks for everything you have done for Tesla! It has been an honor working with you." [11] Press reporting framed the exit as a significant loss for the Autopilot team, coming days after Tesla had laid off 229 data annotation employees in San Mateo [15].
+
+**Legacy within Karpathy's intellectual trajectory.** The technical work at Tesla forms the empirical foundation for the "Software 2.0" thesis [55]: Karpathy's observation that handwritten C++ modules were being displaced by trained neural networks was drawn directly from Autopilot development. The data engine architecture he described — iterative fleet-scale data collection, targeted trigger deployment, human-in-the-loop labeling combined with neural network bootstrapping — anticipated later industry thinking about data-centric AI development. The CVPR 2021 talk and Tesla AI Day 2021 presentation together represent Karpathy's most detailed public disclosure of how large-scale industrial vision AI is developed and operated.
+
+**Uncertainty:**
+- Karpathy's exact role at Tesla Autonomy Day 2019 is not confirmed at the primary level; press coverage [23] describes the event but does not specify whether Karpathy presented or only attended.
+- The specific technical contributions attributable to Karpathy personally versus the broader Autopilot team cannot be delineated from public sources.
+- The departure reason is documented only through press reports [14][15] and Karpathy's brief public statements [10]. No extended primary-source explanation has surfaced.
+- The sabbatical announcement tweet (approximately March 27, 2022) is referenced in press sources [25] but its direct URL was not verified in this research pass.
+- The Tesla AI Day 2021 transcript source [24] is a fan-maintained WordPress blog (Tier 3); the quotes attributed to Karpathy should be verified against the official Tesla YouTube recording.
+- Fleet size discrepancy: Karpathy's CVPR 2021 tweet [69] states "1M car fleet"; the Tier 3 AI Day 2021 transcript [24] gives 1.5 million. These may reflect fleet growth between June and August 2021, but no Tier 1 or Tier 2 source confirms 1.5 million specifically.
 
 ### Stanford PhD: Connecting Images and Natural Language (2016)
 
@@ -340,6 +371,7 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - [66] [karpathy.github.io — "What I learned from competing against a ConvNet on ImageNet" (Sep 2, 2014)](http://karpathy.github.io/2014/09/02/what-i-learned-from-competing-against-a-convnet-on-imagenet/) — Tier 1; Karpathy's personal blog; primary source for the human accuracy experiment: 5.1% top-5 error rate vs GoogLeNet's 6.8% on 1,500 images (p = 0.022)
 - [67] [arXiv — Russakovsky et al. (incl. Karpathy), "ImageNet Large Scale Visual Recognition Challenge" (Sep 2014; IJCV 2015)](https://arxiv.org/abs/1409.0575) — Tier 1; ILSVRC benchmark survey paper; Karpathy's contribution credited as the human accuracy evaluation experiments
 - [68] [arXiv — Karpathy, Johnson, Li, "Visualizing and Understanding Recurrent Networks" (Jun 2015; ICLR 2016 Workshop)](https://arxiv.org/abs/1506.02078) — Tier 1; paper analyzing internal representations of LSTM language models; identifies interpretable cells tracking position within quotes, line counts, and code indentation
+- [69] [X/Twitter — Karpathy announces CVPR 2021 Tesla Autopilot talk (Jun 21, 2021)](https://x.com/karpathy/status/1407017269083865095) — Tier 1; Karpathy's self-posted announcement of his CVPR 2021 workshop keynote; primary source for vision-only approach quote: "estimate very accurate depth, velocity, acceleration with neural nets from vision. Necessary ingredients include: 1M car fleet data engine, strong AI team and a Supercomputer"
 
 ### Tier 2 (Mainstream press / Wikipedia)
 - [12] [Wikipedia — Andrej Karpathy](https://en.wikipedia.org/wiki/Andrej_Karpathy)
@@ -361,6 +393,8 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - [46] [ArXiv — Ganescu & Passerat-Palmbach, "Trust the Process: Zero-Knowledge ML to Enhance Trust in Generative AI" (AAAI Workshop PPAI-24, Feb 2024)](https://arxiv.org/abs/2402.06414)
 - [47] [ArXiv — Zhao et al., "The Automated LLM Speedrunning Benchmark: Reproducing NanoGPT Improvements" (Jun 2025)](https://arxiv.org/abs/2506.22419)
 - [59] [Stanford Hazy Research — "The Road to Software 2.0 or Data-Centric AI" (Jul 19, 2021)](https://hazyresearch.stanford.edu/data-centric-ai) — Tier 2; Stanford academic research group page by Chris Ré; explicitly credits Karpathy's essay as the origin of the group's "Software 2.0" framing; key quote: "Eventually, we turned to others and called this 'Software 2.0' (inspired by Karpathy's post)"
+- [72] [CleanTechnica — "Tesla's Andrej Karpathy Gives A Keynote At CVPR 2021 Workshop On Autonomous Driving" (Jun 21, 2021)](https://cleantechnica.com/2021/06/21/teslas-andrej-karpathy-gives-a-keynote-at-cvpo-2021-workshop-on-autonomous-driving/) — Tier 2; contemporaneous press report on CVPR 2021 keynote; documents Tesla's vision-only strategy and Karpathy's role as keynote speaker at the autonomous driving workshop
+- [73] [TechCrunch — "Top four highlights of Elon Musk's Tesla AI Day" (Aug 19, 2021)](https://techcrunch.com/2021/08/19/top-five-highlights-of-elon-musks-tesla-ai-day/) — Tier 2; contemporaneous mainstream press coverage of Tesla AI Day 2021; documents Karpathy's centerpiece technical presentation on the Autopilot neural network stack. Note: title says "four" but URL slug says "five" — likely a post-publication title edit by TechCrunch.
 
 ### Tier 2.5 (Community — GitHub issues / open-source project records)
 - [45] [GitHub — karpathy/nanoGPT issue #471 "Citing this project in research" (Apr 2024)](https://github.com/karpathy/nanoGPT/issues/471)
@@ -372,6 +406,7 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - [60] [Carlos E. Perez, "Is Deep Learning 'Software 2.0'?" Intuition Machine, Medium](https://medium.com/intuitionmachine/is-deep-learning-software-2-0-cc7ad46b138f) — Tier 3; direct critical response on Medium; Perez acknowledges the term named "what many had implicitly in their heads" while challenging Karpathy's claimed advantages; page returned 403 on direct fetch — URL confirmed from search results
 - [61] [Seth Weidman, "On Andrej Karpathy's 'Software 2.0,'" Medium](https://medium.com/@sethweidman/on-andrej-karpathys-software-2-0-a293cc15357) — Tier 3; technical response arguing the essay describes a shift in how software runs rather than how it is developed; page returned 403 on direct fetch — URL confirmed from search results
 - [62] [Tenstorrent — "The Classic Andrej Software 2.0"](https://tenstorrent.com/vision/the-classic-andrej-software-2-0) — Tier 3; secondary page embedding YouTube ID y57wwucbXR8 for the Spark+AI Summit 2018 keynote "Building the Software 2.0 Stack"
+- [70] [Dynamically Typed — "Karpathy on Tesla Autopilot at CVPR'21" (Jun 2021)](https://dynamicallytyped.com/stories/2021/karpathy-autopilot-cvpr/) — Tier 3; ML newsletter summary of CVPR 2021 keynote; provides dataset scale details (1.5PB, 6B labeled objects, 1M videos, 221 triggers) and describes the iterative data engine training cycle (7 passes); useful for technical numbers not captured in Tier 2 coverage
 
 ## Open Questions
 
