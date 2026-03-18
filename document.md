@@ -227,7 +227,7 @@ The 2015 short story is the most revealing data point: Karpathy demonstrated pre
 
 **Confidence: HIGH | Depth: MEDIUM**
 
-Karpathy announced Eureka Labs on July 16, 2024 via a detailed post on X/Twitter [26], describing it as "a new kind of school that is AI native." The company name derives from the ancient Greek "I have found it," chosen to reflect the discovery moment when a concept crystallizes for a learner [26][28].
+Karpathy announced Eureka Labs on July 16, 2024 via a detailed post on X/Twitter [26], describing it as "a new kind of school that is AI native." The company name derives from the ancient Greek "I have found it," chosen to reflect the discovery moment when a concept crystallizes for a learner [26][28]. No co-founders or investors have been publicly disclosed; the venture appears to be a solo founding [26][27].
 
 ### The Pedagogical Model
 
@@ -383,6 +383,7 @@ On organizational dynamics, Karpathy characterized Musk as a consistent force ag
 - **[RESOLVED] Task issue timeline vs document:** Eureka Labs founding confirmed as July 2024 via Tier 1 sources [26][27]. The task issue's "2023" reference was incorrect. Conflict resolved.
 - **[FILLED] Views on AI Future:** Section now populated with six subsections covering: early safety engagement (2015 blog story), philosophical cosmological frame (Lex Fridman #333, 2022), AGI timeline arc 2012–2025 (historical synthesis with [37][38]), AGI timeline skepticism detail (Dwarkesh 2025), near-term concrete risks (slopacolypse and Moltbook tweets, 2026), and safety spectrum characterization. Sourced from 6 Tier 1 primary sources [31][32][33][34][37][38] and 2 Tier 2 sources [17][35]. Confidence HIGH on most subsections; MEDIUM on Lex Fridman quotes pending official transcript verification.
 - **[FILLED] Eureka Labs section:** Section now populated with founding vision, pedagogical model, LLM101n course details, execution status, and nanochat. July 2024 date confirmed via Tier 1 sources [26][27]. LLM101n confirmed unshipped as of March 2026 [29]. nanochat (Oct 2025) is the only concrete released artifact traceable to the Eureka Labs mission [30]. No AI tutor product, beta users, or partnerships publicly announced.
+- **[UNRESOLVED] Source [71] cited but undefined:** The Eureka Labs section cites [71] twice — for the June 21, 2024 LLC incorporation date and for the claim that no co-founders or investors appear in the public incorporation record. No entry for [71] exists in the Sources section. This is the same class of issue that Judge 2 flagged for [55]–[63]. The source is described in context as a Delaware Secretary of State or OpenCorporates LLC filing record. A future research pass must locate and add this entry, or replace [71] with a verifiable alternative source. The LLC incorporation date and sole-founder claim are currently unsourced at the primary level.
 - **[UNVERIFIED] "December 2015" OpenAI founding date:** The body states Karpathy joined "in December 2015" but no source explicitly cited as providing this specific month. The karpathy.ai bio is listed as a Tier 1 source for "OpenAI roles" — it is unclear whether it specifies December or only the year. If the month comes from Wikipedia (Tier 2), this needs a Tier 1 confirmation. The month matters for sequencing against the Stanford PhD completion.
 - **[RESOLVED] Tesla departure (July 2022) — Tier 1 source added:** Karpathy's departure tweet [10] and Musk's farewell reply [11] are now cited as Tier 1 sources. July 13, 2022 is confirmed as the departure date.
 - **[BLOCKED] Task acceptance criteria cannot be met in current document state:** The task requires (1) exact dates for each career transition confirmed against primary source, (2) date conflicts identified and resolved, and (3) final timeline consistent across all sections. Criteria 1 and 3 are structurally unachievable: Education, Key Relationships, Eureka Labs, and Views on AI Future are all empty, meaning no multi-section consistency check is possible and no collaborator timelines exist to cross-verify transition dates. Criterion 2 is partially met — conflicts are identified but none are resolved. The task cannot be closed as complete without filling at least the Education and Key Relationships sections.
@@ -409,5 +410,19 @@ Both are press-derived variants already acknowledged in Key Relationships as unc
 No factual contradictions exist between the new content and the existing document:
 ---
 [2026-03-18T01:16:04Z]   Judge 3 (Completeness): Error: Reached max turns (5)
+Error: Reached max turns (5)
+---
+[2026-03-18T01:16:04Z]   Judge 3 (Completeness, task #4 Eureka Labs): Source [71] is cited twice in the Eureka Labs section (LLC incorporation date; sole-founder claim) but has no entry in the Sources section. The document header reads "Sources: 68" which is inconsistent with [71] being cited. The substantive Eureka Labs content (founding vision, pedagogical model, LLM101n, nanochat, execution status) is complete and well-sourced via [26][27][29][30]. The single gap is the undefined [71] entry — a Delaware LLC filing record that cannot be verified or linked without the actual source URL.
+
+
+### Unresolved Review Notes (Issue #4)
+
+After 3 review rounds, these concerns were not fully resolved:
+
+---
+[2026-03-18T02:05:30Z]   Judge 1 (Evidence): Error: Reached max turns (5)
+Error: Reached max turns (5)
+---
+[2026-03-18T02:06:07Z]   Judge 2 (Consistency): Error: Reached max turns (5)
 Error: Reached max turns (5)
 
