@@ -84,3 +84,8 @@
 - PR: #96
 - Score: 66
 - Action: merged
+
+### 2026-03-19 — #78: How does the 2015 'Visualizing and Understanding Recurrent Networks' paper connect to today's mechanistic interpretability research agenda?
+- PR: #99
+- Score: 68
+- Action: merged
