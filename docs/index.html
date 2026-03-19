@@ -270,72 +270,36 @@
     td { padding: 0.75rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; color: #d4d4d8; }
     tr:hover td { background: var(--surface); }
 
-    /* Section submenu (sticky sidebar on desktop, horizontal scroll on mobile) */
-    .page-layout { display: grid; grid-template-columns: 200px 1fr; gap: 2rem; align-items: start; }
-    .section-nav {
+    /* Section submenu — horizontal bar under main nav */
+    .section-bar {
+      display: flex;
+      gap: 0.2rem;
+      padding: 0.4rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 2.5rem;
+      overflow-x: auto;
       position: sticky;
-      top: 5rem;
-      max-height: calc(100vh - 6rem);
-      overflow-y: auto;
-      padding: 1rem 0;
+      top: 4.5rem;
+      z-index: 99;
+      backdrop-filter: blur(12px);
+      -webkit-overflow-scrolling: touch;
     }
-    .section-nav a {
-      display: block;
-      padding: 0.4rem 0.75rem;
-      margin: 0.1rem 0;
+    .section-bar::-webkit-scrollbar { height: 0; }
+    .section-bar a {
+      white-space: nowrap;
       color: var(--dim);
       text-decoration: none;
-      font-size: 0.82rem;
-      border-radius: 6px;
-      border-left: 2px solid transparent;
-      transition: all 0.15s ease;
-      line-height: 1.4;
-    }
-    .section-nav a:hover { color: var(--text-secondary); background: var(--surface); border-left-color: var(--border); text-decoration: none; }
-    .section-nav a.active { color: var(--amber); background: rgba(245,158,11,0.08); border-left-color: var(--amber); font-weight: 600; }
-    .section-nav .nav-label {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--dim);
-      padding: 0.75rem 0.75rem 0.3rem;
-      font-weight: 600;
-    }
-    .section-nav .nav-divider { border-top: 1px solid var(--border); margin: 0.5rem 0.75rem; }
-    .page-content { min-width: 0; }
-
-    /* Back to top */
-    .back-top {
-      display: inline-block;
-      margin: 2rem 0;
-      color: var(--dim);
       font-size: 0.8rem;
-      text-decoration: none;
-      transition: color 0.15s;
+      font-weight: 500;
+      padding: 0.45rem 0.9rem;
+      border-radius: 7px;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
     }
-    .back-top:hover { color: var(--text-secondary); text-decoration: none; }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .page-layout { grid-template-columns: 1fr; }
-      .section-nav {
-        position: relative;
-        top: 0;
-        display: flex;
-        gap: 0.25rem;
-        overflow-x: auto;
-        padding: 0.5rem;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        margin-bottom: 1.5rem;
-        max-height: none;
-      }
-      .section-nav a { white-space: nowrap; border-left: none; border-bottom: 2px solid transparent; padding: 0.4rem 0.75rem; }
-      .section-nav a.active { border-left: none; border-bottom-color: var(--amber); }
-      .section-nav .nav-label { display: none; }
-      .section-nav .nav-divider { display: none; }
-    }
+    .section-bar a:hover { color: var(--text-secondary); background: var(--surface-hover); text-decoration: none; }
+    .section-bar a.active { color: var(--amber); background: rgba(245,158,11,0.1); font-weight: 600; }
     @media (max-width: 640px) {
       body { padding: 1rem; }
       h1 { font-size: 1.8rem; }
@@ -415,7 +379,7 @@
         <strong>Key Relationships</strong>
         <p>Elon Musk, Fei-Fei Li, Ilya Sutskever, collaborations</p>
       </a>
-    </div><div class="page-layout"><div class="section-nav"><div class="nav-label">Sections</div><a href="#intellectual-contributions">Intellectual Contributions</a><a href="#role-at-openai" style="padding-left: 1.5rem; font-size: 0.78rem;">Role at OpenAI</a><a href="#the-software-2-0-thesis-2017" style="padding-left: 1.5rem; font-size: 0.78rem;">The 'Software 2.0' Thesis (2017)</a><a href="#the-software-3-0-thesis-2025" style="padding-left: 1.5rem; font-size: 0.78rem;">The 'Software 3.0' Thesis (2025)</a><a href="#tesla-autopilot-the-vision-only-approach-2017-2022" style="padding-left: 1.5rem; font-size: 0.78rem;">Tesla Autopilot: The Vision-Only Approach (20...</a><a href="#stanford-phd-connecting-images-and-natural-language-2016" style="padding-left: 1.5rem; font-size: 0.78rem;">Stanford PhD: Connecting Images and Natural L...</a><a href="#visualizing-and-understanding-recurrent-networks-and-the-mec" style="padding-left: 1.5rem; font-size: 0.78rem;">'Visualizing and Understanding Recurrent Netw...</a><a href="#the-nanogpt-speedrun-and-the-muon-optimizer-2024-present" style="padding-left: 1.5rem; font-size: 0.78rem;">The nanoGPT Speedrun and the Muon Optimizer (...</a><div class="nav-divider"></div><a href="#education-and-teaching">Education and Teaching</a><a href="#nanogpt-creation-design-and-reception" style="padding-left: 1.5rem; font-size: 0.78rem;">nanoGPT: Creation, Design, and Reception</a><a href="#cs231n-convolutional-neural-networks-for-visual-recognition" style="padding-left: 1.5rem; font-size: 0.78rem;">cs231n: Convolutional Neural Networks for Vis...</a><div class="nav-divider"></div><a href="#views-on-ai-future">Views on AI Future</a><a href="#overview-pragmatist-with-substantive-safety-concerns" style="padding-left: 1.5rem; font-size: 0.78rem;">Overview: Pragmatist with Substantive Safety ...</a><a href="#early-engagement-a-cognitive-discontinuity-2015" style="padding-left: 1.5rem; font-size: 0.78rem;">Early Engagement: "A Cognitive Discontinuity"...</a><a href="#philosophical-frame-humans-as-bootloader-ai-as-next-stage-20" style="padding-left: 1.5rem; font-size: 0.78rem;">Philosophical Frame: Humans as "Bootloader," ...</a><a href="#agi-timeline-views-from-early-pessimism-to-the-decade-estima" style="padding-left: 1.5rem; font-size: 0.78rem;">AGI Timeline Views: From Early Pessimism to t...</a><a href="#agi-timelines-and-skepticism-of-industry-hype-2025" style="padding-left: 1.5rem; font-size: 0.78rem;">AGI Timelines and Skepticism of Industry Hype...</a><a href="#near-term-concrete-risks-slopacolypse-and-agent-security-202" style="padding-left: 1.5rem; font-size: 0.78rem;">Near-Term Concrete Risks: Slopacolypse and Ag...</a><a href="#capability-jumps-and-safety-views-gpt-4-and-o1" style="padding-left: 1.5rem; font-size: 0.78rem;">Capability Jumps and Safety Views: GPT-4 and ...</a><a href="#position-on-the-safety-spectrum" style="padding-left: 1.5rem; font-size: 0.78rem;">Position on the Safety Spectrum</a><div class="nav-divider"></div><a href="#eureka-labs">Eureka Labs</a><a href="#the-pedagogical-model" style="padding-left: 1.5rem; font-size: 0.78rem;">The Pedagogical Model</a><a href="#ai-tutor-design-elaborations-from-the-dwarkesh-patel-intervi" style="padding-left: 1.5rem; font-size: 0.78rem;">AI Tutor Design: Elaborations from the Dwarke...</a><a href="#agi-timeline-as-founding-context" style="padding-left: 1.5rem; font-size: 0.78rem;">AGI Timeline as Founding Context</a><a href="#llm101n-the-first-course" style="padding-left: 1.5rem; font-size: 0.78rem;">LLM101n — The First Course</a><a href="#nanochat-the-closest-shipped-artifact-and-the-nanochat-llm10" style="padding-left: 1.5rem; font-size: 0.78rem;">nanochat — The Closest Shipped Artifact and t...</a><a href="#execution-status-summary" style="padding-left: 1.5rem; font-size: 0.78rem;">Execution Status Summary</a><a href="#corporate-and-funding-structure" style="padding-left: 1.5rem; font-size: 0.78rem;">Corporate and Funding Structure</a><a href="#personal-motivation" style="padding-left: 1.5rem; font-size: 0.78rem;">Personal Motivation</a><div class="nav-divider"></div><a href="#key-relationships">Key Relationships</a><a href="#karpathy-and-elon-musk-2017-2022" style="padding-left: 1.5rem; font-size: 0.78rem;">Karpathy and Elon Musk (2017–2022)</a><div class="nav-divider"></div><a href="#sources-section">Sources</a><a href="#" class="back-top" style="margin-top: 1rem;">Back to top</a></div><div class="page-content"><div id="intellectual-contributions"><h2>Intellectual Contributions</h2>
+    </div><div class="section-bar" id="section-bar"><a href="#intellectual-contributions">Intellectual Contributions</a><a href="#education-and-teaching">Education and Teaching</a><a href="#views-on-ai-future">Views on AI Future</a><a href="#eureka-labs">Eureka Labs</a><a href="#key-relationships">Key Relationships</a><a href="#sources-section">Sources</a></div><div id="intellectual-contributions"><h2>Intellectual Contributions</h2>
 
 <p>Karpathy's intellectual contributions span three mutually reinforcing domains: foundational academic research in multimodal vision-language models (Stanford PhD, 2011–2016), industrial-scale architectural innovation in autonomous driving perception (Tesla Autopilot, 2017–2022), and paradigm-framing conceptual work on neural-network-based programming (Software 2.0, 2017; extended to Software 3.0, 2025). These are not sequential phases but deeply interconnected: the Autopilot work generated the firsthand empirical evidence behind the Software 2.0 thesis; the PhD research established the CNN+RNN and multimodal embedding foundations that informed the vision-only approach at scale; and the Software 2.0 framing shaped the academic data-centric AI research agenda. His two OpenAI stints (December 2015–June 2017, February 2023–February 2024) provide context for earlier RL and web-agent work and the later GPT-era contributions, including the widely adopted "State of GPT" (2023) presentation.</p>
 
@@ -1109,26 +1073,25 @@
 <li><sup class="cite">[61]</sup> <a href="https://medium.com/@sethweidman/on-andrej-karpathys-software-2-0-a293cc15357" target="_blank">Seth Weidman, "On Andrej Karpathy's 'Software 2.0,'" Medium</a> — Tier 3; technical response arguing the essay describes a shift in how software runs rather than how it is developed; page returned 403 on direct fetch — URL confirmed from search results</li>
 <li><sup class="cite">[62]</sup> <a href="https://tenstorrent.com/vision/the-classic-andrej-software-2-0" target="_blank">Tenstorrent — "The Classic Andrej Software 2.0"</a> — Tier 3; secondary page embedding YouTube ID y57wwucbXR8 for the Spark+AI Summit 2018 keynote "Building the Software 2.0 Stack"</li>
 <li><sup class="cite">[70]</sup> <a href="https://dynamicallytyped.com/stories/2021/karpathy-autopilot-cvpr/" target="_blank">Dynamically Typed — "Karpathy on Tesla Autopilot at CVPR'21" (Jun 2021)</a> — Tier 3; ML newsletter summary of CVPR 2021 keynote; provides dataset scale details (1.5PB, 6B labeled objects, 1M videos, 221 triggers) and describes the iterative data engine training cycle (7 passes); useful for technical numbers not captured in Tier 2 coverage</li>
-<p></ul></p></div></div></div>
+<p></ul></p></div>
   <script>
-    // Highlight active section in sidebar on scroll
-    const navLinks = document.querySelectorAll('.section-nav a[href^="#"]');
-    const sections = [];
-    navLinks.forEach(link => {
+    const barLinks = document.querySelectorAll('.section-bar a[href^="#"]');
+    const sects = [];
+    barLinks.forEach(link => {
       const id = link.getAttribute('href').slice(1);
       const el = document.getElementById(id);
-      if (el) sections.push({ el, link });
+      if (el) sects.push({ el, link });
     });
-    function updateActive() {
-      let current = sections[0];
-      for (const s of sections) {
-        if (s.el.getBoundingClientRect().top <= 120) current = s;
+    function updateBar() {
+      let current = sects[0];
+      for (const s of sects) {
+        if (s.el.getBoundingClientRect().top <= 150) current = s;
       }
-      navLinks.forEach(l => l.classList.remove('active'));
+      barLinks.forEach(l => l.classList.remove('active'));
       if (current) current.link.classList.add('active');
     }
-    window.addEventListener('scroll', updateActive, { passive: true });
-    updateActive();
+    window.addEventListener('scroll', updateBar, { passive: true });
+    updateBar();
   </script>
   <footer>
     <p>Built by <strong>Alexandru DAN</strong>, CEO <a href="#">TVL Tech</a></p>
