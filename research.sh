@@ -168,6 +168,31 @@ get_section_from_body() {
   echo "$body" | grep -A1 "^## Section" | tail -1 | xargs
 }
 
+section_to_file() {
+  # Map section name to file path in sections/
+  local section="$1"
+  local slug
+  slug=$(echo "$section" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//')
+  local file="$SCRIPT_DIR/sections/${slug}.md"
+  # Check if file exists, fallback to partial match
+  if [[ -f "$file" ]]; then
+    echo "$file"
+  else
+    # Try to find a match
+    local found
+    # shellcheck disable=SC2012
+    found=$(ls "$SCRIPT_DIR/sections/"*.md 2>/dev/null | while read -r f; do
+      if echo "$f" | grep -qi "$slug"; then echo "$f"; break; fi
+    done)
+    if [[ -n "$found" ]]; then
+      echo "$found"
+    else
+      # Default: create new section file
+      echo "$file"
+    fi
+  fi
+}
+
 # ============================================================================
 # Prompt Builders
 # ============================================================================
@@ -180,27 +205,19 @@ build_research_prompt() {
   local goal_content
   goal_content=$(cat "$SCRIPT_DIR/goal.md")
 
+  # Read the section file (not the whole document)
+  local section_file
   local doc_section=""
+  local sources_content=""
   if [[ -n "$section" ]]; then
-    # Use fixed-string matching to avoid regex injection from section names
-    local start_line
-    start_line=$(while IFS= read -r line_num_and_text; do
-      local lnum="${line_num_and_text%%:*}"
-      local ltext="${line_num_and_text#*:}"
-      if [[ "$ltext" == "## ${section}" ]]; then
-        echo "$lnum"
-        break
-      fi
-    done < <(grep -nF "## ${section}" "$SCRIPT_DIR/document.md"))
-    if [[ -n "$start_line" ]]; then
-      local end_line
-      end_line=$(tail -n +"$((start_line + 1))" "$SCRIPT_DIR/document.md" | grep -n "^## " | head -1 | cut -d: -f1)
-      if [[ -n "$end_line" ]]; then
-        doc_section=$(sed -n "${start_line},$((start_line + end_line - 1))p" "$SCRIPT_DIR/document.md")
-      else
-        doc_section=$(tail -n +"$start_line" "$SCRIPT_DIR/document.md")
-      fi
+    section_file=$(section_to_file "$section")
+    if [[ -f "$section_file" ]]; then
+      doc_section=$(cat "$section_file")
     fi
+  fi
+  # Always include sources for citation reference
+  if [[ -f "$SCRIPT_DIR/sections/sources.md" ]]; then
+    sources_content=$(cat "$SCRIPT_DIR/sections/sources.md")
   fi
 
   local feedback_block=""
@@ -223,8 +240,12 @@ You are a research agent investigating a specific question. Your job is to find 
 RESEARCH GOAL:
 ${goal_content}
 
-CURRENT DOCUMENT SECTION (${section:-General}):
+SECTION FILE: ${section_file:-sections/general.md}
+CURRENT CONTENT:
 ${doc_section:-No existing content yet.}
+
+SOURCES (for citation numbers):
+${sources_content:-No sources yet.}
 
 TASK: ${title}
 ${body}
@@ -278,7 +299,9 @@ You have 25 tool calls. If you reach turn 20 without writing, STOP and WRITE.
 8. Never fabricate sources. If you cannot find a source, say so explicitly.
 
 WORKING DIRECTORY: ${SCRIPT_DIR}
-Edit the file: document.md
+Edit the SECTION file: ${section_file:-sections/general.md}
+Add new sources to: sections/sources.md
+Do NOT edit document.md (it's just an index).
 PROMPTEOF
 }
 
@@ -288,8 +311,14 @@ build_document_prompt() {
   local section="$3"
   local goal_content
   goal_content=$(cat "$SCRIPT_DIR/goal.md")
+  local section_file
+  section_file=$(section_to_file "${section:-General}")
   local doc_content
-  doc_content=$(cat "$SCRIPT_DIR/document.md")
+  if [[ -f "$section_file" ]]; then
+    doc_content=$(cat "$section_file")
+  else
+    doc_content="No content yet."
+  fi
 
   cat <<PROMPTEOF
 You are a document synthesis agent. Your job is to improve the coherence and quality of an existing research document WITHOUT adding new claims.
@@ -312,7 +341,8 @@ INSTRUCTIONS:
 6. Do NOT remove any sourced claims.
 
 WORKING DIRECTORY: ${SCRIPT_DIR}
-Edit the file: document.md
+Edit the SECTION file: ${section_file}
+Do NOT edit document.md (it's just an index).
 PROMPTEOF
 }
 
@@ -320,14 +350,27 @@ build_review_prompt() {
   local title="$1"
   local body="$2"
   local section="$3"
+  local section_file
+  section_file=$(section_to_file "${section:-General}")
   local doc_content
-  doc_content=$(cat "$SCRIPT_DIR/document.md")
+  if [[ -f "$section_file" ]]; then
+    doc_content=$(cat "$section_file")
+  else
+    doc_content="No content yet."
+  fi
+  local sources_content=""
+  if [[ -f "$SCRIPT_DIR/sections/sources.md" ]]; then
+    sources_content=$(cat "$SCRIPT_DIR/sections/sources.md")
+  fi
 
   cat <<PROMPTEOF
-You are a quality review agent. Your job is to evaluate the research document and flag issues.
+You are a quality review agent. Your job is to evaluate the research section and flag issues.
 
-FULL DOCUMENT:
+SECTION CONTENT:
 ${doc_content}
+
+SOURCES:
+${sources_content}
 
 SECTION TO REVIEW: ${section:-Entire document}
 
@@ -339,14 +382,15 @@ INSTRUCTIONS:
 2. Flag:
    - Claims without sufficient sources
    - Confidence levels that seem too high for the evidence
-   - Contradictions between sections
+   - Contradictions
    - Gaps in coverage
 3. Update confidence badges where warranted (HIGH/MEDIUM/LOW).
-4. Add notes in the Open Questions section for unresolved issues.
+4. Add notes to sections/open-questions.md for unresolved issues.
 5. Do NOT use web search.
 
 WORKING DIRECTORY: ${SCRIPT_DIR}
-Edit the file: document.md
+Edit the SECTION file: ${section_file}
+Add issues to: sections/open-questions.md
 PROMPTEOF
 }
 
@@ -409,7 +453,7 @@ create_pr() {
   local old_score="$5"
   local new_score="$6"
 
-  git add document.md goal.md coverage.md changelog.md 2>/dev/null || true
+  git add document.md sections/ goal.md coverage.md changelog.md 2>/dev/null || true
   git -c user.name="Autoresearch Researcher" -c user.email="researcher@autoresearch" \
     commit -m "research(#${issue_num}): ${title}" || {
     log "ERROR: Nothing to commit"
@@ -554,7 +598,7 @@ post_merge() {
   propose_followup_tasks "$issue_num"
 
   # 4. Commit post-merge updates
-  git add document.md changelog.md coverage.md 2>/dev/null || true
+  git add document.md sections/ changelog.md coverage.md 2>/dev/null || true
   if ! git diff --cached --quiet 2>/dev/null; then
     git -c user.name="Autoresearch System" -c user.email="system@autoresearch" \
       commit -m "chore: post-merge update header + changelog (#${issue_num})" 2>/dev/null || true
@@ -748,7 +792,7 @@ judge_review_loop() {
   fi
 
   local diff_content
-  diff_content=$(git diff -- document.md 2>/dev/null || echo "")
+  diff_content=$(git diff -- sections/ document.md 2>/dev/null || echo "")
   if [[ -z "$diff_content" ]]; then
     log "Judge review: no changes — PASS"
     return 0
@@ -761,7 +805,7 @@ judge_review_loop() {
     log "Judge review round $round/$max_rounds for Issue #${issue_num}..."
 
     local added_lines
-    added_lines=$(git diff -- document.md 2>/dev/null | grep "^+" | grep -v "^+++" | sed 's/^+//')
+    added_lines=$(git diff -- sections/ document.md 2>/dev/null | grep "^+" | grep -v "^+++" | sed 's/^+//')
     local doc_content
     doc_content=$(cat "$SCRIPT_DIR/document.md")
     local sources
@@ -1054,7 +1098,7 @@ main_loop() {
 
     # Check if document.md was modified (covers all task types)
     local doc_changed=false
-    if ! git diff --quiet -- document.md 2>/dev/null; then
+    if ! git diff --quiet -- sections/ document.md 2>/dev/null; then
       doc_changed=true
       log "Document modified by $task_type task"
     fi

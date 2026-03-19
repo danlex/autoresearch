@@ -12,7 +12,7 @@ if [[ -f "$SCRIPT_DIR/.env" ]]; then
   source "$SCRIPT_DIR/.env"
 fi
 
-DOC="$SCRIPT_DIR/document.md"
+DOC_DIR="$SCRIPT_DIR/sections"
 
 # --- Task completion ---
 total_tasks=$(gh issue list --label "task" --state all --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
@@ -35,31 +35,17 @@ cited=0
 low_confidence=0
 total_paragraphs=0
 
-if [[ -f "$DOC" ]]; then
-  in_content=false
-  in_sources=false
+# Scan all section files (excluding sources and open-questions)
+for section_file in "$DOC_DIR"/intellectual-contributions.md "$DOC_DIR"/education-and-teaching.md "$DOC_DIR"/views-on-ai-future.md "$DOC_DIR"/eureka-labs.md "$DOC_DIR"/key-relationships.md; do
+  [[ -f "$section_file" ]] || continue
   while IFS= read -r line; do
-    # Track section boundaries
-    if [[ "$line" =~ ^##\  ]]; then
-      if [[ "$line" =~ "Sources" || "$line" =~ "Open Questions" ]]; then
-        in_sources=true
-        in_content=false
-      else
-        in_sources=false
-        in_content=true
-      fi
-      continue
-    fi
-
-    # Skip non-content areas
-    $in_sources && continue
-    ! $in_content && continue
-
-    # Skip empty lines, metadata lines, sub-headers
+    # Skip empty lines, headers, metadata
     [[ -z "$line" ]] && continue
+    [[ "$line" =~ ^## ]] && continue
     [[ "$line" =~ ^### ]] && continue
     [[ "$line" =~ ^\*\*Confidence: ]] && continue
     [[ "$line" =~ ^\*\*Uncertainty: ]] && continue
+    [[ "$line" =~ ^\> ]] && continue
 
     # Only count substantive paragraphs (>50 chars)
     [[ ${#line} -le 50 ]] && continue
@@ -72,11 +58,15 @@ if [[ -f "$DOC" ]]; then
     else
       uncited=$((uncited + 1))
     fi
-  done < "$DOC"
+  done < "$section_file"
+done
 
-  low_confidence=$(grep -c "Confidence: LOW" "$DOC" 2>/dev/null || true)
-  low_confidence=${low_confidence:-0}
-fi
+# Count LOW confidence across all sections
+for section_file in "$DOC_DIR"/*.md; do
+  [[ -f "$section_file" ]] || continue
+  local_low=$(grep -c "Confidence: LOW" "$section_file" 2>/dev/null || true)
+  low_confidence=$((low_confidence + ${local_low:-0}))
+done
 
 # Citation quality: what % of paragraphs have citations
 citation_pct=100
