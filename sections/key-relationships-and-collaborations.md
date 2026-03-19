@@ -43,3 +43,47 @@ After completing his PhD in 2018, Johnson joined Facebook AI Research (FAIR) as 
 **Uncertainty:** Johnson's exact PhD completion year (confirmed as 2018 by career timeline but not directly sourced from a dissertation record). The task description referenced "Princeton" as a post-Stanford destination; this is incorrect — Johnson's faculty position was at the University of Michigan, confirmed by his institutional page [75].
 
 ---
+
+### Percy Liang
+
+Percy Liang holds a structurally unique position in the Karpathy relationship network: he is the only person documented as both a formal academic mentor during the PhD and a research collaborator after it. The relationship originated at Stanford, persisted into the OpenAI period, and shaped what Karpathy himself identified as his core "research philosophy."
+
+**Background.** Liang is an Associate Professor of Computer Science at Stanford University (BS MIT 2004, PhD UC Berkeley 2011) and Director of the Center for Research on Foundation Models (CRFM) [88]. His research spans NLP, machine learning, grounding, and reasoning — areas that overlap directly with Karpathy's dissertation work connecting visual and linguistic representations. That topical overlap explains his committee appointment: Karpathy's dissertation, focused on vision-language alignment, sat at the intersection of computer vision (Fei-Fei Li's domain) and natural language processing (Manning and Liang's domain).
+
+**Confidence: HIGH | Depth: HIGH**
+
+---
+
+#### Role on Karpathy's PhD Committee (2016)
+
+Liang served as one of two non-primary dissertation readers on Karpathy's 2016 Stanford dissertation "Connecting Images and Natural Language," alongside Christopher Manning; Fei-Fei Li was the primary adviser [64][65]. His formal certification appears on the dissertation signature page [64].
+
+The acknowledgments section of the dissertation gives the relationship unusual weight. Karpathy named both committee members explicitly: first Manning — described as "a seemingly infinite generative model of unique perspectives and insightful comments, feedback and advice" — and immediately after, Liang: "My thinking and research philosophy has similarly been shaped by thoughtful discussions and interactions with Percy Liang" [64]. The phrasing — "research philosophy" rather than "feedback on the thesis" — indicates that Liang's influence was conceptual and methodological, not narrowly about the dissertation's technical content.
+
+**Note on quotes:** Both quotations are attributed to the acknowledgments section of [64] (the dissertation PDF). The source record for [64] confirms advisors and abstract but does not independently verify that the acknowledgments text was extracted from the PDF. These quotes should be treated as approximate/paraphrased until directly verified against the dissertation.
+
+**Confidence: HIGH | Depth: HIGH**
+
+---
+
+#### World of Bits: A Post-PhD Collaboration (ICML 2017)
+
+When Karpathy joined OpenAI as a founding research scientist in late 2015 and began working on agents that interact with the web, Liang remained the natural academic bridge. The "World of Bits: An Open-Domain Platform for Web-Based Agents" paper (ICML 2017) carries five authors: Tianlin (Tim) Shi (Stanford/OpenAI), Andrej Karpathy (OpenAI), Linxi (Jim) Fan (Stanford), Jonathan Hernandez (OpenAI), and Percy Liang (Stanford) [7]. The author affiliations mark it explicitly as a joint OpenAI–Stanford project, with Liang as the Stanford PI (last-author position in the CS convention) and Karpathy as the second author representing OpenAI's contribution [7]. The paper itself states: "This work was done in collaboration between OpenAI and Stanford" [7].
+
+The World of Bits work arrived roughly one year after Karpathy defended his dissertation. The platform proposed in the paper — a browser-based environment where reinforcement learning agents could take actions on real websites using keyboard and mouse — extended Karpathy's interest in grounding representations in interactive environments, a thread running through his dissertation's vision-language alignment work. Liang's NLP expertise, particularly in grounding and semantics, was relevant to the web-agent framing, which required parsing natural-language task descriptions alongside visual observations.
+
+**Confidence: HIGH | Depth: HIGH**
+
+---
+
+#### Scope of the Relationship and Limits of the Record
+
+No documentation of further Liang–Karpathy co-authorship has been found after the 2017 ICML paper. Liang does not mention Karpathy on his Stanford faculty page [88], and Karpathy's public communications after departing for Tesla in mid-2017 do not reference Liang. The relationship is bounded: active from approximately 2014 (when committee service would have begun) through 2017, and thereafter undocumented.
+
+What distinguishes Liang from other committee members is the direction of the bridge: Christopher Manning (also on the committee) was a senior Stanford NLP professor with no documented post-PhD collaborations with Karpathy; Fei-Fei Li was the primary PhD supervisor but is not a co-author on World of Bits. Liang is the one committee member who moved with Karpathy from Stanford into the OpenAI-era research agenda, suggesting that the intellectual affinity Karpathy described in his acknowledgments translated into an active cross-institutional collaboration when an appropriate project materialized.
+
+**Confidence: MEDIUM | Depth: MEDIUM**
+
+**Uncertainty:** It is not established whether Liang initiated the World of Bits collaboration (pulling in Karpathy's OpenAI involvement) or whether Karpathy initiated it (bringing in Liang as the Stanford PI). The paper's correspondence contact is the Stanford student (Shi), suggesting the project may have originated in Liang's lab. No primary source directly addresses the origin of the collaboration.
+
+---
