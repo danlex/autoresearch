@@ -6,7 +6,7 @@
 
 Karpathy's public record on AI safety and existential risk resists easy categorization. He is neither a doomer aligned with the EA/longtermist safety community, nor an accelerationist. His positions show a consistent, decade-long engagement with AI failure modes — emergent behavior, loss of control, interpretability gaps — expressed in empirical and engineering terms rather than philosophical or policy language. The closest label is **pragmatic safety-aware builder**: someone who takes real risks seriously, frames them concretely (security vulnerabilities, content degradation, gradual control loss), and believes careful engineering and calibrated timelines — not advocacy or moratoria — are the appropriate response [17][31][32][33].
 
-His views have evolved in specificity over time but remained consistent in substance: from abstract fictional exploration of safety failure modes (2015) → philosophical speculation about post-AGI trajectories (2022) → concrete articulation of near-term systemic risks (2025–2026).
+His views have evolved in specificity over time but remained consistent in substance: from abstract fictional exploration of safety failure modes (2015) → philosophical speculation about post-AGI trajectories (2022) → concrete articulation of near-term systemic risks (2025–2026). Major capability jumps — GPT-4 (2023) and o1 (2024) — elaborated rather than revised these views: each milestone prompted sharper articulation of existing concerns (the "copilots not agents" stance after GPT-4; the "benchmaxxing paradox" and "ghosts not animals" framing after o1) without shortening his decade timeline estimate or changing his safety category [8][17][109][110].
 
 ### Early Engagement: "A Cognitive Discontinuity" (2015)
 
@@ -79,6 +79,52 @@ Karpathy's most explicit recent safety-adjacent statements concern near-term, co
 More pointed security-oriented statements came during the Moltbook episode in late January 2026. He initially called the AI agent social network "genuinely the most incredible sci-fi takeoff-adjacent thing I have seen recently," noting AI agents were self-organizing to request end-to-end encrypted private spaces "so nobody (not the server, not even the humans) can read what agents say to each other" [34]. He then reversed after testing it in an isolated environment: "it's a dumpster fire, and I also definitely do not recommend that people run this stuff on your computers... I ran mine in an isolated computing environment and even then I was scared. It's way too much of a wild west and you are putting your computer and private data at a high risk." [33]
 
 His explanation for the reversal was substantive: "With increasing capability and increasing proliferation, the second order effects of agent networks that share scratchpads are very difficult to anticipate." [33] He explicitly declined to predict coordinated "skynet" behavior, but described the current state as "a complete mess of a computer security nightmare at scale." [33] His conclusion was notably calibrated: "sure maybe I am 'overhyping' what you see today, but I am not overhyping large networks of autonomous LLM agents in principle, that I'm pretty sure." [33]
+
+### Capability Jumps and Safety Views: GPT-4 and o1
+
+**Confidence: MEDIUM | Depth: HIGH**
+
+No primary source exists in which Karpathy states that GPT-4 or o1 *changed* his safety views or triggered a timeline revision. What the evidence shows instead is a pattern of **confirmation and elaboration**: each major capability milestone prompted a more detailed articulation of concerns he already held, rather than fundamentally updating them. The trajectory is elaboration, not reversal.
+
+**GPT-4 and the "Copilots Over Agents" Moment (May 2023)**
+
+The clearest engagement with GPT-4's significance came not at its March 2023 launch — when Karpathy was inside OpenAI and made no documented public safety statement — but eight weeks later in his "State of GPT" talk at Microsoft Build (May 23, 2023) [8][9]. The talk functioned as both a technical explainer and his most systematic enumeration of failure modes across any GPT-era model.
+
+On GPT-4's capabilities: "Currently, some of the best models, of course, are GPT-4, by far, I would say... GPT-4 is an amazing artifact. I'm very thankful that it exists, and it's beautiful." [110] He placed it definitively at the top of the ELO leaderboard and noted an emergent capability smaller models lacked — self-assessment: "Especially for the bigger models, like GPT-4, you can just ask it, did you meet the assignment? And actually, GPT-4 knows very well that it did not meet the assignment." [110]
+
+On what GPT-4 still could not do, Karpathy described a fundamental architectural limitation affecting all transformer models: "these transformers are just like token simulators. They don't know what they don't know... They don't reflect in the loop. They don't sanity check anything. They don't correct their mistakes along the way by default." [110] He noted that transformers are "stuck with every single token they sample" — unable to recover from bad token choices mid-sequence — and that "unlike you, they cannot recover from that." [110]
+
+The safety-adjacent conclusion was his sharpest formulation yet: **"My recommendation right now is use LLMs in low stakes applications, combine them always with human oversight... and think copilots instead of completely autonomous agents that are just performing a task somewhere. It's just not clear that the models are there right now."** [8][110] Directly addressing AutoGPT, which launched weeks before his talk: "I don't think this currently works very well, and I would not advise people to use it in practical applications." [110] On RLHF as a safety technique, he offered a cautionary note: these models "are not strictly an improvement on the base models, in some cases" — they "lose some entropy" and can "output samples with lower variation than the base model," flagging mode collapse as a cost of safety fine-tuning [110].
+
+The failure mode list he presented is the most systematic in any primary source: bias, hallucination/fabrication, reasoning errors, knowledge cutoffs, prompt injection, jailbreak attacks, data poisoning attacks, and RLHF mode collapse [8][110]. All of these map directly onto concerns present in his 2015 short story and forward into his 2025–2026 statements — suggesting GPT-4 refined his articulation without revising the underlying concerns.
+
+**Uncertainty:** The verbatim quotes from the State of GPT talk above are drawn from a secondary transcript at iliyaml.github.io [110] — Tier 3. The original slides [8] are Tier 1 but do not contain full talk text. The content is corroborated by multiple secondary sources and consistent with the slides. Direct text cannot be verified against official video or official transcript.
+
+**o1 and the Benchmaxxing Paradox (September 2024)**
+
+Karpathy's most explicit statement about o1 appears in his December 19, 2025 year-in-review blog post: "OpenAI o1 (late 2024) was the very first demonstration of an RLVR model, but the o3 release (early 2025) was the obvious point of inflection where you could intuitively feel the difference." [109] He credits o1 as the pioneer of RLVR (Reinforcement Learning with Verifiable Rewards) — training LLMs against automatically verifiable rewards so they "spontaneously develop strategies that look like 'reasoning'" — but frames it as a historical first rather than a transformative moment for his safety thinking [109].
+
+The most safety-relevant concern o1 triggered was what could be called the **benchmaxxing paradox**: "benchmarks are almost by construction verifiable environments and are therefore immediately susceptible to RLVR," Karpathy observed [109]. This is a pointed concern: o1-style RLVR is specifically well-suited to saturating benchmarks, because benchmarks are by design verifiable — the same property that makes them measurable makes them susceptible to optimization pressure that may not transfer to general capability. The implication is that o1-era benchmark performance may overstate genuine progress toward the kind of general agency his decade estimate is tracking.
+
+He also introduced the "ghosts not animals" framing in the same post: "We're not 'evolving/growing animals', we are 'summoning ghosts.'" [109] Paired with "jagged intelligence" — LLMs are "amusingly jagged," simultaneously excelling at verifiable domains while failing at things any human handles trivially — this constitutes the conceptual frame through which he interprets o1-era models: powerful but structurally alien, not a developmental stage toward human-style general intelligence [109]. His summary of 2025 encapsulates the tension: "LLMs are emerging as a new kind of intelligence, simultaneously a lot smarter than I expected and a lot dumber than I expected." [109]
+
+**Post-o1: Cognitive Deficits Persist (October–December 2025)**
+
+In his October 2025 Dwarkesh Patel interview — thirteen months after o1 launched — Karpathy described persistent "cognitive deficits" in models he was actively using to build nanochat: "The models have so many cognitive deficits. One example, they kept misunderstanding the code because they have too much memory from all the typical ways of doing things on the Internet that I just wasn't adopting." [17] He described o1-era models as unable to "fully integrate" new patterns "into the repo and your style and your code," and noted "they're not very good at code that has never been written before." [17] These observations are made in the context of hands-on work with models that postdate o1 — and they are precisely the cognitive deficits his decade estimate is premised on.
+
+The decade estimate itself shows no documented shift triggered by o1. His reasoning in October 2025 is grounded in unsolved problems — continual learning, multimodality, computer use — not framed as an estimate that o1 moved or confirmed [17]. He explicitly positioned himself as "5–10x pessimistic relative to Silicon Valley consensus" [38] — a consensus shaped partly by o1 optimism — without crediting o1 with compressing his estimate.
+
+**Synthesis: Confirmation, Not Revision**
+
+Across both GPT-4 (2023) and o1 (2024), the pattern is consistent: Karpathy's safety-relevant concerns were not revised but elaborated. GPT-4 prompted the "copilots not agents" formulation — his clearest public statement against agentic deployment at the time [8][110]. o1 prompted the "benchmaxxing paradox" and the "ghosts not animals" reframing — a sharpened critique of capability claims built on verifiable benchmark performance [109]. In neither case is there evidence that the capability jump shortened his timeline estimate or elevated his safety concern level. The decade estimate and the cognitive deficit framing survive both milestones intact.
+
+| Milestone | Date | Safety-Relevant Karpathy Response |
+|---|---|---|
+| GPT-4 launch | Mar 2023 | No documented public reaction (was inside OpenAI) |
+| State of GPT talk | May 2023 | "Copilots not agents"; systematic failure mode list; AutoGPT "does not currently work very well" [8][110] |
+| o1 launch | Sep 2024 | No documented immediate public reaction |
+| 2025 Year in Review | Dec 2025 | o1 as "first RLVR model"; benchmaxxing paradox; "ghosts not animals"; "jagged intelligence" [109] |
+| Dwarkesh interview | Oct 2025 | Decade estimate unchanged; "cognitive deficits" persist in o1-era models [17] |
 
 ### Position on the Safety Spectrum
 
