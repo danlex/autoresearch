@@ -114,3 +114,8 @@
 - PR: #112
 - Score: 77
 - Action: merged
+
+### 2026-03-19 — #58: What is Karpathy's professional relationship with Ilya Sutskever, and how did their views on AGI diverge?
+- PR: #115
+- Score: 80
+- Action: merged
