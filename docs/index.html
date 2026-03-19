@@ -300,6 +300,355 @@
     }
     .section-bar a:hover { color: var(--text-secondary); background: var(--surface-hover); text-decoration: none; }
     .section-bar a.active { color: var(--amber); background: rgba(245,158,11,0.1); font-weight: 600; }
+    /* Light theme overrides */
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --surface: rgba(0,0,0,0.03);
+      --surface-hover: rgba(0,0,0,0.06);
+      --border: rgba(0,0,0,0.1);
+      --text: #1a1a1a;
+      --text-secondary: #555555;
+      --dim: #888888;
+    }
+    [data-theme="light"] p,
+    [data-theme="light"] li,
+    [data-theme="light"] td { color: #333333; }
+    [data-theme="light"] h1 { -webkit-text-fill-color: unset; background: none; color: #1a1a1a; }
+    [data-theme="light"] code { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.1); }
+    [data-theme="light"] .score-bar { background: rgba(0,0,0,0.08); }
+    [data-theme="light"] .section-card:hover { background: rgba(0,0,0,0.04); }
+
+    /* Reading progress bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--amber), var(--red), var(--purple));
+      z-index: 9999;
+      transition: width 0.1s linear;
+      pointer-events: none;
+    }
+
+    /* Reading time pill */
+    .reading-time {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--dim);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.7rem;
+      border-radius: 9999px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+      letter-spacing: 0.02em;
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+    .theme-toggle:hover { color: var(--text); background: var(--surface-hover); }
+
+    /* Interactive career timeline */
+    .timeline {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      padding: 2rem 0 1rem;
+      margin: 2rem 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 2.7rem;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--border);
+    }
+    .timeline-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 120px;
+      flex: 1;
+      position: relative;
+      text-decoration: none;
+      color: var(--text);
+      cursor: pointer;
+      padding: 0 0.5rem;
+      transition: transform 0.2s ease;
+    }
+    .timeline-item:hover { transform: translateY(-3px); text-decoration: none; }
+    .timeline-item .tl-year {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--amber);
+      margin-bottom: 0.4rem;
+    }
+    .timeline-item .tl-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--amber);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 2px var(--amber);
+      z-index: 1;
+      margin-bottom: 0.6rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    [data-theme="light"] .timeline-item .tl-dot { border-color: var(--bg); }
+    .timeline-item:hover .tl-dot { transform: scale(1.3); box-shadow: 0 0 0 3px var(--amber), 0 0 12px rgba(245,158,11,0.3); }
+    .timeline-item .tl-title {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-align: center;
+      line-height: 1.3;
+    }
+    @media (max-width: 640px) {
+      .timeline { padding-bottom: 0.5rem; }
+      .timeline-item { min-width: 100px; }
+    }
+
+    /* Citation popovers */
+    .cite-popover {
+      position: absolute;
+      z-index: 1000;
+      background: #1e1e2e;
+      color: #e0e0e0;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      max-width: 320px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+    .cite-popover.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .cite-popover::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid #1e1e2e;
+    }
+    [data-theme="light"] .cite-popover { background: #2a2a3a; color: #f0f0f0; }
+    [data-theme="light"] .cite-popover::after { border-top-color: #2a2a3a; }
+
+    /* TOC dropdown */
+    .toc-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: 0.3rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      backdrop-filter: blur(16px);
+      padding: 0.4rem;
+      z-index: 200;
+      max-height: 280px;
+      overflow-y: auto;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .toc-dropdown.open { display: block; }
+    .toc-dropdown a {
+      display: block;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.78rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+    }
+    .toc-dropdown a:hover { color: var(--text); background: var(--surface-hover); text-decoration: none; }
+    .section-bar { position: relative; }
+
+    /* Client-side search */
+    .search-box {
+      position: relative;
+      margin-left: 0.25rem;
+      flex-shrink: 0;
+    }
+    .search-box input {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
+      width: 140px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .search-box input::placeholder { color: var(--dim); }
+    .search-box input:focus { border-color: var(--amber); width: 200px; }
+    .search-results {
+      display: none;
+      position: absolute;
+      top: calc(100% + 0.4rem);
+      right: 0;
+      width: 340px;
+      max-height: 320px;
+      overflow-y: auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      z-index: 300;
+      padding: 0.3rem;
+    }
+    .search-results.open { display: block; }
+    .search-results .sr-item {
+      display: block;
+      padding: 0.5rem 0.7rem;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s;
+      line-height: 1.4;
+    }
+    .search-results .sr-item:hover { background: var(--surface-hover); color: var(--text); }
+    .search-results .sr-item mark {
+      background: rgba(245,158,11,0.3);
+      color: var(--amber);
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+    .search-results .sr-empty {
+      padding: 0.8rem;
+      font-size: 0.8rem;
+      color: var(--dim);
+      text-align: center;
+    }
+
+    /* Key findings callout boxes */
+    .callout {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--amber);
+      border-radius: 0 10px 10px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+    .callout strong { color: var(--amber); }
+
+    /* Section stats pills */
+    .section-stats {
+      display: inline-flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      margin: 0.4rem 0;
+    }
+    .section-stats span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 500;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--dim);
+      letter-spacing: 0.02em;
+    }
+
+    /* Source quality indicators */
+    .source-t1::before,
+    .source-t2::before,
+    .source-t3::before {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-right: 0.4rem;
+      vertical-align: middle;
+    }
+    .source-t1::before { background: var(--green); box-shadow: 0 0 4px rgba(34,197,94,0.4); }
+    .source-t2::before { background: var(--blue); box-shadow: 0 0 4px rgba(59,130,246,0.4); }
+    .source-t3::before { background: var(--dim); }
+
+    /* Open questions badge */
+    .oq-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      min-width: 1.3rem;
+      height: 1.3rem;
+      line-height: 1.3rem;
+      text-align: center;
+      border-radius: 9999px;
+      background: var(--amber);
+      color: var(--bg);
+      margin-left: 0.3rem;
+      vertical-align: middle;
+      letter-spacing: 0;
+    }
+
+    /* Print stylesheet */
+    @media print {
+      nav, .section-bar, .search-box, .search-results, .theme-toggle,
+      .progress-bar, .timeline, .video-grid, .video-card, .toc-dropdown,
+      .score-bar, footer { display: none !important; }
+      body {
+        background: #fff;
+        color: #000;
+        max-width: 100%;
+        padding: 0;
+        font-size: 11pt;
+        line-height: 1.5;
+      }
+      h1, h2, h3, h4 { color: #000; -webkit-text-fill-color: #000; background: none; }
+      h1 { font-size: 20pt; }
+      h2 { font-size: 16pt; border-bottom-color: #ccc; }
+      h3 { font-size: 13pt; color: #333; }
+      p, li, td { color: #222; }
+      a { color: #000; text-decoration: underline; }
+      sup.cite { color: #555; }
+      .badge { border: 1px solid #999; background: none; color: #333; }
+      .stat { border-color: #ccc; }
+      .stat-value { color: #000; }
+      .callout { border-color: #ccc; border-left-color: #999; background: #f9f9f9; }
+      blockquote { border-left-color: #999; background: #f5f5f5; }
+      code { background: #f0f0f0; border-color: #ddd; }
+      @page { margin: 2cm; }
+    }
+
     @media (max-width: 640px) {
       body { padding: 1rem; }
       h1 { font-size: 1.8rem; }
@@ -308,18 +657,27 @@
       .video-grid { grid-template-columns: 1fr; }
       nav { flex-wrap: nowrap; overflow-x: auto; }
       nav a { white-space: nowrap; font-size: 0.8rem; padding: 0.4rem 0.75rem; }
+      .search-box input { width: 100px; }
+      .search-box input:focus { width: 140px; }
+      .search-results { width: 280px; }
     }
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="progress-bar" id="progress-bar"></div>
   <nav>
     <a href="index.html" class="active">Research</a>
     <a href="progress.html" class="">Progress</a>
     <a href="sections.html" class="">Sections</a>
     <a href="sources.html" class="">Sources</a>
     <a href="about.html" class="">About</a>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark/light mode" title="Toggle theme">&#9790;</button>
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Search..." aria-label="Search content">
+      <div class="search-results" id="search-results"></div>
+    </div>
   </nav>
   
     <h1>Andrej Karpathy — Research Document</h1>
@@ -352,6 +710,16 @@
     </div>
     <div class="score-bar"><div class="score-fill" style="width: 83%"></div></div>
 
+    <h2>Career Timeline</h2>
+    <div class="timeline">
+      <div class="timeline-item"><a href="#intellectual-contributions"><span class="tl-dot"></span><span class="tl-year">2011</span><span class="tl-title">Stanford PhD</span></a></div>
+      <div class="timeline-item"><a href="#intellectual-contributions"><span class="tl-dot" style="background: var(--green)"></span><span class="tl-year">2015</span><span class="tl-title">Co-founds OpenAI</span></a></div>
+      <div class="timeline-item"><a href="#intellectual-contributions"><span class="tl-dot" style="background: var(--red)"></span><span class="tl-year">2017</span><span class="tl-title">Tesla AI Director</span></a></div>
+      <div class="timeline-item"><a href="#education-and-teaching"><span class="tl-dot" style="background: var(--cyan)"></span><span class="tl-year">2022</span><span class="tl-title">nanoGPT & Teaching</span></a></div>
+      <div class="timeline-item"><a href="#intellectual-contributions"><span class="tl-dot" style="background: var(--green)"></span><span class="tl-year">2023</span><span class="tl-title">Returns to OpenAI</span></a></div>
+      <div class="timeline-item"><a href="#eureka-labs"><span class="tl-dot" style="background: var(--purple)"></span><span class="tl-year">2024</span><span class="tl-title">Founds Eureka Labs</span></a></div>
+    </div>
+
     <h2>Sections</h2>
     <div class="section-grid">
   
@@ -379,7 +747,7 @@
         <strong>Key Relationships</strong>
         <p>Elon Musk, Fei-Fei Li, Ilya Sutskever, collaborations</p>
       </a>
-    </div><div class="section-bar" id="section-bar"><a href="#intellectual-contributions">Intellectual Contributions</a><a href="#education-and-teaching">Education and Teaching</a><a href="#views-on-ai-future">Views on AI Future</a><a href="#eureka-labs">Eureka Labs</a><a href="#key-relationships">Key Relationships</a><a href="#sources-section">Sources</a></div><div id="intellectual-contributions"><h2>Intellectual Contributions</h2>
+    </div><div class="section-bar" id="section-bar"><a href="#intellectual-contributions">Intellectual Contributions</a><a href="#education-and-teaching">Education and Teaching</a><a href="#views-on-ai-future">Views on AI Future</a><a href="#eureka-labs">Eureka Labs</a><a href="#key-relationships">Key Relationships</a><a href="#sources-section">Sources</a></div><p class="reading-time">74 min read · 16,833 words</p><div id="intellectual-contributions"><div class="section-stats"><span>7381 words</span><span>152 citations</span><span>7 subsections</span><span style="color: var(--green);">5 HIGH</span><span style="color: var(--amber);">2 MED</span></div><h2>Intellectual Contributions</h2>
 
 <p>Karpathy's intellectual contributions span three mutually reinforcing domains: foundational academic research in multimodal vision-language models (Stanford PhD, 2011–2016), industrial-scale architectural innovation in autonomous driving perception (Tesla Autopilot, 2017–2022), and paradigm-framing conceptual work on neural-network-based programming (Software 2.0, 2017; extended to Software 3.0, 2025). These are not sequential phases but deeply interconnected: the Autopilot work generated the firsthand empirical evidence behind the Software 2.0 thesis; the PhD research established the CNN+RNN and multimodal embedding foundations that informed the vision-only approach at scale; and the Software 2.0 framing shaped the academic data-centric AI research agenda. His two OpenAI stints (December 2015–June 2017, February 2023–February 2024) provide context for earlier RL and web-agent work and the later GPT-era contributions, including the widely adopted "State of GPT" (2023) presentation.</p>
 
@@ -576,7 +944,7 @@
           <div class="video-desc">Karpathy explains the full GPT training pipeline</div>
         </div>
       </div>
-    </div></div><hr><div id="education-and-teaching"><h2>Education and Teaching</h2>
+    </div></div><hr><div id="education-and-teaching"><div class="section-stats"><span>1870 words</span><span>42 citations</span><span>2 subsections</span><span style="color: var(--green);">2 HIGH</span><span style="color: var(--amber);">1 MED</span></div><h2>Education and Teaching</h2>
 
 <p><strong><span class="badge medium">MEDIUM</span> | <span class="badge medium">MEDIUM</span></strong></p>
 
@@ -658,7 +1026,7 @@
           <div class="video-desc">Stanford cs231n with Karpathy (2016)</div>
         </div>
       </div>
-    </div></div><hr><div id="views-on-ai-future"><h2>Views on AI Future</h2>
+    </div></div><hr><div id="views-on-ai-future"><div class="section-stats"><span>3528 words</span><span>89 citations</span><span>8 subsections</span><span style="color: var(--green);">6 HIGH</span><span style="color: var(--amber);">2 MED</span></div><h2>Views on AI Future</h2>
 
 <h3 id="overview-pragmatist-with-substantive-safety-concerns">Overview: Pragmatist with Substantive Safety Concerns</h3>
 
@@ -814,7 +1182,7 @@
           <div class="video-desc">AGI timelines, OpenAI reflections, AI safety</div>
         </div>
       </div>
-    </div></div><hr><div id="eureka-labs"><h2>Eureka Labs</h2>
+    </div></div><hr><div id="eureka-labs"><div class="section-stats"><span>3188 words</span><span>104 citations</span><span>8 subsections</span><span style="color: var(--green);">2 HIGH</span><span style="color: var(--amber);">4 MED</span></div><h2>Eureka Labs</h2>
 
 <p><strong><span class="badge high">HIGH</span> | <span class="badge medium">MEDIUM</span></strong></p>
 
@@ -917,7 +1285,7 @@
           <div class="video-desc">The teaching style that inspired Eureka Labs</div>
         </div>
       </div>
-    </div></div><hr><div id="key-relationships"><h2>Key Relationships and Collaborations</h2>
+    </div></div><hr><div id="key-relationships"><div class="section-stats"><span>866 words</span><span>32 citations</span><span>1 subsections</span><span style="color: var(--amber);">1 MED</span></div><h2>Key Relationships and Collaborations</h2>
 
 <h3 id="karpathy-and-elon-musk-2017-2022">Karpathy and Elon Musk (2017–2022)</h3>
 
@@ -966,8 +1334,8 @@
 <li><sup class="cite">[27]</sup> <a href="https://eurekalabs.ai/" target="_blank">Eureka Labs official website — eurekalabs.ai</a></li>
 <li><sup class="cite">[29]</sup> <a href="https://github.com/karpathy/LLM101n" target="_blank">GitHub — karpathy/LLM101n repository (README)</a></li>
 <li><sup class="cite">[30]</sup> <a href="https://github.com/karpathy/nanochat" target="_blank">GitHub — karpathy/nanochat repository (README, Oct 2025)</a></li>
-<li><sup class="cite">[77]</sup> <a href="https://x.com/karpathy/status/1977755427569111362" target="_blank">X/Twitter — Karpathy nanochat announcement thread (Oct 13, 2025)</a> — Tier 1; announcement thread for nanochat release; indexed snippet shows nanoGPT comparison ("Unlike my earlier similar repo nanoGPT which only covered pretraining, nanochat is a minimal, from scratch, full-stack training/inference pipeline..."); full tweet thread text could not be directly retrieved (X.com JavaScript-gated); secondary sources attribute "capstone of LLM101n" characterization to this thread but use paraphrase language; verbatim text not independently verified</li>
-<li><sup class="cite">[96]</sup> <a href="https://github.com/karpathy/nanochat/discussions/1" target="_blank">GitHub — karpathy/nanochat Discussion #1 "Introducing nanochat: The best ChatGPT that $100 can buy" (Oct 13, 2025)</a> — Tier 1; Karpathy's full technical introduction to nanochat (~7,000 words); covers tokenizer training, pretraining, SFT, RL; confirmed no mention of LLM101n, Eureka Labs, or "capstone" anywhere in the document; accessible primary source directly checked March 2026</li>
+<li><sup class="cite">[77]</sup> <a href="https://x.com/karpathy/status/1977755427569111362" target="_blank">X/Twitter — Karpathy nanochat announcement thread (Oct 13, 2025)</a> — <span class="source-t1">Tier 1</span>; announcement thread for nanochat release; indexed snippet shows nanoGPT comparison ("Unlike my earlier similar repo nanoGPT which only covered pretraining, nanochat is a minimal, from scratch, full-stack training/inference pipeline..."); full tweet thread text could not be directly retrieved (X.com JavaScript-gated); secondary sources attribute "capstone of LLM101n" characterization to this thread but use paraphrase language; verbatim text not independently verified</li>
+<li><sup class="cite">[96]</sup> <a href="https://github.com/karpathy/nanochat/discussions/1" target="_blank">GitHub — karpathy/nanochat Discussion #1 "Introducing nanochat: The best ChatGPT that $100 can buy" (Oct 13, 2025)</a> — <span class="source-t1">Tier 1</span>; Karpathy's full technical introduction to nanochat (~7,000 words); covers tokenizer training, pretraining, SFT, RL; confirmed no mention of LLM101n, Eureka Labs, or "capstone" anywhere in the document; accessible primary source directly checked March 2026</li>
 <li><sup class="cite">[31]</sup> <a href="https://karpathy.github.io/2015/11/14/ai/" target="_blank">karpathy.github.io — "A Short Story on AI: A Cognitive Discontinuity" (Nov 14, 2015)</a></li>
 <li><sup class="cite">[32]</sup> <a href="https://x.com/karpathy/status/2015883857489522876" target="_blank">X/Twitter — Karpathy "slopacolypse" / Claude coding thread (Jan 27, 2026)</a></li>
 <li><sup class="cite">[33]</sup> <a href="https://x.com/karpathy/status/2017442712388309406" target="_blank">X/Twitter — Karpathy Moltbook "dumpster fire" thread (Jan 30, 2026)</a></li>
@@ -987,41 +1355,41 @@
 <li><sup class="cite">[52]</sup> <a href="https://github.com/cs231n/cs231n.github.io" target="_blank">GitHub — cs231n/cs231n.github.io (course notes repository)</a> — Official course notes repository; creation date January 5, 2015 visible in repository metadata; star/fork counts accessed March 2026</li>
 <li><sup class="cite">[53]</sup> <a href="http://karpathy.github.io/neuralnets/" target="_blank">karpathy.github.io/neuralnets — "Hacker's Guide to Neural Networks"</a> — Karpathy self-published tutorial; states intent to avoid "full-page, dense derivations" in favor of code and "physical intuitions"; notes it was suspended to redirect energy toward teaching cs231n</li>
 <li><sup class="cite">[54]</sup> <a href="https://cs231n.stanford.edu/" target="_blank">cs231n.stanford.edu — course archive (all offerings)</a> — Stanford official cs231n homepage; lists offerings from Winter 2015 through Spring 2025; Spring 2017 instructor listing (Fei-Fei Li, Justin Johnson, Serena Yeung) confirms Karpathy's absence after 2016</li>
-<li><sup class="cite">[64]</sup> <a href="https://purl.stanford.edu/wf528qt3314" target="_blank">Stanford Digital Repository — "Connecting images and natural language" (Karpathy PhD dissertation, 2016)</a> — Tier 1; persistent university archive record; confirms title, year 2016, advisors Fei-Fei Li, Percy Liang, Christopher D. Manning, and abstract of core contributions</li>
-<li><sup class="cite">[65]</sup> [Stanford SearchWorks catalog — "Connecting images and natural language [electronic resource]"](https://searchworks.stanford.edu/view/11849345) — Tier 1; Stanford library catalog record; confirms title, year 2016, degree-granting institution Stanford University, Computer Science Department, same committee as <sup class="cite">[64]</sup></li>
-<li><sup class="cite">[55]</sup> <a href="https://karpathy.medium.com/software-2-0-a64152b37c35" target="_blank">Karpathy, "Software 2.0," Medium (Nov 11, 2017)</a> — Tier 1; Karpathy's self-published essay arguing neural networks constitute a qualitatively new programming paradigm; primary source for all Software 2.0 section claims; Medium page returned 403 on direct fetch but URL confirmed from multiple secondary sources</li>
-<li><sup class="cite">[56]</sup> <a href="https://x.com/karpathy/status/929473842749120512" target="_blank">X/Twitter — Karpathy announces "Software 2.0" essay (Nov 11, 2017)</a> — Tier 1; announcement tweet; confirms publication date of the Medium essay</li>
-<li><sup class="cite">[63]</sup> <a href="https://www.ycombinator.com/library/MW-andrej-karpathy-software-is-changing-again" target="_blank">YC AI Startup School — Karpathy, "Software Is Changing (Again)" (Jun 18, 2025)</a> — Tier 1; YC-hosted talk in which Karpathy extends the Software 1.0/2.0 framework to "Software 3.0" — LLMs as the new CPU, natural language as the new programming interface; YouTube ID LCEmiRjPEtQ; primary source for Software 3.0 section</li>
-<li><sup class="cite">[93]</sup> <a href="https://x.com/karpathy/status/1886192184808149383" target="_blank">X/Twitter — Karpathy "vibe coding" thread (Feb 2, 2025)</a> — Tier 1; Karpathy coins "vibe coding" — describes fully prompt-driven development where the programmer "gives in to the vibes," uses Accept All, does not read diffs; coined term entered developer common usage within weeks</li>
-<li><sup class="cite">[94]</sup> <a href="https://x.com/karpathy/status/1617979122625712128" target="_blank">X/Twitter — Karpathy "hottest new programming language is English" (Jan 24, 2023)</a> — Tier 1; one-line tweet that became Karpathy's pinned tweet; earliest concise public articulation of the Software 3.0 idea; widely circulated precursor to the 2025 formal talk</li>
-<li><sup class="cite">[95]</sup> <a href="https://x.com/karpathy/status/1935518272667217925" target="_blank">X/Twitter — Karpathy announces YC AI Startup School talk (Jun 19, 2025)</a> — Tier 1; Karpathy's own announcement of the talk video going live; contains verbatim: "LLMs are a new kind of computer, and you program them <em>in English</em>. Hence I think they are well deserving of a major version upgrade in terms of [Software 3.0]"; Tier 1 confirmation of the Software 3.0 label and core framing</li>
-<li><sup class="cite">[66]</sup> <a href="http://karpathy.github.io/2014/09/02/what-i-learned-from-competing-against-a-convnet-on-imagenet/" target="_blank">karpathy.github.io — "What I learned from competing against a ConvNet on ImageNet" (Sep 2, 2014)</a> — Tier 1; Karpathy's personal blog; primary source for the human accuracy experiment: 5.1% top-5 error rate vs GoogLeNet's 6.8% on 1,500 images (p = 0.022)</li>
-<li><sup class="cite">[67]</sup> <a href="https://arxiv.org/abs/1409.0575" target="_blank">arXiv — Russakovsky et al. (incl. Karpathy), "ImageNet Large Scale Visual Recognition Challenge" (Sep 2014; IJCV 2015)</a> — Tier 1; ILSVRC benchmark survey paper; Karpathy's contribution credited as the human accuracy evaluation experiments</li>
-<li><sup class="cite">[68]</sup> <a href="https://arxiv.org/abs/1506.02078" target="_blank">arXiv — Karpathy, Johnson, Li, "Visualizing and Understanding Recurrent Networks" (Jun 2015; ICLR 2016 Workshop)</a> — Tier 1; paper analyzing internal representations of LSTM language models; identifies interpretable cells tracking position within quotes, line counts, and code indentation</li>
-<li><sup class="cite">[69]</sup> <a href="https://x.com/karpathy/status/1407017269083865095" target="_blank">X/Twitter — Karpathy announces CVPR 2021 Tesla Autopilot talk (Jun 21, 2021)</a> — Tier 1; Karpathy's self-posted announcement of his CVPR 2021 workshop keynote; primary source for vision-only approach quote: "estimate very accurate depth, velocity, acceleration with neural nets from vision. Necessary ingredients include: 1M car fleet data engine, strong AI team and a Supercomputer"</li>
+<li><sup class="cite">[64]</sup> <a href="https://purl.stanford.edu/wf528qt3314" target="_blank">Stanford Digital Repository — "Connecting images and natural language" (Karpathy PhD dissertation, 2016)</a> — <span class="source-t1">Tier 1</span>; persistent university archive record; confirms title, year 2016, advisors Fei-Fei Li, Percy Liang, Christopher D. Manning, and abstract of core contributions</li>
+<li><sup class="cite">[65]</sup> [Stanford SearchWorks catalog — "Connecting images and natural language [electronic resource]"](https://searchworks.stanford.edu/view/11849345) — <span class="source-t1">Tier 1</span>; Stanford library catalog record; confirms title, year 2016, degree-granting institution Stanford University, Computer Science Department, same committee as <sup class="cite">[64]</sup></li>
+<li><sup class="cite">[55]</sup> <a href="https://karpathy.medium.com/software-2-0-a64152b37c35" target="_blank">Karpathy, "Software 2.0," Medium (Nov 11, 2017)</a> — <span class="source-t1">Tier 1</span>; Karpathy's self-published essay arguing neural networks constitute a qualitatively new programming paradigm; primary source for all Software 2.0 section claims; Medium page returned 403 on direct fetch but URL confirmed from multiple secondary sources</li>
+<li><sup class="cite">[56]</sup> <a href="https://x.com/karpathy/status/929473842749120512" target="_blank">X/Twitter — Karpathy announces "Software 2.0" essay (Nov 11, 2017)</a> — <span class="source-t1">Tier 1</span>; announcement tweet; confirms publication date of the Medium essay</li>
+<li><sup class="cite">[63]</sup> <a href="https://www.ycombinator.com/library/MW-andrej-karpathy-software-is-changing-again" target="_blank">YC AI Startup School — Karpathy, "Software Is Changing (Again)" (Jun 18, 2025)</a> — <span class="source-t1">Tier 1</span>; YC-hosted talk in which Karpathy extends the Software 1.0/2.0 framework to "Software 3.0" — LLMs as the new CPU, natural language as the new programming interface; YouTube ID LCEmiRjPEtQ; primary source for Software 3.0 section</li>
+<li><sup class="cite">[93]</sup> <a href="https://x.com/karpathy/status/1886192184808149383" target="_blank">X/Twitter — Karpathy "vibe coding" thread (Feb 2, 2025)</a> — <span class="source-t1">Tier 1</span>; Karpathy coins "vibe coding" — describes fully prompt-driven development where the programmer "gives in to the vibes," uses Accept All, does not read diffs; coined term entered developer common usage within weeks</li>
+<li><sup class="cite">[94]</sup> <a href="https://x.com/karpathy/status/1617979122625712128" target="_blank">X/Twitter — Karpathy "hottest new programming language is English" (Jan 24, 2023)</a> — <span class="source-t1">Tier 1</span>; one-line tweet that became Karpathy's pinned tweet; earliest concise public articulation of the Software 3.0 idea; widely circulated precursor to the 2025 formal talk</li>
+<li><sup class="cite">[95]</sup> <a href="https://x.com/karpathy/status/1935518272667217925" target="_blank">X/Twitter — Karpathy announces YC AI Startup School talk (Jun 19, 2025)</a> — Tier 1; Karpathy's own announcement of the talk video going live; contains verbatim: "LLMs are a new kind of computer, and you program them <em>in English</em>. Hence I think they are well deserving of a major version upgrade in terms of [Software 3.0]"; <span class="source-t1">Tier 1</span> confirmation of the Software 3.0 label and core framing</li>
+<li><sup class="cite">[66]</sup> <a href="http://karpathy.github.io/2014/09/02/what-i-learned-from-competing-against-a-convnet-on-imagenet/" target="_blank">karpathy.github.io — "What I learned from competing against a ConvNet on ImageNet" (Sep 2, 2014)</a> — <span class="source-t1">Tier 1</span>; Karpathy's personal blog; primary source for the human accuracy experiment: 5.1% top-5 error rate vs GoogLeNet's 6.8% on 1,500 images (p = 0.022)</li>
+<li><sup class="cite">[67]</sup> <a href="https://arxiv.org/abs/1409.0575" target="_blank">arXiv — Russakovsky et al. (incl. Karpathy), "ImageNet Large Scale Visual Recognition Challenge" (Sep 2014; IJCV 2015)</a> — <span class="source-t1">Tier 1</span>; ILSVRC benchmark survey paper; Karpathy's contribution credited as the human accuracy evaluation experiments</li>
+<li><sup class="cite">[68]</sup> <a href="https://arxiv.org/abs/1506.02078" target="_blank">arXiv — Karpathy, Johnson, Li, "Visualizing and Understanding Recurrent Networks" (Jun 2015; ICLR 2016 Workshop)</a> — <span class="source-t1">Tier 1</span>; paper analyzing internal representations of LSTM language models; identifies interpretable cells tracking position within quotes, line counts, and code indentation</li>
+<li><sup class="cite">[69]</sup> <a href="https://x.com/karpathy/status/1407017269083865095" target="_blank">X/Twitter — Karpathy announces CVPR 2021 Tesla Autopilot talk (Jun 21, 2021)</a> — <span class="source-t1">Tier 1</span>; Karpathy's self-posted announcement of his CVPR 2021 workshop keynote; primary source for vision-only approach quote: "estimate very accurate depth, velocity, acceleration with neural nets from vision. Necessary ingredients include: 1M car fleet data engine, strong AI team and a Supercomputer"</li>
 <p></ul></p>
-<ul><li><sup class="cite">[74]</sup> <a href="https://arxiv.org/abs/1511.07571" target="_blank">arXiv — Johnson, Karpathy, Li, "DenseCap: Fully Convolutional Localization Networks for Dense Captioning" (Nov 2015; CVPR 2016 Oral)</a> — Tier 1; primary source for DenseCap paper; confirms full author list, equal contribution credit for Johnson and Karpathy, CVPR 2016 oral presentation venue</li>
-<li><sup class="cite">[75]</sup> <a href="https://web.eecs.umich.edu/~justincj/" target="_blank">University of Michigan EECS — Justin Johnson faculty page</a> — Tier 1; Johnson's official institutional page; confirms PhD advisor (Fei-Fei Li, Stanford), faculty appointment at Michigan, and research areas</li>
-<li><sup class="cite">[76]</sup> <a href="https://worldlabs.ai/" target="_blank">World Labs — company and Justin Johnson co-founder</a> — Tier 2; official company site; confirms Johnson as co-founder; corroborated by LinkedIn and press coverage</li>
-<li><sup class="cite">[82]</sup> <a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank">karpathy.github.io — "The Unreasonable Effectiveness of Recurrent Neural Networks" (May 21, 2015)</a> — Tier 1; Karpathy's personal blog post; primary source for the "quote detection cell" description and the ~5% interpretable cells finding; contains verbatim quote: "one of its cells gradually tuned itself during training to become a quote detection cell, since this helps it better perform the final task. This is one of the cleanest and most compelling examples of where the power in Deep Learning models...is coming from."</li>
-<li><sup class="cite">[83]</sup> <a href="https://arxiv.org/abs/1704.01444" target="_blank">arXiv — Radford et al., "Learning to Generate Reviews and Discovering Sentiment" (Apr 2017)</a> — Tier 1; OpenAI paper discovering a single "sentiment neuron" (unit #2388) in a 4,096-unit mLSTM trained on Amazon reviews; the direct intellectual successor to Karpathy 2015's interpretable LSTM cells, extending from syntactic to semantic features</li>
-<li><sup class="cite">[84]</sup> <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank">Anthropic — Elhage et al., "Toy Models of Superposition" (2022)</a> — Tier 1; Anthropic research paper introducing the superposition hypothesis — that models compress more features than dimensions by storing multiple features per neuron; provides the theoretical explanation for why only ~5% of Karpathy 2015's LSTM cells were interpretable</li>
-<li><sup class="cite">[85]</sup> <a href="https://transformer-circuits.pub/2023/monosemantic-features/index.html" target="_blank">Anthropic — "Towards Monosemanticity: Decomposing Language Models With Dictionary Learning" (2023)</a> — Tier 1; Anthropic paper introducing sparse autoencoders (SAEs) to decompose polysemantic neurons into monosemantic features; extends the interpretable-neuron goal of Karpathy 2015 to the full transformer at scale</li>
-<li><sup class="cite">[86]</sup> <a href="https://arxiv.org/abs/1611.01368" target="_blank">arXiv — Linzen et al., "Assessing the Ability of LSTMs to Learn Syntax-Sensitive Dependencies" (Nov 2016)</a> — Tier 1; paper launching the NLP probing classifier tradition; uses subject-verb agreement tasks to probe LSTM linguistic knowledge; parallel to but distinct from the circuits/MI tradition initiated by Karpathy 2015 and Olah 2020</li>
-<li><sup class="cite">[88]</sup> <a href="https://cs.stanford.edu/~pliang/" target="_blank">Stanford CS — Percy Liang faculty page</a> — Tier 1; Liang's official Stanford institutional page; confirms title (Associate Professor of CS, Stanford HAI Senior Fellow), research areas (NLP, ML, grounding, reasoning), and Director of CRFM; accessed March 2026</li>
-<li><sup class="cite">[97]</sup> <a href="https://kellerjordan.github.io/posts/muon/" target="_blank">Keller Jordan — "Muon: An optimizer for hidden layers in neural networks" (Dec 8, 2024)</a> — Tier 1; Jordan's self-published blog post formally introducing Muon; defines "MomentUm Orthogonalized by Newton-Schulz"; states "switching from AdamW to Muon set a new NanoGPT training speed record on 10/15/24"; documents 1.35× speedup; lists contributors: Jeremy Bernstein, Laker Newhouse, Vlado Boza, Yuchen Jin, Jiacheng You, Franz Cesista; directly fetched and verified March 2026</li>
-<li><sup class="cite">[98]</sup> <a href="https://github.com/KellerJordan/modded-nanogpt" target="_blank">GitHub — KellerJordan/modded-nanogpt (README, accessed Mar 2026)</a> — Tier 1; official speedrun repository; lists Record #1 as "45 min — llm.c baseline by Karpathy and contributors (05/28/24)"; Record #3 (10/04/24) as first Muon record at 24.9 min; current record (#77, 03/06/26) at 1.435 min; confirms codebase descends from Karpathy's llm.c PyTorch trainer; directly fetched and verified March 2026</li>
-<li><sup class="cite">[99]</sup> <a href="https://arxiv.org/abs/2409.20325" target="_blank">arXiv:2409.20325 — Bernstein & Newhouse, "Old Optimizer, New Norm: An Anthology" (Sep 2024)</a> — Tier 1; theoretical foundation for Muon; develops steepest descent under the spectral norm, showing that orthogonalized gradient updates (Muon's core operation) correspond to the theoretically principled update direction; co-authored by Jeremy Bernstein and Laker Newhouse</li>
-<li><sup class="cite">[100]</sup> <a href="https://arxiv.org/abs/2502.16982" target="_blank">arXiv:2502.16982 — Liu et al. (Moonshot AI), "Muon is Scalable for LLM Training" (Feb 24, 2025)</a> — Tier 1; 28-author Moonshot AI paper introducing Moonlight, a 3B/16B MoE model trained on 5.7 trillion tokens using Muon; identifies two scaling modifications (weight decay + per-parameter update scale); reports "~2x computational efficiency compared to AdamW with compute optimal training"; open-sources pretrained, instruction-tuned, and intermediate checkpoints; abstract directly fetched and verified March 2026</li>
-<li><sup class="cite">[101]</sup> <a href="https://github.com/KellerJordan/Muon" target="_blank">GitHub — KellerJordan/Muon (standalone repository, created Nov 9, 2024)</a> — Tier 1; Jordan's standalone Muon implementation repository; creation date November 9, 2024</li>
-<li><sup class="cite">[102]</sup> <a href="https://ssi.inc" target="_blank">Safe Superintelligence — ssi.inc (official website)</a> — Tier 1; SSI's official company page; verbatim mission statement: "Building safe superintelligence (SSI) is the most important technical problem of our time... one goal and one product: a safe superintelligence"; confirms single-product, safety-by-design framing; fetched and verified March 2026</li>
-<li><sup class="cite">[103]</sup> <a href="https://x.com/ilyasut/status/1790517455628198322" target="_blank">X/Twitter — Sutskever departure from OpenAI tweet (May 14, 2024)</a> — Tier 1; Sutskever's self-posted announcement of OpenAI departure; no mention of Karpathy; no stated reason beyond gratitude</li>
-<li><sup class="cite">[104]</sup> <a href="https://x.com/ilyasut/status/1803472979873128498" target="_blank">X/Twitter — Sutskever announces Safe Superintelligence Inc. (Jun 19, 2024)</a> — Tier 1; founding announcement tweet; verbatim: "We will pursue safe superintelligence in a straight shot, with one focus, one goal, and one product"; co-founders Daniel Gross and Daniel Levy named</li>
-<li><sup class="cite">[105]</sup> <a href="https://safe.ai/work/press-release-ai-risk" target="_blank">Center for AI Safety — "Statement on AI Risk" (May 2023)</a> — Tier 1; official CAIS press release; verbatim statement: "Mitigating the risk of extinction from AI should be a global priority alongside other societal-scale risks such as pandemics and nuclear war"; Sutskever listed as signatory; CAIS description identifies him as "behind every version of GPT"; fetched and verified March 2026</li>
-<li><sup class="cite">[109]</sup> <a href="https://karpathy.bearblog.dev/year-in-review-2025/" target="_blank">karpathy.bearblog.dev — "Year in Review 2025" (Dec 19, 2025)</a> — Tier 1; Karpathy's self-published annual review covering RLVR, o1, o3, the "ghosts not animals" framing, "jagged intelligence," and the benchmaxxing paradox; directly fetched and verified March 2026; key quotes: "OpenAI o1 (late 2024) was the very first demonstration of an RLVR model, but the o3 release (early 2025) was the obvious point of inflection"; "We're not 'evolving/growing animals', we are 'summoning ghosts'"; "LLMs are emerging as a new kind of intelligence, simultaneously a lot smarter than I expected and a lot dumber than I expected"</li>
+<ul><li><sup class="cite">[74]</sup> <a href="https://arxiv.org/abs/1511.07571" target="_blank">arXiv — Johnson, Karpathy, Li, "DenseCap: Fully Convolutional Localization Networks for Dense Captioning" (Nov 2015; CVPR 2016 Oral)</a> — <span class="source-t1">Tier 1</span>; primary source for DenseCap paper; confirms full author list, equal contribution credit for Johnson and Karpathy, CVPR 2016 oral presentation venue</li>
+<li><sup class="cite">[75]</sup> <a href="https://web.eecs.umich.edu/~justincj/" target="_blank">University of Michigan EECS — Justin Johnson faculty page</a> — <span class="source-t1">Tier 1</span>; Johnson's official institutional page; confirms PhD advisor (Fei-Fei Li, Stanford), faculty appointment at Michigan, and research areas</li>
+<li><sup class="cite">[76]</sup> <a href="https://worldlabs.ai/" target="_blank">World Labs — company and Justin Johnson co-founder</a> — <span class="source-t2">Tier 2</span>; official company site; confirms Johnson as co-founder; corroborated by LinkedIn and press coverage</li>
+<li><sup class="cite">[82]</sup> <a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank">karpathy.github.io — "The Unreasonable Effectiveness of Recurrent Neural Networks" (May 21, 2015)</a> — <span class="source-t1">Tier 1</span>; Karpathy's personal blog post; primary source for the "quote detection cell" description and the ~5% interpretable cells finding; contains verbatim quote: "one of its cells gradually tuned itself during training to become a quote detection cell, since this helps it better perform the final task. This is one of the cleanest and most compelling examples of where the power in Deep Learning models...is coming from."</li>
+<li><sup class="cite">[83]</sup> <a href="https://arxiv.org/abs/1704.01444" target="_blank">arXiv — Radford et al., "Learning to Generate Reviews and Discovering Sentiment" (Apr 2017)</a> — <span class="source-t1">Tier 1</span>; OpenAI paper discovering a single "sentiment neuron" (unit #2388) in a 4,096-unit mLSTM trained on Amazon reviews; the direct intellectual successor to Karpathy 2015's interpretable LSTM cells, extending from syntactic to semantic features</li>
+<li><sup class="cite">[84]</sup> <a href="https://transformer-circuits.pub/2022/toy_model/index.html" target="_blank">Anthropic — Elhage et al., "Toy Models of Superposition" (2022)</a> — <span class="source-t1">Tier 1</span>; Anthropic research paper introducing the superposition hypothesis — that models compress more features than dimensions by storing multiple features per neuron; provides the theoretical explanation for why only ~5% of Karpathy 2015's LSTM cells were interpretable</li>
+<li><sup class="cite">[85]</sup> <a href="https://transformer-circuits.pub/2023/monosemantic-features/index.html" target="_blank">Anthropic — "Towards Monosemanticity: Decomposing Language Models With Dictionary Learning" (2023)</a> — <span class="source-t1">Tier 1</span>; Anthropic paper introducing sparse autoencoders (SAEs) to decompose polysemantic neurons into monosemantic features; extends the interpretable-neuron goal of Karpathy 2015 to the full transformer at scale</li>
+<li><sup class="cite">[86]</sup> <a href="https://arxiv.org/abs/1611.01368" target="_blank">arXiv — Linzen et al., "Assessing the Ability of LSTMs to Learn Syntax-Sensitive Dependencies" (Nov 2016)</a> — <span class="source-t1">Tier 1</span>; paper launching the NLP probing classifier tradition; uses subject-verb agreement tasks to probe LSTM linguistic knowledge; parallel to but distinct from the circuits/MI tradition initiated by Karpathy 2015 and Olah 2020</li>
+<li><sup class="cite">[88]</sup> <a href="https://cs.stanford.edu/~pliang/" target="_blank">Stanford CS — Percy Liang faculty page</a> — <span class="source-t1">Tier 1</span>; Liang's official Stanford institutional page; confirms title (Associate Professor of CS, Stanford HAI Senior Fellow), research areas (NLP, ML, grounding, reasoning), and Director of CRFM; accessed March 2026</li>
+<li><sup class="cite">[97]</sup> <a href="https://kellerjordan.github.io/posts/muon/" target="_blank">Keller Jordan — "Muon: An optimizer for hidden layers in neural networks" (Dec 8, 2024)</a> — <span class="source-t1">Tier 1</span>; Jordan's self-published blog post formally introducing Muon; defines "MomentUm Orthogonalized by Newton-Schulz"; states "switching from AdamW to Muon set a new NanoGPT training speed record on 10/15/24"; documents 1.35× speedup; lists contributors: Jeremy Bernstein, Laker Newhouse, Vlado Boza, Yuchen Jin, Jiacheng You, Franz Cesista; directly fetched and verified March 2026</li>
+<li><sup class="cite">[98]</sup> <a href="https://github.com/KellerJordan/modded-nanogpt" target="_blank">GitHub — KellerJordan/modded-nanogpt (README, accessed Mar 2026)</a> — <span class="source-t1">Tier 1</span>; official speedrun repository; lists Record #1 as "45 min — llm.c baseline by Karpathy and contributors (05/28/24)"; Record #3 (10/04/24) as first Muon record at 24.9 min; current record (#77, 03/06/26) at 1.435 min; confirms codebase descends from Karpathy's llm.c PyTorch trainer; directly fetched and verified March 2026</li>
+<li><sup class="cite">[99]</sup> <a href="https://arxiv.org/abs/2409.20325" target="_blank">arXiv:2409.20325 — Bernstein & Newhouse, "Old Optimizer, New Norm: An Anthology" (Sep 2024)</a> — <span class="source-t1">Tier 1</span>; theoretical foundation for Muon; develops steepest descent under the spectral norm, showing that orthogonalized gradient updates (Muon's core operation) correspond to the theoretically principled update direction; co-authored by Jeremy Bernstein and Laker Newhouse</li>
+<li><sup class="cite">[100]</sup> <a href="https://arxiv.org/abs/2502.16982" target="_blank">arXiv:2502.16982 — Liu et al. (Moonshot AI), "Muon is Scalable for LLM Training" (Feb 24, 2025)</a> — <span class="source-t1">Tier 1</span>; 28-author Moonshot AI paper introducing Moonlight, a 3B/16B MoE model trained on 5.7 trillion tokens using Muon; identifies two scaling modifications (weight decay + per-parameter update scale); reports "~2x computational efficiency compared to AdamW with compute optimal training"; open-sources pretrained, instruction-tuned, and intermediate checkpoints; abstract directly fetched and verified March 2026</li>
+<li><sup class="cite">[101]</sup> <a href="https://github.com/KellerJordan/Muon" target="_blank">GitHub — KellerJordan/Muon (standalone repository, created Nov 9, 2024)</a> — <span class="source-t1">Tier 1</span>; Jordan's standalone Muon implementation repository; creation date November 9, 2024</li>
+<li><sup class="cite">[102]</sup> <a href="https://ssi.inc" target="_blank">Safe Superintelligence — ssi.inc (official website)</a> — <span class="source-t1">Tier 1</span>; SSI's official company page; verbatim mission statement: "Building safe superintelligence (SSI) is the most important technical problem of our time... one goal and one product: a safe superintelligence"; confirms single-product, safety-by-design framing; fetched and verified March 2026</li>
+<li><sup class="cite">[103]</sup> <a href="https://x.com/ilyasut/status/1790517455628198322" target="_blank">X/Twitter — Sutskever departure from OpenAI tweet (May 14, 2024)</a> — <span class="source-t1">Tier 1</span>; Sutskever's self-posted announcement of OpenAI departure; no mention of Karpathy; no stated reason beyond gratitude</li>
+<li><sup class="cite">[104]</sup> <a href="https://x.com/ilyasut/status/1803472979873128498" target="_blank">X/Twitter — Sutskever announces Safe Superintelligence Inc. (Jun 19, 2024)</a> — <span class="source-t1">Tier 1</span>; founding announcement tweet; verbatim: "We will pursue safe superintelligence in a straight shot, with one focus, one goal, and one product"; co-founders Daniel Gross and Daniel Levy named</li>
+<li><sup class="cite">[105]</sup> <a href="https://safe.ai/work/press-release-ai-risk" target="_blank">Center for AI Safety — "Statement on AI Risk" (May 2023)</a> — <span class="source-t1">Tier 1</span>; official CAIS press release; verbatim statement: "Mitigating the risk of extinction from AI should be a global priority alongside other societal-scale risks such as pandemics and nuclear war"; Sutskever listed as signatory; CAIS description identifies him as "behind every version of GPT"; fetched and verified March 2026</li>
+<li><sup class="cite">[109]</sup> <a href="https://karpathy.bearblog.dev/year-in-review-2025/" target="_blank">karpathy.bearblog.dev — "Year in Review 2025" (Dec 19, 2025)</a> — <span class="source-t1">Tier 1</span>; Karpathy's self-published annual review covering RLVR, o1, o3, the "ghosts not animals" framing, "jagged intelligence," and the benchmaxxing paradox; directly fetched and verified March 2026; key quotes: "OpenAI o1 (late 2024) was the very first demonstration of an RLVR model, but the o3 release (early 2025) was the obvious point of inflection"; "We're not 'evolving/growing animals', we are 'summoning ghosts'"; "LLMs are emerging as a new kind of intelligence, simultaneously a lot smarter than I expected and a lot dumber than I expected"</li>
 <p></ul></p>
 <h3>Tier 3 — Corporate Registry Analysis</h3>
-<ul><li><sup class="cite">[71]</sup> <a href="https://aiexpert.network/eureka-labs/" target="_blank">AIExpert Network — "Eureka Labs: Karpathy's AI-Native School" (2024)</a> — Tier 3; independent analysis; documents Delaware LLC formation date of June 21, 2024, California Secretary of State foreign LLC filing signed solely by Karpathy, and notes absence of any public investment filings; the only accessible source with specific entity registration details (Delaware ICIS and OpenCorporates are CAPTCHA-gated)</li>
+<ul><li><sup class="cite">[71]</sup> <a href="https://aiexpert.network/eureka-labs/" target="_blank">AIExpert Network — "Eureka Labs: Karpathy's AI-Native School" (2024)</a> — <span class="source-t3">Tier 3</span>; independent analysis; documents Delaware LLC formation date of June 21, 2024, California Secretary of State foreign LLC filing signed solely by Karpathy, and notes absence of any public investment filings; the only accessible source with specific entity registration details (Delaware ICIS and OpenCorporates are CAPTCHA-gated)</li>
 <p></ul></p>
 <h3>Tier 2 (Mainstream press / Wikipedia)</h3>
 <ul><li><sup class="cite">[12]</sup> <a href="https://en.wikipedia.org/wiki/Andrej_Karpathy" target="_blank">Wikipedia — Andrej Karpathy</a></li>
@@ -1029,7 +1397,7 @@
 <li><sup class="cite">[14]</sup> <a href="https://www.cnbc.com/2022/07/13/tesla-ai-leader-andrej-karpathy-announces-hes-leaving-the-company.html" target="_blank">CNBC — Karpathy leaves Tesla, July 2022</a></li>
 <li><sup class="cite">[15]</sup> <a href="https://fortune.com/2022/07/14/andrej-karpathy-quits-tesla-ai-chief-trouble-for-elon-musk/" target="_blank">Fortune — Karpathy quits Tesla, July 2022</a></li>
 <li><sup class="cite">[16]</sup> <a href="https://techcrunch.com/2024/02/13/andrej-karpathy-is-leaving-openai-again-but-he-says-there-was-no-drama/" target="_blank">TechCrunch — Karpathy leaves OpenAI (no drama), Feb 2024</a></li>
-<li><sup class="cite">[17]</sup> <a href="https://www.dwarkesh.com/p/andrej-karpathy" target="_blank">Dwarkesh Patel podcast — "AGI is still a decade away," Andrej Karpathy (Oct 17, 2025)</a> — Tier 2; full transcript on Substack; approx. 2.5-hour interview covering AGI timelines, RL critique, education philosophy, and Eureka Labs; partial transcript accessible (truncated ~01:07:05); education section confirmed accessed via secondary summaries <sup class="cite">[78]</sup><sup class="cite">[79]</sup></li>
+<li><sup class="cite">[17]</sup> <a href="https://www.dwarkesh.com/p/andrej-karpathy" target="_blank">Dwarkesh Patel podcast — "AGI is still a decade away," Andrej Karpathy (Oct 17, 2025)</a> — <span class="source-t2">Tier 2</span>; full transcript on Substack; approx. 2.5-hour interview covering AGI timelines, RL critique, education philosophy, and Eureka Labs; partial transcript accessible (truncated ~01:07:05); education section confirmed accessed via secondary summaries <sup class="cite">[78]</sup><sup class="cite">[79]</sup></li>
 <li><sup class="cite">[18]</sup> <a href="https://lexfridman.com/andrej-karpathy/" target="_blank">Lex Fridman Podcast #333</a></li>
 <li><sup class="cite">[19]</sup> <a href="https://techcrunch.com/2017/06/20/tesla-hires-deep-learning-expert-andrej-karpathy-to-lead-autopilot-vision/" target="_blank">TechCrunch — Tesla hires Karpathy to lead Autopilot Vision, June 2017</a></li>
 <li><sup class="cite">[20]</sup> <a href="https://www.startuparchive.org/p/andrej-karpathy-explains-what-makes-elon-musk-unique" target="_blank">StartupArchive — Karpathy on Elon Musk (clips from Lex Fridman #333), 2022</a></li>
@@ -1042,37 +1410,37 @@
 <li><sup class="cite">[36]</sup> <a href="https://fortune.com/2026/02/02/moltbook-security-agents-singularity-disaster-gary-marcus-andrej-karpathy/" target="_blank">Fortune — Moltbook security episode with Karpathy, Gary Marcus (Feb 2, 2026)</a></li>
 <li><sup class="cite">[46]</sup> <a href="https://arxiv.org/abs/2402.06414" target="_blank">ArXiv — Ganescu & Passerat-Palmbach, "Trust the Process: Zero-Knowledge ML to Enhance Trust in Generative AI" (AAAI Workshop PPAI-24, Feb 2024)</a></li>
 <li><sup class="cite">[47]</sup> <a href="https://arxiv.org/abs/2506.22419" target="_blank">ArXiv — Zhao et al., "The Automated LLM Speedrunning Benchmark: Reproducing NanoGPT Improvements" (Jun 2025)</a></li>
-<li><sup class="cite">[59]</sup> <a href="https://hazyresearch.stanford.edu/data-centric-ai" target="_blank">Stanford Hazy Research — "The Road to Software 2.0 or Data-Centric AI" (Jul 19, 2021)</a> — Tier 1; Stanford Hazy Research group blog by Chris Ré; documents the full naming lineage from Karpathy's essay → Hazy Research → "data-centric AI" → Ng adoption; key quotes: "Eventually, we turned to others and called this 'Software 2.0' (inspired by [Karpathy's post])" and "Recently Andrew Ng found this to be a not-totally-embarrassing name and gave a great talk about his perspective on this direction." Fetched and verified March 2026.</li>
-<li><sup class="cite">[89]</sup> <a href="https://hazyresearch.stanford.edu/blog/2020-02-28-software2" target="_blank">Stanford Hazy Research — "Software 2.0 and Data Programming: Lessons Learned, and What's Next" (Feb 28, 2020)</a> — Tier 1; Stanford Hazy Research group blog; documents Karpathy's lab visit and the group's terminology adoption; key quote (verified by direct fetch): "We started out by calling this paradigm 'data programming' but eventually migrated to the (much better) name Software 2.0 after Andrej Karpathy wrote his blog post and visited the lab."</li>
-<li><sup class="cite">[90]</sup> <a href="https://www.youtube.com/watch?v=06-AZXmwHjo" target="_blank">DeepLearning.AI / Andrew Ng — "A Chat with Andrew on MLOps: From Model-centric to Data-centric AI" (Mar 24, 2021)</a> — Tier 1; Ng's first major public talk launching the named "data-centric AI" movement; linked directly from the Hazy Research July 2021 post <sup class="cite">[59]</sup>; demonstrates shift from model iteration to data iteration using steel-sheet defect detection case study</li>
-<li><sup class="cite">[91]</sup> <a href="https://spectrum.ieee.org/andrew-ng-data-centric-ai" target="_blank">IEEE Spectrum — "Andrew Ng: Unbiggen AI" (Feb 9, 2022)</a> — Tier 2; most widely cited interview on data-centric AI; Ng defines it as "the discipline of systematically engineering the data needed to successfully build an AI system"; does not mention Karpathy or Software 2.0</li>
-<li><sup class="cite">[92]</sup> <a href="https://datacentricai.org/neurips21/" target="_blank">NeurIPS 2021 Data-Centric AI Workshop (Dec 14, 2021)</a> — Tier 1; official academic workshop organized by Ng (Landing AI / DeepLearning.AI) and co-organizers; attracted 160+ submitted papers; primary record of the movement's formal academic launch</li>
-<li><sup class="cite">[72]</sup> <a href="https://cleantechnica.com/2021/06/21/teslas-andrej-karpathy-gives-a-keynote-at-cvpo-2021-workshop-on-autonomous-driving/" target="_blank">CleanTechnica — "Tesla's Andrej Karpathy Gives A Keynote At CVPR 2021 Workshop On Autonomous Driving" (Jun 21, 2021)</a> — Tier 2; contemporaneous press report on CVPR 2021 keynote; documents Tesla's vision-only strategy and Karpathy's role as keynote speaker at the autonomous driving workshop</li>
-<li><sup class="cite">[73]</sup> <a href="https://techcrunch.com/2021/08/19/top-five-highlights-of-elon-musks-tesla-ai-day/" target="_blank">TechCrunch — "Top four highlights of Elon Musk's Tesla AI Day" (Aug 19, 2021)</a> — Tier 2; contemporaneous mainstream press coverage of Tesla AI Day 2021; documents Karpathy's centerpiece technical presentation on the Autopilot neural network stack. Note: title says "four" but URL slug says "five" — likely a post-publication title edit by TechCrunch.</li>
-<li><sup class="cite">[80]</sup> <a href="https://efts.sec.gov/LATEST/search-index?q=%22Eureka+Labs%22" target="_blank">SEC EDGAR full-text search — "Eureka Labs"</a> — Tier 2; U.S. Securities and Exchange Commission filing database; search returned zero results for "Eureka Labs" as of March 2026; no Form D (Reg D exempt offering) or other securities filings found</li>
-<li><sup class="cite">[87]</sup> <a href="https://www.semanticscholar.org/paper/Visualizing-and-Understanding-Recurrent-Networks-Karpathy-Johnson/40be3888daa5c2e5af4d36ae22f690bcc8caf600" target="_blank">Semantic Scholar — "Visualizing and Understanding Recurrent Networks" paper page</a> — Tier 2; citation aggregator; API returns citationCount=1134 as of March 2026; used for citation count of arXiv:1506.02078</li>
-<li><sup class="cite">[81]</sup> <a href="https://www.crunchbase.com/organization/eureka-labs-7357" target="_blank">Crunchbase — Eureka Labs company profile</a> — Tier 2; paywalled; secondary press coverage citing the profile confirms no funding rounds are listed as of March 2026</li>
-<li><sup class="cite">[106]</sup> <a href="https://www.dwarkesh.com/p/ilya-sutskever-2" target="_blank">Dwarkesh Patel podcast — Ilya Sutskever, "We're moving from the age of scaling to the age of research" (Nov 2025)</a> — Tier 2; full Dwarkesh podcast episode with Sutskever; verbatim AGI timeline quote: "I think like 5 to 20"; describes SSI as "squarely an 'age of research' company"; characterizes current models as generalizing "dramatically worse than people"; directly fetched and verified March 2026</li>
-<li><sup class="cite">[107]</sup> <a href="https://www.cnbc.com/2024/06/19/openai-co-founder-ilya-sutskever-announces-safe-superintelligence.html" target="_blank">CNBC — "OpenAI co-founder Ilya Sutskever announces new AI company focused on safe superintelligence" (Jun 19, 2024)</a> — Tier 2; mainstream press coverage of SSI founding (June 2024); documents co-founders, mission, and Sutskever's stated motivation; <strong>cannot contain NeurIPS 2024 content (December 2024) — NeurIPS quote attributed to this source requires a separate contemporaneous citation</strong></li>
-<li><sup class="cite">[108]</sup> <a href="https://en.wikipedia.org/wiki/Safe_Superintelligence_Inc." target="_blank">Wikipedia — Safe Superintelligence Inc.</a> — Tier 2; Wikipedia entry for SSI; confirms founding date June 19, 2024; co-founders Sutskever, Daniel Gross, Daniel Levy; Series A $1B September 2024; $30B+ valuation March 2025; headquarters Palo Alto and Tel Aviv</li>
+<li><sup class="cite">[59]</sup> <a href="https://hazyresearch.stanford.edu/data-centric-ai" target="_blank">Stanford Hazy Research — "The Road to Software 2.0 or Data-Centric AI" (Jul 19, 2021)</a> — <span class="source-t1">Tier 1</span>; Stanford Hazy Research group blog by Chris Ré; documents the full naming lineage from Karpathy's essay → Hazy Research → "data-centric AI" → Ng adoption; key quotes: "Eventually, we turned to others and called this 'Software 2.0' (inspired by [Karpathy's post])" and "Recently Andrew Ng found this to be a not-totally-embarrassing name and gave a great talk about his perspective on this direction." Fetched and verified March 2026.</li>
+<li><sup class="cite">[89]</sup> <a href="https://hazyresearch.stanford.edu/blog/2020-02-28-software2" target="_blank">Stanford Hazy Research — "Software 2.0 and Data Programming: Lessons Learned, and What's Next" (Feb 28, 2020)</a> — <span class="source-t1">Tier 1</span>; Stanford Hazy Research group blog; documents Karpathy's lab visit and the group's terminology adoption; key quote (verified by direct fetch): "We started out by calling this paradigm 'data programming' but eventually migrated to the (much better) name Software 2.0 after Andrej Karpathy wrote his blog post and visited the lab."</li>
+<li><sup class="cite">[90]</sup> <a href="https://www.youtube.com/watch?v=06-AZXmwHjo" target="_blank">DeepLearning.AI / Andrew Ng — "A Chat with Andrew on MLOps: From Model-centric to Data-centric AI" (Mar 24, 2021)</a> — <span class="source-t1">Tier 1</span>; Ng's first major public talk launching the named "data-centric AI" movement; linked directly from the Hazy Research July 2021 post <sup class="cite">[59]</sup>; demonstrates shift from model iteration to data iteration using steel-sheet defect detection case study</li>
+<li><sup class="cite">[91]</sup> <a href="https://spectrum.ieee.org/andrew-ng-data-centric-ai" target="_blank">IEEE Spectrum — "Andrew Ng: Unbiggen AI" (Feb 9, 2022)</a> — <span class="source-t2">Tier 2</span>; most widely cited interview on data-centric AI; Ng defines it as "the discipline of systematically engineering the data needed to successfully build an AI system"; does not mention Karpathy or Software 2.0</li>
+<li><sup class="cite">[92]</sup> <a href="https://datacentricai.org/neurips21/" target="_blank">NeurIPS 2021 Data-Centric AI Workshop (Dec 14, 2021)</a> — <span class="source-t1">Tier 1</span>; official academic workshop organized by Ng (Landing AI / DeepLearning.AI) and co-organizers; attracted 160+ submitted papers; primary record of the movement's formal academic launch</li>
+<li><sup class="cite">[72]</sup> <a href="https://cleantechnica.com/2021/06/21/teslas-andrej-karpathy-gives-a-keynote-at-cvpo-2021-workshop-on-autonomous-driving/" target="_blank">CleanTechnica — "Tesla's Andrej Karpathy Gives A Keynote At CVPR 2021 Workshop On Autonomous Driving" (Jun 21, 2021)</a> — <span class="source-t2">Tier 2</span>; contemporaneous press report on CVPR 2021 keynote; documents Tesla's vision-only strategy and Karpathy's role as keynote speaker at the autonomous driving workshop</li>
+<li><sup class="cite">[73]</sup> <a href="https://techcrunch.com/2021/08/19/top-five-highlights-of-elon-musks-tesla-ai-day/" target="_blank">TechCrunch — "Top four highlights of Elon Musk's Tesla AI Day" (Aug 19, 2021)</a> — <span class="source-t2">Tier 2</span>; contemporaneous mainstream press coverage of Tesla AI Day 2021; documents Karpathy's centerpiece technical presentation on the Autopilot neural network stack. Note: title says "four" but URL slug says "five" — likely a post-publication title edit by TechCrunch.</li>
+<li><sup class="cite">[80]</sup> <a href="https://efts.sec.gov/LATEST/search-index?q=%22Eureka+Labs%22" target="_blank">SEC EDGAR full-text search — "Eureka Labs"</a> — <span class="source-t2">Tier 2</span>; U.S. Securities and Exchange Commission filing database; search returned zero results for "Eureka Labs" as of March 2026; no Form D (Reg D exempt offering) or other securities filings found</li>
+<li><sup class="cite">[87]</sup> <a href="https://www.semanticscholar.org/paper/Visualizing-and-Understanding-Recurrent-Networks-Karpathy-Johnson/40be3888daa5c2e5af4d36ae22f690bcc8caf600" target="_blank">Semantic Scholar — "Visualizing and Understanding Recurrent Networks" paper page</a> — <span class="source-t2">Tier 2</span>; citation aggregator; API returns citationCount=1134 as of March 2026; used for citation count of arXiv:1506.02078</li>
+<li><sup class="cite">[81]</sup> <a href="https://www.crunchbase.com/organization/eureka-labs-7357" target="_blank">Crunchbase — Eureka Labs company profile</a> — <span class="source-t2">Tier 2</span>; paywalled; secondary press coverage citing the profile confirms no funding rounds are listed as of March 2026</li>
+<li><sup class="cite">[106]</sup> <a href="https://www.dwarkesh.com/p/ilya-sutskever-2" target="_blank">Dwarkesh Patel podcast — Ilya Sutskever, "We're moving from the age of scaling to the age of research" (Nov 2025)</a> — <span class="source-t2">Tier 2</span>; full Dwarkesh podcast episode with Sutskever; verbatim AGI timeline quote: "I think like 5 to 20"; describes SSI as "squarely an 'age of research' company"; characterizes current models as generalizing "dramatically worse than people"; directly fetched and verified March 2026</li>
+<li><sup class="cite">[107]</sup> <a href="https://www.cnbc.com/2024/06/19/openai-co-founder-ilya-sutskever-announces-safe-superintelligence.html" target="_blank">CNBC — "OpenAI co-founder Ilya Sutskever announces new AI company focused on safe superintelligence" (Jun 19, 2024)</a> — <span class="source-t2">Tier 2</span>; mainstream press coverage of SSI founding (June 2024); documents co-founders, mission, and Sutskever's stated motivation; <strong>cannot contain NeurIPS 2024 content (December 2024) — NeurIPS quote attributed to this source requires a separate contemporaneous citation</strong></li>
+<li><sup class="cite">[108]</sup> <a href="https://en.wikipedia.org/wiki/Safe_Superintelligence_Inc." target="_blank">Wikipedia — Safe Superintelligence Inc.</a> — <span class="source-t2">Tier 2</span>; Wikipedia entry for SSI; confirms founding date June 19, 2024; co-founders Sutskever, Daniel Gross, Daniel Levy; Series A $1B September 2024; $30B+ valuation March 2025; headquarters Palo Alto and Tel Aviv</li>
 <p></ul></p>
 <h3>Tier 2.5 (Community — GitHub issues / open-source project records)</h3>
 <ul><li><sup class="cite">[45]</sup> <a href="https://github.com/karpathy/nanoGPT/issues/471" target="_blank">GitHub — karpathy/nanoGPT issue #471 "Citing this project in research" (Apr 2024)</a></li>
 <p></ul></p>
 <h3>Tier 3 (Blogs / Fan Transcripts)</h3>
-<ul><li><sup class="cite">[110]</sup> <a href="https://iliyaml.github.io/notes/nlp/state-of-gpt-2023/" target="_blank">iliyaml.github.io — State of GPT 2023 talk notes (secondary transcript)</a> — Tier 3; secondary transcript of the "State of GPT" talk (Microsoft Build, May 23, 2023); used for verbatim quotes from the talk; content corroborated by multiple secondary sources; not an official transcript — all verbatim quotes from this source require uncertainty flag</li>
+<ul><li><sup class="cite">[110]</sup> <a href="https://iliyaml.github.io/notes/nlp/state-of-gpt-2023/" target="_blank">iliyaml.github.io — State of GPT 2023 talk notes (secondary transcript)</a> — <span class="source-t3">Tier 3</span>; secondary transcript of the "State of GPT" talk (Microsoft Build, May 23, 2023); used for verbatim quotes from the talk; content corroborated by multiple secondary sources; not an official transcript — all verbatim quotes from this source require uncertainty flag</li>
 <p></ul></p>
 
-<ul><li><sup class="cite">[78]</sup> <a href="https://thezvi.substack.com/p/on-dwarkesh-patels-podcast-with-andrej" target="_blank">Zvi Mowshowitz — "On Dwarkesh Patel's Podcast with Andrej Karpathy" (Oct 2025)</a> — Tier 3; detailed episode summary by Zvi Mowshowitz; covers education philosophy, Korean tutor story, Starfleet Academy, Pre-AGI/Post-AGI distinction, and current AI tutoring limitations; used to cross-check <sup class="cite">[17]</sup> claims</li>
-<li><sup class="cite">[79]</sup> <a href="https://www.podchemy.com/notes/andrej-karpathy-agi-is-still-a-decade-away-43921620932" target="_blank">Podchemy — "Andrej Karpathy — AGI is still a decade away" podcast notes</a> — Tier 3; AI-generated podcast notes; covers education section including "eurekas per second," "pain before solution," nanochat learning approach, and Karpathy's Korean tutor reference; used to cross-check <sup class="cite">[17]</sup> claims</li>
+<ul><li><sup class="cite">[78]</sup> <a href="https://thezvi.substack.com/p/on-dwarkesh-patels-podcast-with-andrej" target="_blank">Zvi Mowshowitz — "On Dwarkesh Patel's Podcast with Andrej Karpathy" (Oct 2025)</a> — <span class="source-t3">Tier 3</span>; detailed episode summary by Zvi Mowshowitz; covers education philosophy, Korean tutor story, Starfleet Academy, Pre-AGI/Post-AGI distinction, and current AI tutoring limitations; used to cross-check <sup class="cite">[17]</sup> claims</li>
+<li><sup class="cite">[79]</sup> <a href="https://www.podchemy.com/notes/andrej-karpathy-agi-is-still-a-decade-away-43921620932" target="_blank">Podchemy — "Andrej Karpathy — AGI is still a decade away" podcast notes</a> — <span class="source-t3">Tier 3</span>; AI-generated podcast notes; covers education section including "eurekas per second," "pain before solution," nanochat learning approach, and Karpathy's Korean tutor reference; used to cross-check <sup class="cite">[17]</sup> claims</li>
 <p></ul></p>
 <ul><li><sup class="cite">[24]</sup> <a href="https://elonmuskinterviews.wordpress.com/2021/08/31/tesla-ai-day-the-presentation-i/" target="_blank">Elon Musk Interviews — Tesla AI Day 2021 presentation transcript (Part I)</a> — WordPress fan blog; not mainstream press. Quote used in body ("building a synthetic animal...") requires verification against official Tesla AI Day video.</li>
-<li><sup class="cite">[57]</sup> <a href="https://news.ycombinator.com/item?id=34881881" target="_blank">Hacker News — "Software 2.0 (2017)" re-submission (Feb 21, 2023)</a> — Tier 3; community aggregator thread; 422 points, 330 comments; documents reception of the essay five years post-publication including substantive skeptical pushback from practitioners</li>
-<li><sup class="cite">[58]</sup> [Hacker News — "Building the Software 2.0 Stack by Andrej Karpathy [video]" (Jun 10, 2018)](https://news.ycombinator.com/item?id=17280454) — Tier 3; community thread on the Spark+AI Summit 2018 keynote; 207 points; links to external video host; cited as evidence of practitioner engagement with the talk</li>
-<li><sup class="cite">[60]</sup> <a href="https://medium.com/intuitionmachine/is-deep-learning-software-2-0-cc7ad46b138f" target="_blank">Carlos E. Perez, "Is Deep Learning 'Software 2.0'?" Intuition Machine, Medium</a> — Tier 3; direct critical response on Medium; Perez acknowledges the term named "what many had implicitly in their heads" while challenging Karpathy's claimed advantages; page returned 403 on direct fetch — URL confirmed from search results</li>
-<li><sup class="cite">[61]</sup> <a href="https://medium.com/@sethweidman/on-andrej-karpathys-software-2-0-a293cc15357" target="_blank">Seth Weidman, "On Andrej Karpathy's 'Software 2.0,'" Medium</a> — Tier 3; technical response arguing the essay describes a shift in how software runs rather than how it is developed; page returned 403 on direct fetch — URL confirmed from search results</li>
-<li><sup class="cite">[62]</sup> <a href="https://tenstorrent.com/vision/the-classic-andrej-software-2-0" target="_blank">Tenstorrent — "The Classic Andrej Software 2.0"</a> — Tier 3; secondary page embedding YouTube ID y57wwucbXR8 for the Spark+AI Summit 2018 keynote "Building the Software 2.0 Stack"</li>
-<li><sup class="cite">[70]</sup> <a href="https://dynamicallytyped.com/stories/2021/karpathy-autopilot-cvpr/" target="_blank">Dynamically Typed — "Karpathy on Tesla Autopilot at CVPR'21" (Jun 2021)</a> — Tier 3; ML newsletter summary of CVPR 2021 keynote; provides dataset scale details (1.5PB, 6B labeled objects, 1M videos, 221 triggers) and describes the iterative data engine training cycle (7 passes); useful for technical numbers not captured in Tier 2 coverage</li>
+<li><sup class="cite">[57]</sup> <a href="https://news.ycombinator.com/item?id=34881881" target="_blank">Hacker News — "Software 2.0 (2017)" re-submission (Feb 21, 2023)</a> — <span class="source-t3">Tier 3</span>; community aggregator thread; 422 points, 330 comments; documents reception of the essay five years post-publication including substantive skeptical pushback from practitioners</li>
+<li><sup class="cite">[58]</sup> [Hacker News — "Building the Software 2.0 Stack by Andrej Karpathy [video]" (Jun 10, 2018)](https://news.ycombinator.com/item?id=17280454) — <span class="source-t3">Tier 3</span>; community thread on the Spark+AI Summit 2018 keynote; 207 points; links to external video host; cited as evidence of practitioner engagement with the talk</li>
+<li><sup class="cite">[60]</sup> <a href="https://medium.com/intuitionmachine/is-deep-learning-software-2-0-cc7ad46b138f" target="_blank">Carlos E. Perez, "Is Deep Learning 'Software 2.0'?" Intuition Machine, Medium</a> — <span class="source-t3">Tier 3</span>; direct critical response on Medium; Perez acknowledges the term named "what many had implicitly in their heads" while challenging Karpathy's claimed advantages; page returned 403 on direct fetch — URL confirmed from search results</li>
+<li><sup class="cite">[61]</sup> <a href="https://medium.com/@sethweidman/on-andrej-karpathys-software-2-0-a293cc15357" target="_blank">Seth Weidman, "On Andrej Karpathy's 'Software 2.0,'" Medium</a> — <span class="source-t3">Tier 3</span>; technical response arguing the essay describes a shift in how software runs rather than how it is developed; page returned 403 on direct fetch — URL confirmed from search results</li>
+<li><sup class="cite">[62]</sup> <a href="https://tenstorrent.com/vision/the-classic-andrej-software-2-0" target="_blank">Tenstorrent — "The Classic Andrej Software 2.0"</a> — <span class="source-t3">Tier 3</span>; secondary page embedding YouTube ID y57wwucbXR8 for the Spark+AI Summit 2018 keynote "Building the Software 2.0 Stack"</li>
+<li><sup class="cite">[70]</sup> <a href="https://dynamicallytyped.com/stories/2021/karpathy-autopilot-cvpr/" target="_blank">Dynamically Typed — "Karpathy on Tesla Autopilot at CVPR'21" (Jun 2021)</a> — <span class="source-t3">Tier 3</span>; ML newsletter summary of CVPR 2021 keynote; provides dataset scale details (1.5PB, 6B labeled objects, 1M videos, 221 triggers) and describes the iterative data engine training cycle (7 passes); useful for technical numbers not captured in <span class="source-t2">Tier 2</span> coverage</li>
 <p></ul></p></div>
   <script>
     const barLinks = document.querySelectorAll('.section-bar a[href^="#"]');
@@ -1098,5 +1466,173 @@
     <p>Powered by <a href="https://github.com/danlex/autoresearch">Autoresearch</a> — Autonomous research with Claude Opus</p>
     <p><a href="https://github.com/danlex/autoresearch">GitHub Repository</a></p>
   </footer>
+  <div class="cite-popover" id="cite-popover"></div>
+  <script>
+  (function() {
+    // === Reading progress bar ===
+    var progressBar = document.getElementById('progress-bar');
+    function updateProgress() {
+      var scrollTop = window.scrollY || document.documentElement.scrollTop;
+      var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // === Dark/light mode toggle ===
+    var toggle = document.getElementById('theme-toggle');
+    var root = document.documentElement;
+    var stored = localStorage.getItem('ar-theme');
+    if (stored) {
+      root.setAttribute('data-theme', stored);
+    }
+    function updateToggleIcon() {
+      toggle.innerHTML = root.getAttribute('data-theme') === 'light' ? '&#9728;' : '&#9790;';
+    }
+    updateToggleIcon();
+    toggle.addEventListener('click', function() {
+      var current = root.getAttribute('data-theme');
+      var next = current === 'light' ? 'dark' : 'light';
+      if (next === 'dark') {
+        root.removeAttribute('data-theme');
+      } else {
+        root.setAttribute('data-theme', next);
+      }
+      localStorage.setItem('ar-theme', next);
+      updateToggleIcon();
+    });
+
+    // === Citation popovers ===
+    var popover = document.getElementById('cite-popover');
+    var cites = document.querySelectorAll('sup.cite');
+    var hideTimer = null;
+    function showPopover(el) {
+      clearTimeout(hideTimer);
+      var num = el.textContent.replace(/[\[\]]/g, '');
+      var srcEl = null;
+      // Look for a matching source in the page — find li or p containing [N] as a source entry
+      var allEls = document.querySelectorAll('#sources-section li, #sources-section p');
+      for (var i = 0; i < allEls.length; i++) {
+        if (allEls[i].textContent.match(new RegExp('^\\s*\\[?' + num + '\\]?[\\s.:\\-]'))) {
+          srcEl = allEls[i];
+          break;
+        }
+      }
+      var text = srcEl ? srcEl.textContent.substring(0, 200) : 'Source [' + num + ']';
+      popover.textContent = text;
+      popover.classList.add('visible');
+      var rect = el.getBoundingClientRect();
+      var popW = popover.offsetWidth;
+      var left = rect.left + rect.width / 2 - popW / 2;
+      if (left < 8) left = 8;
+      if (left + popW > window.innerWidth - 8) left = window.innerWidth - popW - 8;
+      popover.style.left = left + 'px';
+      popover.style.top = (rect.top + window.scrollY - popover.offsetHeight - 8) + 'px';
+    }
+    function hidePopover() {
+      hideTimer = setTimeout(function() { popover.classList.remove('visible'); }, 200);
+    }
+    cites.forEach(function(c) {
+      c.addEventListener('mouseenter', function() { showPopover(c); });
+      c.addEventListener('mouseleave', hidePopover);
+      c.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (popover.classList.contains('visible')) {
+          popover.classList.remove('visible');
+        } else {
+          showPopover(c);
+        }
+      });
+    });
+
+    // === Client-side search ===
+    var searchInput = document.getElementById('search-input');
+    var searchResults = document.getElementById('search-results');
+    var searchTimeout = null;
+    searchInput.addEventListener('input', function() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(doSearch, 200);
+    });
+    searchInput.addEventListener('focus', function() {
+      if (searchInput.value.trim().length >= 2) doSearch();
+    });
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.search-box')) {
+        searchResults.classList.remove('open');
+      }
+    });
+    function doSearch() {
+      var q = searchInput.value.trim().toLowerCase();
+      if (q.length < 2) { searchResults.classList.remove('open'); return; }
+      var paragraphs = document.querySelectorAll('p, li, h2, h3');
+      var results = [];
+      for (var i = 0; i < paragraphs.length && results.length < 12; i++) {
+        var txt = paragraphs[i].textContent;
+        if (txt.toLowerCase().indexOf(q) !== -1) {
+          results.push({ el: paragraphs[i], text: txt.substring(0, 150) });
+        }
+      }
+      searchResults.innerHTML = '';
+      if (results.length === 0) {
+        searchResults.innerHTML = '<div class="sr-empty">No results found</div>';
+      } else {
+        results.forEach(function(r) {
+          var div = document.createElement('div');
+          div.className = 'sr-item';
+          var escaped = r.text.replace(/</g, '&lt;');
+          var esc = q.replace(/[-.*+?^$|()\[\]\\]/g, '\\$&');
+          var re = new RegExp('(' + esc + ')', 'gi');
+          div.innerHTML = escaped.replace(re, '<mark>$1</mark>');
+          div.addEventListener('click', function() {
+            r.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            searchResults.classList.remove('open');
+            r.el.style.outline = '2px solid var(--amber)';
+            setTimeout(function() { r.el.style.outline = ''; }, 2000);
+          });
+          searchResults.appendChild(div);
+        });
+      }
+      searchResults.classList.add('open');
+    }
+
+    // === TOC dropdown for section bar ===
+    var sectionBar = document.getElementById('section-bar');
+    if (sectionBar) {
+      var tocDrop = document.createElement('div');
+      tocDrop.className = 'toc-dropdown';
+      tocDrop.id = 'toc-dropdown';
+      sectionBar.appendChild(tocDrop);
+
+      sectionBar.addEventListener('click', function(e) {
+        var link = e.target.closest('.section-bar a.active');
+        if (!link) { tocDrop.classList.remove('open'); return; }
+        e.preventDefault();
+        // Find the h3s inside the target section
+        var href = link.getAttribute('href');
+        if (!href || href.charAt(0) !== '#') return;
+        var sectionEl = document.getElementById(href.slice(1));
+        if (!sectionEl) return;
+        var h3s = sectionEl.querySelectorAll('h3[id]');
+        if (h3s.length === 0) { tocDrop.classList.remove('open'); return; }
+        tocDrop.innerHTML = '';
+        h3s.forEach(function(h) {
+          var a = document.createElement('a');
+          a.href = '#' + h.id;
+          a.textContent = h.textContent;
+          a.addEventListener('click', function() { tocDrop.classList.remove('open'); });
+          tocDrop.appendChild(a);
+        });
+        tocDrop.classList.toggle('open');
+      });
+
+      document.addEventListener('click', function(e) {
+        if (!e.target.closest('.section-bar')) {
+          tocDrop.classList.remove('open');
+        }
+      });
+    }
+  })();
+  </script>
 </body>
 </html>
