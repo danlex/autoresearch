@@ -64,3 +64,8 @@
 - PR: #87
 - Score: 57
 - Action: merged
+
+### 2026-03-19 — #90: What is Justin Johnson's collaborative relationship with Karpathy across PhD, cs231n, and research?
+- PR: #91
+- Score: 59
+- Action: merged
