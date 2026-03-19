@@ -104,3 +104,8 @@
 - PR: #106
 - Score: 74
 - Action: merged
+
+### 2026-03-19 — #62: What is the formal relationship between nanochat and the LLM101n curriculum?
+- PR: #108
+- Score: 75
+- Action: merged
