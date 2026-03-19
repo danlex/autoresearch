@@ -119,3 +119,8 @@
 - PR: #115
 - Score: 80
 - Action: merged
+
+### 2026-03-19 — #57: How does Karpathy's 'decade to AGI' estimate inform the design and urgency of Eureka Labs?
+- PR: #116
+- Score: 81
+- Action: merged
