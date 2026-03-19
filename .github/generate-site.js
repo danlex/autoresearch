@@ -385,7 +385,72 @@ const TEMPLATE = `<!DOCTYPE html>
     td { padding: 0.75rem; border-bottom: 1px solid var(--border); font-size: 0.9rem; color: #d4d4d8; }
     tr:hover td { background: var(--surface); }
 
+    /* Section submenu (sticky sidebar on desktop, horizontal scroll on mobile) */
+    .page-layout { display: grid; grid-template-columns: 200px 1fr; gap: 2rem; align-items: start; }
+    .section-nav {
+      position: sticky;
+      top: 5rem;
+      max-height: calc(100vh - 6rem);
+      overflow-y: auto;
+      padding: 1rem 0;
+    }
+    .section-nav a {
+      display: block;
+      padding: 0.4rem 0.75rem;
+      margin: 0.1rem 0;
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 0.82rem;
+      border-radius: 6px;
+      border-left: 2px solid transparent;
+      transition: all 0.15s ease;
+      line-height: 1.4;
+    }
+    .section-nav a:hover { color: var(--text-secondary); background: var(--surface); border-left-color: var(--border); text-decoration: none; }
+    .section-nav a.active { color: var(--amber); background: rgba(245,158,11,0.08); border-left-color: var(--amber); font-weight: 600; }
+    .section-nav .nav-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--dim);
+      padding: 0.75rem 0.75rem 0.3rem;
+      font-weight: 600;
+    }
+    .section-nav .nav-divider { border-top: 1px solid var(--border); margin: 0.5rem 0.75rem; }
+    .page-content { min-width: 0; }
+
+    /* Back to top */
+    .back-top {
+      display: inline-block;
+      margin: 2rem 0;
+      color: var(--dim);
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .back-top:hover { color: var(--text-secondary); text-decoration: none; }
+
     /* Responsive */
+    @media (max-width: 900px) {
+      .page-layout { grid-template-columns: 1fr; }
+      .section-nav {
+        position: relative;
+        top: 0;
+        display: flex;
+        gap: 0.25rem;
+        overflow-x: auto;
+        padding: 0.5rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        max-height: none;
+      }
+      .section-nav a { white-space: nowrap; border-left: none; border-bottom: 2px solid transparent; padding: 0.4rem 0.75rem; }
+      .section-nav a.active { border-left: none; border-bottom-color: var(--amber); }
+      .section-nav .nav-label { display: none; }
+      .section-nav .nav-divider { display: none; }
+    }
     @media (max-width: 640px) {
       body { padding: 1rem; }
       h1 { font-size: 1.8rem; }
@@ -562,20 +627,73 @@ const { score, breakdown } = getScore();
     `;
   }
 
-  body += '</div><hr>';
+  body += '</div>';
 
+  // Build sidebar nav + content with page-layout
+  let sidebarHtml = '<div class="section-nav">';
+  sidebarHtml += '<div class="nav-label">Sections</div>';
+  for (const s of sectionMeta) {
+    sidebarHtml += '<a href="#' + s.anchor + '">' + s.name + '</a>';
+    // Extract subsections (### headings) from content
+    const content = readSection(s.file);
+    const subsections = content.match(/^### (.+)$/gm) || [];
+    for (const sub of subsections) {
+      const subTitle = sub.replace(/^### /, '');
+      const subAnchor = subTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 60);
+      sidebarHtml += '<a href="#' + subAnchor + '" style="padding-left: 1.5rem; font-size: 0.78rem;">' + subTitle.substring(0, 45) + (subTitle.length > 45 ? '...' : '') + '</a>';
+    }
+    sidebarHtml += '<div class="nav-divider"></div>';
+  }
+  sidebarHtml += '<a href="#sources-section">Sources</a>';
+  sidebarHtml += '<a href="#" class="back-top" style="margin-top: 1rem;">Back to top</a>';
+  sidebarHtml += '</div>';
+
+  // Build main content
+  let contentHtml = '<div class="page-content">';
   for (const s of sectionMeta) {
     const content = readSection(s.file);
     if (content.trim()) {
-      body += '<div id="' + s.anchor + '">' + md2html(content);
-      // Add video grid for this section
+      // Add id anchors to h3 headings for subsection navigation
+      let sectionHtml = md2html(content);
+      sectionHtml = sectionHtml.replace(/<h3>(.+?)<\/h3>/g, (match, title) => {
+        const anchor = title.toLowerCase().replace(/<[^>]+>/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 60);
+        return '<h3 id="' + anchor + '">' + title + '</h3>';
+      });
+      contentHtml += '<div id="' + s.anchor + '">' + sectionHtml;
       const videos = renderVideoGrid(s.anchor);
       if (videos) {
-        body += '<h3 style="color: var(--dim); margin-top: 2rem;">Related Videos</h3>' + videos;
+        contentHtml += '<h3 style="color: var(--dim); margin-top: 2rem;">Related Videos</h3>' + videos;
       }
-      body += '</div><hr>';
+      contentHtml += '</div><hr>';
     }
   }
+  contentHtml += '<div id="sources-section">' + md2html(readSection('sources.md')) + '</div>';
+  contentHtml += '</div>';
+
+  body += '<div class="page-layout">' + sidebarHtml + contentHtml + '</div>';
+
+  // Add scroll spy script
+  body += `
+  <script>
+    // Highlight active section in sidebar on scroll
+    const navLinks = document.querySelectorAll('.section-nav a[href^="#"]');
+    const sections = [];
+    navLinks.forEach(link => {
+      const id = link.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if (el) sections.push({ el, link });
+    });
+    function updateActive() {
+      let current = sections[0];
+      for (const s of sections) {
+        if (s.el.getBoundingClientRect().top <= 120) current = s;
+      }
+      navLinks.forEach(l => l.classList.remove('active'));
+      if (current) current.link.classList.add('active');
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+  </script>`;
 
   writePage('index.html', 'Research Document', body, 'index',
     'Comprehensive autonomous research on Andrej Karpathy — AI researcher, educator, OpenAI founding member, Tesla AI Director, Eureka Labs founder. ' + score + '% complete with ' + header.sources + ' verified sources.');
@@ -647,14 +765,27 @@ const { score, breakdown } = getScore();
   let body = `
     <h1>About Autoresearch</h1>
 
-    <div style="background: var(--surface); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border); margin: 1.5rem 0;">
-      <h3 style="color: var(--amber); margin: 0 0 0.8rem;">Alexandru DAN</h3>
-      <p style="color: var(--dim); margin: 0 0 0.5rem;">CEO, TVL Tech</p>
+    <div style="background: var(--surface); padding: 2rem; border-radius: 16px; border: 1px solid var(--border); margin: 2rem 0;">
+      <h3 style="color: var(--amber); margin: 0 0 0.3rem; font-size: 1.3rem;">Alexandru DAN</h3>
+      <p style="color: var(--text-secondary); margin: 0 0 1rem; font-weight: 500;">CEO & Founder, TVL Tech</p>
       <p>Creator of the Autoresearch system. Building autonomous AI-powered research tools that produce verified, citation-backed knowledge with zero human intervention.</p>
       <p style="margin-top: 0.8rem;">
-        <a href="https://github.com/danlex" style="margin-right: 1rem;">GitHub</a>
+        <a href="https://github.com/danlex" style="margin-right: 1.5rem;">GitHub</a>
         <a href="https://github.com/danlex/autoresearch">Autoresearch Repository</a>
       </p>
+    </div>
+
+    <div style="background: var(--surface); padding: 2rem; border-radius: 16px; border: 1px solid var(--border); margin: 2rem 0;">
+      <h3 style="background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0 0 0.5rem; font-size: 1.3rem;">TVL Tech</h3>
+      <p style="color: var(--text-secondary); margin: 0 0 1rem; font-weight: 500;">Technology. Vision. Leadership.</p>
+      <p>TVL Tech builds AI-first tools and platforms that augment human capabilities. Our focus areas:</p>
+      <ul>
+        <li><strong>Autonomous Research</strong> — AI systems that research, verify, and publish knowledge independently, with human oversight at every stage</li>
+        <li><strong>AI-Powered Workflows</strong> — Integrating large language models into real business processes — not chatbots, but autonomous agents that do actual work</li>
+        <li><strong>Open Source AI Tools</strong> — Contributing to the ecosystem with production-grade tools like Autoresearch that anyone can use and extend</li>
+      </ul>
+      <p style="margin-top: 1rem;">TVL Tech believes the most impactful AI applications are not consumer chat products but <strong>infrastructure that makes knowledge workers more effective</strong> — automating the research, verification, and synthesis steps that consume 80% of knowledge work.</p>
+      <p style="margin-top: 0.8rem; color: var(--dim);">Autoresearch is TVL Tech's first open-source release — a proof that autonomous AI research is possible, auditable, and trustworthy when built with the right guardrails (three-judge review, mandatory citations, source verification).</p>
     </div>
 
     <h2>What is Autoresearch?</h2>
