@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress — Autoresearch</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --text: #e0e0e0;
+      --dim: #555;
+      --green: #4ade80;
+      --amber: #fbbf24;
+      --red: #f87171;
+      --blue: #60a5fa;
+      --cyan: #22d3ee;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    nav {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: var(--amber);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+    nav a:hover { text-decoration: underline; }
+    nav a.active { color: var(--text); font-weight: bold; }
+    h1 { color: var(--amber); font-size: 2rem; margin: 1rem 0; }
+    h2 { color: var(--amber); font-size: 1.4rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+    h3 { color: var(--blue); font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+    h4 { color: var(--dim); font-size: 1rem; margin: 1rem 0 0.3rem; }
+    p { margin: 0.8rem 0; }
+    a { color: var(--blue); }
+    code { font-family: 'JetBrains Mono', monospace; background: var(--surface); padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.9em; }
+    blockquote { border-left: 3px solid var(--amber); padding: 0.5rem 1rem; margin: 1rem 0; color: var(--dim); background: var(--surface); }
+    ul { padding-left: 1.5rem; margin: 0.5rem 0; }
+    li { margin: 0.3rem 0; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    sup.cite { color: var(--cyan); font-size: 0.75em; cursor: help; }
+    .badge { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 3px; }
+    .badge.high { background: #064e3b; color: var(--green); }
+    .badge.medium { background: #451a03; color: var(--amber); }
+    .badge.low { background: #450a0a; color: var(--red); }
+    .uncertainty { color: var(--amber); margin-top: 1rem; }
+    .uncertainty-body { background: var(--surface); padding: 0.8rem; border-radius: 4px; margin: 0.3rem 0 1rem; border-left: 3px solid var(--amber); }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .stat { background: var(--surface); padding: 1rem; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: bold; font-family: 'JetBrains Mono', monospace; }
+    .stat-label { color: var(--dim); font-size: 0.8rem; margin-top: 0.3rem; }
+    .score-bar { background: var(--surface); border-radius: 4px; overflow: hidden; height: 8px; margin: 0.5rem 0; }
+    .score-fill { height: 100%; background: var(--green); transition: width 0.3s; }
+    footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--dim); font-size: 0.8rem; text-align: center; }
+    footer a { color: var(--dim); }
+    @media (max-width: 600px) { body { padding: 1rem; } .stats { grid-template-columns: 1fr 1fr; } }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="">Research</a>
+    <a href="progress.html" class="active">Progress</a>
+    <a href="sections.html" class="">Sections</a>
+    <a href="sources.html" class="">Sources</a>
+    <a href="about.html" class="">About</a>
+  </nav>
+  
+    <h1>Research Progress</h1>
+    <div class="stats">
+      <div class="stat"><div class="stat-value" style="color: var(--green)">83%</div><div class="stat-label">Score</div></div>
+      <div class="stat"><div class="stat-value">3/3</div><div class="stat-label">Tasks Done</div></div>
+      <div class="stat"><div class="stat-value">72</div><div class="stat-label">Sources</div></div>
+      <div class="stat"><div class="stat-value">37</div><div class="stat-label">Iterations</div></div>
+    </div>
+    <div class="score-bar"><div class="score-fill" style="width: 83%"></div></div>
+    <p style="color: var(--dim); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">Score: 83% (tasks: 86% [26/30, rework=0] | citations: 75% [125/165] | confidence: -0%)</p>
+    <h2>Changelog</h2>
+    <h1>Research Changelog</h1>
+
+<h3>2026-03-17 — #28: What was the nature of Karpathy's working relationship with Elon Musk?</h3>
+<ul><li>PR: #42</li>
+<li>Score: 15</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-17 — #27: How does Eureka Labs' 'AI native school' model work in practice?</h3>
+<ul><li>PR: #43</li>
+<li>Score: 23</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-17 — #24: What specific products or curricula has Eureka Labs shipped?</h3>
+<ul><li>PR: #47</li>
+<li>Score: 29</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-18 — #19: What has Karpathy said about AI safety and existential risk?</h3>
+<ul><li>PR: #51</li>
+<li>Score: 30</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-18 — #18: What are Karpathy's stated views on AGI timelines?</h3>
+<ul><li>PR: #55</li>
+<li>Score: 32</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-18 — #15: What is nanoGPT and why did it become a reference implementation?</h3>
+<ul><li>PR: #59</li>
+<li>Score: 43</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-18 — #13: What is the full curriculum and pedagogical design of cs231n?</h3>
+<ul><li>PR: #63</li>
+<li>Score: 44</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-18 — #8: What is the 'Software 2.0' thesis and its industry impact?</h3>
+<ul><li>PR: #67</li>
+<li>Score: 47</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-18 — #7: What was Karpathy's PhD thesis title and core contributions?</h3>
+<ul><li>PR: #71</li>
+<li>Score: 49</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-18 — #1: Research Karpathy's academic work at Stanford</h3>
+<ul><li>PR: #75</li>
+<li>Score: 50</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-18 — #4: Research Eureka Labs founding and mission</h3>
+<ul><li>PR: #79</li>
+<li>Score: 52</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-18 — #3: Research Karpathy's work at Tesla Autopilot</h3>
+<ul><li>PR: #83</li>
+<li>Score: 56</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-18 — #5: Synthesize Intellectual Contributions section</h3>
+<ul><li>PR: #87</li>
+<li>Score: 57</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-19 — #90: What is Justin Johnson's collaborative relationship with Karpathy across PhD, cs231n, and research?</h3>
+<ul><li>PR: #91</li>
+<li>Score: 59</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-19 — #82: Is nanochat formally part of the LLM101n curriculum or a separate personal project?</h3>
+<ul><li>PR: #94</li>
+<li>Score: 62</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-19 — #81: What does Karpathy's Dwarkesh Patel 2025 interview reveal about the AI teaching assistant design?</h3>
+<ul><li>PR: #95</li>
+<li>Score: 64</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-19 — #80: What is Eureka Labs' corporate and funding structure?</h3>
+<ul><li>PR: #96</li>
+<li>Score: 66</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-19 — #78: How does the 2015 'Visualizing and Understanding Recurrent Networks' paper connect to today's mechanistic interpretability research agenda?</h3>
+<ul><li>PR: #99</li>
+<li>Score: 68</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-19 — #74: What was Percy Liang's ongoing relationship with Karpathy after the PhD?</h3>
+<ul><li>PR: #102</li>
+<li>Score: 69</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-19 — #70: What is the verified influence of Software 2.0 on Andrew Ng's data-centric AI movement?</h3>
+<ul><li>PR: #103</li>
+<li>Score: 71</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-19 — #68: What is Karpathy's 'Software 3.0' thesis and when did he formally articulate it?</h3>
+<ul><li>PR: #106</li>
+<li>Score: 74</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-19 — #62: What is the formal relationship between nanochat and the LLM101n curriculum?</h3>
+<ul><li>PR: #108</li>
+<li>Score: 75</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-19 — #61: What is the Muon optimizer and what role did the nanoGPT speedrun play in its development?</h3>
+<ul><li>PR: #112</li>
+<li>Score: 77</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-19 — #58: What is Karpathy's professional relationship with Ilya Sutskever, and how did their views on AGI diverge?</h3>
+<ul><li>PR: #115</li>
+<li>Score: 80</li>
+<li>Action: merged</li>
+<p></ul></p>
+<h3>2026-03-19 — #57: How does Karpathy's 'decade to AGI' estimate inform the design and urgency of Eureka Labs?</h3>
+<ul><li>PR: #116</li>
+<li>Score: 81</li>
+<li>Action: merged</li>
+<p></ul></p>
+  
+  <footer>
+    Generated by <a href="https://github.com/danlex/autoresearch">Autoresearch</a> — Autonomous research powered by Claude Opus
+  </footer>
+</body>
+</html>

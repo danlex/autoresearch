@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sections — Autoresearch</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --text: #e0e0e0;
+      --dim: #555;
+      --green: #4ade80;
+      --amber: #fbbf24;
+      --red: #f87171;
+      --blue: #60a5fa;
+      --cyan: #22d3ee;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    nav {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: var(--amber);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+    nav a:hover { text-decoration: underline; }
+    nav a.active { color: var(--text); font-weight: bold; }
+    h1 { color: var(--amber); font-size: 2rem; margin: 1rem 0; }
+    h2 { color: var(--amber); font-size: 1.4rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+    h3 { color: var(--blue); font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+    h4 { color: var(--dim); font-size: 1rem; margin: 1rem 0 0.3rem; }
+    p { margin: 0.8rem 0; }
+    a { color: var(--blue); }
+    code { font-family: 'JetBrains Mono', monospace; background: var(--surface); padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.9em; }
+    blockquote { border-left: 3px solid var(--amber); padding: 0.5rem 1rem; margin: 1rem 0; color: var(--dim); background: var(--surface); }
+    ul { padding-left: 1.5rem; margin: 0.5rem 0; }
+    li { margin: 0.3rem 0; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    sup.cite { color: var(--cyan); font-size: 0.75em; cursor: help; }
+    .badge { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 3px; }
+    .badge.high { background: #064e3b; color: var(--green); }
+    .badge.medium { background: #451a03; color: var(--amber); }
+    .badge.low { background: #450a0a; color: var(--red); }
+    .uncertainty { color: var(--amber); margin-top: 1rem; }
+    .uncertainty-body { background: var(--surface); padding: 0.8rem; border-radius: 4px; margin: 0.3rem 0 1rem; border-left: 3px solid var(--amber); }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .stat { background: var(--surface); padding: 1rem; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: bold; font-family: 'JetBrains Mono', monospace; }
+    .stat-label { color: var(--dim); font-size: 0.8rem; margin-top: 0.3rem; }
+    .score-bar { background: var(--surface); border-radius: 4px; overflow: hidden; height: 8px; margin: 0.5rem 0; }
+    .score-fill { height: 100%; background: var(--green); transition: width 0.3s; }
+    footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--dim); font-size: 0.8rem; text-align: center; }
+    footer a { color: var(--dim); }
+    @media (max-width: 600px) { body { padding: 1rem; } .stats { grid-template-columns: 1fr 1fr; } }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="">Research</a>
+    <a href="progress.html" class="">Progress</a>
+    <a href="sections.html" class="active">Sections</a>
+    <a href="sources.html" class="">Sources</a>
+    <a href="about.html" class="">About</a>
+  </nav>
+  <h1>Research Sections</h1>
+      <div style="background: var(--surface); padding: 1.2rem; border-radius: 8px; border: 1px solid var(--border); margin: 1rem 0;">
+        <h3 style="margin: 0 0 0.5rem;">Intellectual Contributions</h3>
+        <p style="color: var(--dim); font-size: 0.85rem;">102 lines · 7 subsections</p>
+        <p style="font-size: 0.9rem;">Karpathy's intellectual contributions span three mutually reinforcing domains: foundational academic research in multimodal vision-language models (Stanford PhD, 2011–2016), industrial-scale architect...</p>
+      </div>
+    
+      <div style="background: var(--surface); padding: 1.2rem; border-radius: 8px; border: 1px solid var(--border); margin: 1rem 0;">
+        <h3 style="margin: 0 0 0.5rem;">Education and Teaching</h3>
+        <p style="color: var(--dim); font-size: 0.85rem;">27 lines · 2 subsections</p>
+        <p style="font-size: 0.9rem;">> **Review note:** nanoGPT and cs231n are now fully sourced with Tier 1 primary sources — see their dedicated subsections below. The broader pedagogical principles section draws on those sources but m...</p>
+      </div>
+    
+      <div style="background: var(--surface); padding: 1.2rem; border-radius: 8px; border: 1px solid var(--border); margin: 1rem 0;">
+        <h3 style="margin: 0 0 0.5rem;">Views on AI Future</h3>
+        <p style="color: var(--dim); font-size: 0.85rem;">51 lines · 7 subsections</p>
+        <p style="font-size: 0.9rem;">Karpathy's public record on AI safety and existential risk resists easy categorization. He is neither a doomer aligned with the EA/longtermist safety community, nor an accelerationist. His positions s...</p>
+      </div>
+    
+      <div style="background: var(--surface); padding: 1.2rem; border-radius: 8px; border: 1px solid var(--border); margin: 1rem 0;">
+        <h3 style="margin: 0 0 0.5rem;">Eureka Labs</h3>
+        <p style="color: var(--dim); font-size: 0.85rem;">48 lines · 8 subsections</p>
+        <p style="font-size: 0.9rem;">Karpathy announced Eureka Labs on July 16, 2024 via a detailed post on X/Twitter [26], describing it as "a new kind of school that is AI native." The company name derives from the ancient Greek "I hav...</p>
+      </div>
+    
+      <div style="background: var(--surface); padding: 1.2rem; border-radius: 8px; border: 1px solid var(--border); margin: 1rem 0;">
+        <h3 style="margin: 0 0 0.5rem;">Key Relationships and Collaborations</h3>
+        <p style="color: var(--dim); font-size: 0.85rem;">14 lines · 1 subsections</p>
+        <p style="font-size: 0.9rem;">Karpathy's most significant professional relationship during his Tesla tenure (June 2017 – July 2022) was with Elon Musk, to whom he reported directly as "Senior Director of Artificial Intelligence" [...</p>
+      </div>
+    
+  <footer>
+    Generated by <a href="https://github.com/danlex/autoresearch">Autoresearch</a> — Autonomous research powered by Claude Opus
+  </footer>
+</body>
+</html>

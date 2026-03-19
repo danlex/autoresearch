@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Autoresearch</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --text: #e0e0e0;
+      --dim: #555;
+      --green: #4ade80;
+      --amber: #fbbf24;
+      --red: #f87171;
+      --blue: #60a5fa;
+      --cyan: #22d3ee;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    nav {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    nav a {
+      color: var(--amber);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+    nav a:hover { text-decoration: underline; }
+    nav a.active { color: var(--text); font-weight: bold; }
+    h1 { color: var(--amber); font-size: 2rem; margin: 1rem 0; }
+    h2 { color: var(--amber); font-size: 1.4rem; margin: 2rem 0 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+    h3 { color: var(--blue); font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+    h4 { color: var(--dim); font-size: 1rem; margin: 1rem 0 0.3rem; }
+    p { margin: 0.8rem 0; }
+    a { color: var(--blue); }
+    code { font-family: 'JetBrains Mono', monospace; background: var(--surface); padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.9em; }
+    blockquote { border-left: 3px solid var(--amber); padding: 0.5rem 1rem; margin: 1rem 0; color: var(--dim); background: var(--surface); }
+    ul { padding-left: 1.5rem; margin: 0.5rem 0; }
+    li { margin: 0.3rem 0; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    sup.cite { color: var(--cyan); font-size: 0.75em; cursor: help; }
+    .badge { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 0.1rem 0.4rem; border-radius: 3px; }
+    .badge.high { background: #064e3b; color: var(--green); }
+    .badge.medium { background: #451a03; color: var(--amber); }
+    .badge.low { background: #450a0a; color: var(--red); }
+    .uncertainty { color: var(--amber); margin-top: 1rem; }
+    .uncertainty-body { background: var(--surface); padding: 0.8rem; border-radius: 4px; margin: 0.3rem 0 1rem; border-left: 3px solid var(--amber); }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .stat { background: var(--surface); padding: 1rem; border-radius: 8px; border: 1px solid var(--border); text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: bold; font-family: 'JetBrains Mono', monospace; }
+    .stat-label { color: var(--dim); font-size: 0.8rem; margin-top: 0.3rem; }
+    .score-bar { background: var(--surface); border-radius: 4px; overflow: hidden; height: 8px; margin: 0.5rem 0; }
+    .score-fill { height: 100%; background: var(--green); transition: width 0.3s; }
+    footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--dim); font-size: 0.8rem; text-align: center; }
+    footer a { color: var(--dim); }
+    @media (max-width: 600px) { body { padding: 1rem; } .stats { grid-template-columns: 1fr 1fr; } }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="">Research</a>
+    <a href="progress.html" class="">Progress</a>
+    <a href="sections.html" class="">Sections</a>
+    <a href="sources.html" class="">Sources</a>
+    <a href="about.html" class="active">About</a>
+  </nav>
+  <h1>Autoresearch</h1>
+
+<blockquote>One subject. One goal. Fully autonomous research powered by Claude Opus.</blockquote>
+
+<p>Define a research subject in <code>goal.md</code>. The system generates tasks, researches them using Claude Code (<code>claude -p</code>), opens PRs, and builds a verified research document — all without human intervention. Three Claude Opus judges at different temperatures evaluate every PR. Nothing merges without 3/3 unanimous approval. Verified findings accumulate in <code>document.md</code> until the score hits zero.</p>
+
+<hr>
+
+<h2>The Loop</h2>
+
+<p><code>`</code></p>
+<p> You write goal.md</p>
+<p>       │</p>
+<p>       ▼</p>
+<p> Tasks generated as GitHub Issues</p>
+<p>       │</p>
+<p>       ▼</p>
+<p> You /accept with priority ──────────────── (or auto-accept)</p>
+<p>       │</p>
+<p>       ▼</p>
+<p> ┌─────────────────────────────────────┐</p>
+<p> │  research.sh picks next task        │</p>
+<p> │  Creates branch                     │</p>
+<p> │  Builds type-specific prompt        │</p>
+<p> │  Runs: claude -p (Opus, temp 0.5)   │</p>
+<p> │  Tools: WebSearch, WebFetch, Read,  │</p>
+<p> │         Write, Bash                 │</p>
+<p> └──────────────┬──────────────────────┘</p>
+<p>                │</p>
+<p>        Score improved?</p>
+<p>       ╱              ╲</p>
+<p>     Yes               No</p>
+<p>      │                 │</p>
+<p>  Commit, push,     Delete branch,</p>
+<p>  open PR           reopen Issue</p>
+<p>      │</p>
+<p>      ▼</p>
+<p> ┌──────────────────────────────────┐</p>
+<p> │  Three judges review in parallel │</p>
+<p> │                                  │</p>
+<p> │  Judge 1 (temp 0.1) → Evidence   │</p>
+<p> │  Judge 2 (temp 0.3) → Consistency│</p>
+<p> │  Judge 3 (temp 0.8) → Completeness│</p>
+<p> └──────────────┬───────────────────┘</p>
+<p>                │</p>
+<p>          3/3 Approved?</p>
+<p>         ╱            ╲</p>
+<p>       Yes              No</p>
+<p>        │                │</p>
+<p>    Auto-merge       Feedback posted,</p>
+<p>    Close Issue      Issue re-queued</p>
+<p>        │            (up to 5 retries)</p>
+<p>        ▼</p>
+<p>  document.md updated</p>
+<p>  Score decreases</p>
+<p>  Loop continues</p>
+<p><code>`</code></p>
+
+<hr>
+
+<h2>One-Command Deploy</h2>
+
+<p><code>`</code>bash</p>
+<p>export ANTHROPIC_API_KEY="sk-..."</p>
+<p>bash deploy.sh</p>
+<p><code>`</code></p>
+
+<p>That's it. <code>deploy.sh</code> handles everything:</p>
+<ul><li>Installs <code>jq</code>, <code>gh</code>, Claude Code CLI if missing</li>
+<li>Authenticates GitHub CLI</li>
+<li>Builds the NestJS backend</li>
+<li>Seeds task Issues if none exist</li>
+<li>Starts the backend with hourly cron on port 3000</li>
+<li>Generates <code>stop.sh</code> for clean shutdown</li>
+<p></ul></p>
+<p>After deploy, start researching:</p>
+
+<p><code>`</code>bash</p>
+<p>NO_JUDGES=1 ./research.sh</p>
+<p><code>`</code></p>
+
+<hr>
+
+<h2>How It Works</h2>
+
+<h3>Score System</h3>
+
+<p>The score goes from <strong>0% to 100%</strong>. Higher is better. 100% = done.</p>
+
+<p><code>`</code></p>
+<p>score = (task_completion × 60%) + (citation_quality × 30%) + (confidence × 10%)</p>
+<p><code>`</code></p>
+
+<p>| Component | Weight | What it measures |</p>
+<p>|-----------|--------|-----------------|</p>
+<p>| Task completion | 60% | % of Issues labeled <code>implemented</code> (penalizes rework) |</p>
+<p>| Citation quality | 30% | % of content paragraphs with inline <code>[N]</code> citations |</p>
+<p>| Confidence | 10% | Penalizes LOW confidence sections (-5% each) |</p>
+
+<p><code>autoresearch.sh</code> computes this with a full breakdown to stderr.</p>
+<p><code>research.sh</code> only creates PRs when the score improves or document changes.</p>
+
+<h3>Self-Review</h3>
+
+<p>Before any PR is created, Claude runs a <strong>self-review</strong> checking for:</p>
+<ul><li>Uncited factual claims (every claim needs <code>[N]</code>)</li>
+<li>Phantom citations (references to sources that don't exist)</li>
+<li>Confidence levels that don't match source quality</li>
+<li>Suspiciously specific unsourced claims (hallucination detection)</li>
+<p></ul></p>
+<p>Failed self-review = no PR, feedback posted on the Issue for next attempt.</p>
+
+<h3>Adaptive Task Generation</h3>
+
+<p>The system generates its own follow-up tasks:</p>
+<ul><li><strong><code>explode-goal.sh</code></strong> — Reads <code>goal.md</code>, generates 30-50 specific research questions as GitHub Issues</li>
+<li><strong>Post-merge proposals</strong> — After each merge, Claude proposes 1-3 follow-up questions based on discoveries</li>
+<li><strong>Retry escalation</strong> — 3 failures → <code>hard-task</code> label, 5 failures → <code>unanswerable</code> + auto-close</li>
+<p></ul></p>
+<h3>Task Types</h3>
+
+<p>| Type | What it does | Tools | Turns |</p>
+<p>|------|-------------|-------|-------|</p>
+<p>| <code>type-research</code> | Web search, find sources, update document | Bash, Read, Write, WebSearch, WebFetch | 15 |</p>
+<p>| <code>type-document</code> | Synthesize sections into narrative | Bash, Read, Write | 8 |</p>
+<p>| <code>type-review</code> | Evaluate quality, flag issues | Bash, Read, Write | 6 |</p>
+
+<h3>Source Requirements</h3>
+
+<p>Every finding needs 2+ sources with at least 1 Tier 1:</p>
+
+<p>| Tier | What counts | Can stand alone? |</p>
+<p>|------|-------------|-----------------|</p>
+<p>| <strong>Tier 1</strong> | Subject's own content, official docs, institutional pages | Yes |</p>
+<p>| <strong>Tier 2</strong> | Mainstream press, Wikipedia with citations | With Tier 1 |</p>
+<p>| <strong>Tier 3</strong> | Blogs, aggregators | Never |</p>
+
+<h3>Model Assignment</h3>
+
+<p>Same model. Different temperature. Different context. Genuine independence through cognitive mode.</p>
+
+<p>| Role | Model | Temp | Context | Focus |</p>
+<p>|------|-------|------|---------|-------|</p>
+<p>| Researcher | claude-opus-4-5 | 0.5 | goal + doc section + task | Balanced exploration |</p>
+<p>| Judge 1 | claude-opus-4-5 | 0.1 | diff + task + criteria only | Evidence — strict, literal |</p>
+<p>| Judge 2 | claude-opus-4-5 | 0.3 | diff + full document | Consistency — contradiction detection |</p>
+<p>| Judge 3 | claude-opus-4-5 | 0.8 | diff + task only, no document | Completeness — edge cases |</p>
+
+<hr>
+
+<h2>Setup</h2>
+
+<h3>Prerequisites</h3>
+
+<ul><li><a href="https://cli.github.com/" target="_blank">GitHub CLI</a> — <code>gh auth login</code></li>
+<li><a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code CLI</a> — <code>npm install -g @anthropic-ai/claude-code</code></li>
+<li><code>jq</code> — <code>brew install jq</code> (macOS) or <code>apt install jq</code> (Linux)</li>
+<li><code>ANTHROPIC_API_KEY</code> environment variable</li>
+<p></ul></p>
+<h3>Local</h3>
+
+<p><code>`</code>bash</p>
+<p>git clone https://github.com/danlex/autoresearch.git</p>
+<p>cd autoresearch</p>
+<p>export ANTHROPIC_API_KEY="sk-..."</p>
+
+<h1>Seed 5 starter tasks</h1>
+<p>./seed-tasks.sh</p>
+
+<h1>Run one iteration to test</h1>
+<p>NO_JUDGES=1 MAX_ITERATIONS=1 ./research.sh</p>
+
+<h1>Run full loop</h1>
+<p>NO_JUDGES=1 ./research.sh</p>
+<p><code>`</code></p>
+
+<h3>GitHub Codespaces</h3>
+
+<p>1. Go to <a href="https://github.com/danlex/autoresearch" target="_blank">github.com/danlex/autoresearch</a></p>
+<p>2. Click <strong>Code → Codespaces → Create codespace on main</strong></p>
+<p>3. In the terminal:</p>
+<p>   <code>`</code>bash</p>
+<p>   export ANTHROPIC_API_KEY="sk-..."</p>
+<p>   bash deploy.sh</p>
+<p>   NO_JUDGES=1 ./research.sh</p>
+<p>   <code>`</code></p>
+<p>4. The backend cron runs research every hour automatically</p>
+<p>5. Increase <strong>Settings → Codespaces → Default idle timeout</strong> to keep it running</p>
+
+<h3>NestJS Backend (port 3000)</h3>
+
+<p>The backend serves research state over REST and triggers research on a schedule.</p>
+
+<p><code>`</code></p>
+<p>GET  /api/status           → current loop state (iteration, score, task)</p>
+<p>GET  /api/document          → document.md content</p>
+<p>GET  /api/goal              → goal.md content</p>
+<p>GET  /api/coverage          → coverage.md content</p>
+<p>GET  /api/score             → live score from autoresearch.sh</p>
+<p>GET  /api/log?lines=50      → last N lines of research.log</p>
+<p>POST /api/feedback          → { "text": "focus on primary sources" }</p>
+<p>POST /api/pause             → toggle pause.flag</p>
+<p>POST /api/research/start    → { "max_iterations": 3 }</p>
+<p><code>`</code></p>
+
+<p>Hourly cron: if score < 100% and no research running, starts 3 iterations automatically.</p>
+
+<h3>Real-Time Monitor</h3>
+
+<p><code>`</code>bash</p>
+<p>bash watch.sh              # Live dashboard (refreshes every 5s)</p>
+<p>bash watch.sh log          # Color-coded tail of research.log</p>
+<p>bash watch.sh status       # One-shot status</p>
+<p><code>`</code></p>
+
+<p>The dashboard shows: score with breakdown, current task, iteration count, last action (color-coded), and the last 15 log lines — all in a terminal UI with auto-refresh.</p>
+
+<h3>Propose Research</h3>
+
+<p><code>`</code>bash</p>
+<p>bash propose.sh                      # Interactive — prompts for question</p>
+<p>bash propose.sh "What was X?"        # Quick — creates Issue from title</p>
+<p>bash propose.sh list                 # Show all proposed tasks</p>
+<p>bash propose.sh accept               # Accept all proposed tasks</p>
+<p>bash propose.sh accept high          # Accept high-priority only</p>
+<p><code>`</code></p>
+
+<p>Proposed tasks are created as GitHub Issues labeled <code>proposed</code>. Accept them to add to the research queue. The system also proposes tasks automatically after each merge.</p>
+
+<h3>Generate Tasks from Goal</h3>
+
+<p><code>`</code>bash</p>
+<p>bash explode-goal.sh    # Reads goal.md, generates 30-50 task Issues</p>
+<p><code>`</code></p>
+
+<p>Claude analyzes your research goal and generates specific, actionable research questions — each assigned to a section with type and priority labels. Run once after editing <code>goal.md</code>.</p>
+
+<hr>
+
+<h2>Environment Variables</h2>
+
+<p>Copy <code>.env.example</code> to <code>.env</code> and fill in your values. <code>.env</code> is gitignored. All scripts auto-load it — no need to <code>source</code> manually.</p>
+
+<p><code>`</code>bash</p>
+<p>cp .env.example .env</p>
+<p>nano .env   # add your keys</p>
+<p>bash research.sh   # just run it</p>
+<p><code>`</code></p>
+
+<p>| Variable | Default | Description |</p>
+<p>|----------|---------|-------------|</p>
+<p>| <code>ANTHROPIC_API_KEY</code> | — | Anthropic API key (or use OAuth token) |</p>
+<p>| <code>CLAUDE_CODE_OAUTH_TOKEN</code> | — | Alternative: OAuth token from <code>claude setup-token</code> |</p>
+<p>| <code>MAX_ITERATIONS</code> | <code>50</code> | Max iterations per research session |</p>
+<p>| <code>RESEARCH_MODEL</code> | <code>claude-opus-4-5</code> | Model for research tasks |</p>
+<p>| <code>HARD_RESEARCH_MODEL</code> | <code>claude-opus-4-5</code> | Model for tasks that failed 3+ times |</p>
+<p>| <code>NO_JUDGES</code> | <code>0</code> | Set to <code>1</code> to auto-merge PRs (skip judge review) |</p>
+<p>| <code>GITHUB_TOKEN</code> | <em>from gh cli</em> | Used in Codespaces for auth |</p>
+
+<hr>
+
+<h2>Intervention</h2>
+
+<p>You are always in control. The system never stops — you observe and intervene at any time.</p>
+
+<p>| Action | How |</p>
+<p>|--------|-----|</p>
+<p>| <strong>Pause</strong> | <code>touch pause.flag</code> or <code>POST /api/pause</code> |</p>
+<p>| <strong>Resume</strong> | <code>rm pause.flag</code> or <code>POST /api/pause</code> |</p>
+<p>| <strong>Give feedback</strong> | Write <code>feedback.md</code> or <code>POST /api/feedback</code> |</p>
+<p>| <strong>Stop</strong> | <code>./stop.sh</code> or <code>Ctrl+C</code> |</p>
+<p>| <strong>Skip a task</strong> | Close the GitHub Issue |</p>
+<p>| <strong>Reprioritize</strong> | Change Issue labels (<code>priority-high/medium/low</code>) |</p>
+<p>| <strong>Add a task</strong> | Create Issue with labels <code>task</code>, <code>accepted</code>, <code>type-research</code>, <code>priority-medium</code> |</p>
+<p>| <strong>Change subject</strong> | Edit <code>goal.md</code> |</p>
+
+<hr>
+
+<h2>Research Files</h2>
+
+<p>These markdown files are the knowledge backbone of the system. Claude reads and writes them. You own them.</p>
+
+<h3><code>goal.md</code> — The Research Goal</h3>
+
+<p>The only file you <strong>must</strong> edit. Everything starts here. It defines:</p>
+
+<ul><li><strong>Subject</strong> — who or what to research (e.g., "Andrej Karpathy — AI researcher, educator, entrepreneur")</li>
+<li><strong>Anchors</strong> — known identifiers to ground the search (Twitter handle, GitHub, LinkedIn, career timeline)</li>
+<li><strong>What I Want to Understand</strong> — 3-7 specific areas of inquiry. Each becomes a section in <code>document.md</code> and drives task generation</li>
+<li><strong>Completion Criteria</strong> — what "done" looks like (e.g., "all tasks closed with HIGH confidence, zero contradictions, every finding backed by 2+ sources")</li>
+<li><strong>Out of Scope</strong> — explicit boundaries to prevent drift (e.g., "personal life, financial details")</li>
+<p></ul></p>
+<p>The system reads <code>goal.md</code> on every iteration. If you change it mid-session, <code>research.sh</code> detects the mtime change and adapts. The Goal Manager workflow (Phase 2) will version-tag changes and regenerate tasks automatically.</p>
+
+<p><strong>Rule:</strong> <code>goal.md</code> holds intent only — no task checklists, no findings. Tasks live in GitHub Issues.</p>
+
+<h3><code>document.md</code> — The Research Document</h3>
+
+<p>The evolving output. Starts with section headers matching your "What I Want to Understand" areas, then fills up across merged PRs. Structure:</p>
+
+<p><code>`</code></p>
+<h1>Subject Name — Research Document</h1>
+<p>Coverage: 42% | Tasks: 12/30 | Sources: 18 | Last updated: 2026-03-17</p>
+
+<h2>Intellectual Contributions</h2>
+<p>[findings with inline confidence badges and source citations]</p>
+
+<h2>Education and Teaching</h2>
+<p>[...]</p>
+
+<h2>Sources</h2>
+<ul><li><sup class="cite">[1]</sup> https://karpathy.github.io/... (Tier 1 — self-published)</li>
+<li><sup class="cite">[2]</sup> https://nytimes.com/... (Tier 2 — mainstream press)</li>
+<p></ul></p>
+<h2>Open Questions</h2>
+<ul><li>What was the exact timeline of...</li>
+<p></ul><code>`</code></p>
+
+<p>Every finding in the document carries:</p>
+<ul><li><strong>Confidence</strong>: <code>HIGH</code> / <code>MEDIUM</code> / <code>LOW</code> — how certain the claim is based on source quality</li>
+<li><strong>Depth</strong>: <code>HIGH</code> / <code>MEDIUM</code> / <code>LOW</code> — how thoroughly the topic has been explored</li>
+<li><strong>Source citations</strong> with tier classification</li>
+<p></ul></p>
+<p>The header block (<code>Coverage</code>, <code>Tasks</code>, <code>Sources</code>, <code>Last updated</code>) is updated automatically by the verdict workflow after each merge. <code>research.sh</code> and Claude never edit the header directly — they only add content to sections.</p>
+
+<p><strong>Rule:</strong> Claude adds to this file. You read it. Judges verify it. Nobody deletes sourced claims.</p>
+
+<h3><code>coverage.md</code> — Coverage Analysis</h3>
+
+<p>Written by the Goal Manager workflow (Phase 2). Maps every aspect of <code>goal.md</code> to existing GitHub Issues and identifies:</p>
+<ul><li><strong>Gaps</strong> — areas with no tasks</li>
+<li><strong>Partial coverage</strong> — areas with tasks but incomplete findings</li>
+<li><strong>Overlaps</strong> — duplicate or conflicting tasks</li>
+<li><strong>Orphans</strong> — tasks that don't map to any goal area</li>
+<p></ul></p>
+<p>Currently a placeholder. When the Goal Manager runs, it produces a full report and creates new proposed Issues for any gaps it finds.</p>
+
+<h3><code>changelog.md</code> — Research Changelog</h3>
+
+<p>Append-only log of every merged PR. Written by the verdict workflow after a successful 3/3 merge. Each entry records:</p>
+<ul><li>Date and Issue number</li>
+<li>What was researched or synthesized</li>
+<li>Score delta (before → after)</li>
+<li>Sources added</li>
+<p></ul></p>
+<p>Gives you a chronological view of how the research document was built, complementing <code>document.md</code> which shows the current state.</p>
+
+<h3><code>model-versions.md</code> — Fine-Tune Model Versions</h3>
+
+<p>Tracks each QLoRA fine-tune of the Qwen3.5-4B expert model (Phase 5). After a milestone completes and training runs on Hetzner, this file gets a new row:</p>
+
+<p><code>`</code></p>
+<p>| Version | Date | Score | Coverage | Base Model |</p>
+<p>|---------|------|-------|----------|------------|</p>
+<p>| v1      | 2026-03-20 | 82.4 | 35% | Qwen3.5-4B |</p>
+<p>| v2      | 2026-03-25 | 87.1 | 58% | Qwen3.5-4B |</p>
+<p><code>`</code></p>
+
+<p>Each version corresponds to a LoRA adapter pushed to HuggingFace Hub. The llama-server on Hetzner loads the latest adapter for inference.</p>
+
+<p>Currently a placeholder — populated when the fine-tuning pipeline is implemented.</p>
+
+<h3>Runtime Files (gitignored)</h3>
+
+<p>These files are created and consumed by <code>research.sh</code> at runtime. They are <strong>not committed</strong> to the repo.</p>
+
+<p><strong><code>status.json</code></strong> — Live snapshot of the research loop state. Written every iteration.</p>
+<p><code>`</code>json</p>
+<p>{</p>
+<p>  "running": true,</p>
+<p>  "iteration": 7,</p>
+<p>  "max_iterations": 50,</p>
+<p>  "score": 30,</p>
+<p>  "starting_score": 50,</p>
+<p>  "current_task": "Research Karpathy's role at OpenAI",</p>
+<p>  "current_issue": 2,</p>
+<p>  "last_action": "improved",</p>
+<p>  "subject": "Andrej Karpathy",</p>
+<p>  "model": "claude-opus-4-5",</p>
+<p>  "session_start": "2026-03-17T08:00:00Z"</p>
+<p>}</p>
+<p><code>`</code></p>
+<p>The NestJS backend reads this file and serves it at <code>GET /api/status</code>.</p>
+
+<p><strong><code>research.log</code></strong> — Append-only session log. Every action, score change, error, and Claude output gets timestamped here. Survives across sessions. The backend tails it at <code>GET /api/log</code>.</p>
+
+<p><strong><code>feedback.md</code></strong> — Write text here to inject guidance into the next iteration. <code>research.sh</code> reads it, includes the content in the next Claude prompt, then deletes the file. Use it for things like: "focus on primary sources for the Tesla section" or "the Stanford dates seem wrong, re-verify".</p>
+
+<p><strong><code>pause.flag</code></strong> — Touch this file to pause the loop. <code>research.sh</code> polls every 5 seconds and resumes when the file is removed. The backend's <code>POST /api/pause</code> toggles this.</p>
+
+<hr>
+
+<h2>Repository Structure</h2>
+
+<p><code>`</code></p>
+<p>autoresearch/</p>
+<p>├── goal.md                 ← YOU EDIT THIS — research subject and goals</p>
+<p>├── document.md             ← accumulated findings (built by Claude)</p>
+<p>├── coverage.md             ← gap/overlap analysis (by Goal Manager)</p>
+<p>├── changelog.md            ← append-only merge log</p>
+<p>├── model-versions.md       ← fine-tune model tracking</p>
+<p>│</p>
+<p>├── research.sh             ← main orchestration loop</p>
+<p>├── autoresearch.sh         ← score calculator (0-100%)</p>
+<p>├── explode-goal.sh         ← generate 30-50 tasks from goal.md</p>
+<p>├── propose.sh              ← propose + accept research tasks</p>
+<p>├── watch.sh                ← real-time terminal dashboard</p>
+<p>├── seed-tasks.sh           ← bootstrap labels + 5 starter Issues</p>
+<p>├── deploy.sh               ← one-command setup for Codespaces</p>
+<p>├── stop.sh                 ← generated by deploy.sh</p>
+<p>├── .env.example            ← template for secrets (copy to .env)</p>
+<p>│</p>
+<p>├── status.json             ← live loop state (gitignored)</p>
+<p>├── research.log            ← session log (gitignored)</p>
+<p>├── feedback.md             ← human → loop guidance (gitignored)</p>
+<p>├── pause.flag              ← pause control (gitignored)</p>
+<p>│</p>
+<p>└── backend/</p>
+<p>    ├── src/</p>
+<p>    │   ├── main.ts</p>
+<p>    │   ├── app.module.ts</p>
+<p>    │   └── research/</p>
+<p>    │       ├── research.module.ts</p>
+<p>    │       ├── research.controller.ts</p>
+<p>    │       └── research.service.ts</p>
+<p>    ├── package.json</p>
+<p>    └── tsconfig.json</p>
+<p><code>`</code></p>
+
+<hr>
+
+<h2>Roadmap</h2>
+
+<ul><li>[x] Phase 1: Core research loop (<code>research.sh</code> + <code>claude -p</code>)</li>
+<li>[x] Phase 1.5: NestJS backend with hourly cron</li>
+<li>[x] Phase 1.6: Score system (0-100%, citation quality + task completion)</li>
+<li>[x] Phase 1.7: Self-review (hallucination detection before merge)</li>
+<li>[x] Phase 1.8: Adaptive tasks (<code>explode-goal.sh</code> + post-merge proposals)</li>
+<li>[x] Phase 1.9: <code>.devcontainer</code> for one-click Codespaces</li>
+<li>[x] Phase 1.10: Test suite (83 tests — bash unit/integration + NestJS unit/e2e)</li>
+<li>[ ] Phase 2: GitHub Actions workflows (judges, goal manager, approval, verdict)</li>
+<li>[ ] Phase 3: Next.js live dashboard (3-panel: goal, document, controls)</li>
+<li>[ ] Phase 4: GitHub Pages public site (5 static pages)</li>
+<p></ul></p>
+<hr>
+
+<h2>Current Status</h2>
+
+<p><strong>Subject:</strong> Andrej Karpathy — AI researcher, educator, entrepreneur.</p>
+
+<p>| Metric | Value |</p>
+<p>|--------|-------|</p>
+<p>| Score | 11% |</p>
+<p>| Tasks | 1/30 completed, 11 accepted, 24 proposed |</p>
+<p>| Sources | 15 (9 Tier 1, 6 Tier 2) |</p>
+<p>| Sections | 1/5 with content (Intellectual Contributions) |</p>
+
+<p>Run <code>./autoresearch.sh</code> for live score breakdown.</p>
+
+<hr>
+
+<h2>License</h2>
+
+<p>MIT</p>
+
+  <footer>
+    Generated by <a href="https://github.com/danlex/autoresearch">Autoresearch</a> — Autonomous research powered by Claude Opus
+  </footer>
+</body>
+</html>
