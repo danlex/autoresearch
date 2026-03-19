@@ -89,3 +89,8 @@
 - PR: #99
 - Score: 68
 - Action: merged
+
+### 2026-03-19 — #74: What was Percy Liang's ongoing relationship with Karpathy after the PhD?
+- PR: #102
+- Score: 69
+- Action: merged
