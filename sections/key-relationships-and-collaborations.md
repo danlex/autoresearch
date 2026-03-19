@@ -87,3 +87,63 @@ What distinguishes Liang from other committee members is the direction of the br
 **Uncertainty:** It is not established whether Liang initiated the World of Bits collaboration (pulling in Karpathy's OpenAI involvement) or whether Karpathy initiated it (bringing in Liang as the Stanford PI). The paper's correspondence contact is the Stanford student (Shi), suggesting the project may have originated in Liang's lab. No primary source directly addresses the origin of the collaboration.
 
 ---
+
+### Ilya Sutskever
+
+Ilya Sutskever is the figure in Karpathy's professional network who most sharply defines the contrast between Karpathy's engineering-pragmatist stance on AI and the safety-first worldview that has come to anchor one wing of the field. They were co-founders of OpenAI in December 2015, worked together across two separate stints, and have since diverged publicly and structurally on the question of when — and how urgently — AGI must be prepared for.
+
+**Background and shared intellectual lineage.** Both Karpathy and Sutskever passed through the University of Toronto and Geoffrey Hinton's orbit, though not simultaneously as mentor and student with each other. Karpathy completed his BSc at Toronto (2005–2009) and attended Hinton's classes and reading groups [12]. Sutskever was Hinton's PhD student and co-developed AlexNet (2012) with Hinton and Alex Krizhevsky — the paper that catalyzed the deep learning era in computer vision [13]. This shared ancestry in the Hinton school gives both researchers a common foundation, even though their direct professional relationship began only at OpenAI.
+
+**Confidence: HIGH | Depth: HIGH**
+
+---
+
+#### Co-Founders at OpenAI: Asymmetric Roles (2015–2017, 2023–2024)
+
+OpenAI was incorporated in December 2015 with eleven founding members including Sam Altman, Elon Musk, Greg Brockman, Sutskever, and Karpathy [13]. Their roles were asymmetric from the outset: Sutskever joined as Chief Scientist — a formal research leadership position — while Karpathy joined as a Research Scientist, a technical contributor role [1][13]. Sutskever had left Google (following Google's acquisition of his and Hinton's DNNResearch startup after AlexNet) to take the Chief Scientist post. Karpathy was still completing his Stanford PhD under Fei-Fei Li when he joined and stayed from December 2015 through June 2017, when he departed for Tesla [19].
+
+Both returned to OpenAI in 2023: Karpathy rejoined in February 2023 to lead work on midtraining and synthetic data generation [2]; Sutskever had never formally left but returned to a more circumscribed role following the November 2023 board crisis, in which he had initially voted to remove Sam Altman before co-signing the employee letter demanding reinstatement [13]. Karpathy departed again in February 2024 with no stated drama [3]; Sutskever departed in May 2024 [103].
+
+No jointly authored research papers from either overlap period have been found. Karpathy's most productive publication period predates OpenAI (Stanford, 2012–2016), and his main OpenAI-era research output — the "World of Bits" paper (ICML 2017) — lists Sutskever as neither co-author nor acknowledgment [7]. The organizational relationship between them (Sutskever as Chief Scientist, Karpathy as research contributor) was documented by their titles but not by any co-authored artifact in the public record.
+
+**Confidence: HIGH | Depth: MEDIUM**
+
+**Uncertainty:** No primary source documents the nature of their working relationship at OpenAI — whether Sutskever directed Karpathy's research agenda, collaborated informally, or operated in parallel domains. The absence of co-authorship is documented; the nature of the day-to-day relationship is not.
+
+---
+
+#### Founding Safe Superintelligence: Sutskever's Post-OpenAI Move
+
+On June 19, 2024 — four months after Karpathy's own OpenAI departure — Sutskever announced Safe Superintelligence Inc. (SSI) via Twitter: "We will pursue safe superintelligence in a straight shot, with one focus, one goal, and one product" [104]. SSI's website states its mission directly: "Building safe superintelligence (SSI) is the most important technical problem of our time. We have started the world's first straight-shot SSI lab, with one goal and one product: a safe superintelligence" [102]. The company was co-founded with Daniel Gross (Y Combinator partner) and Daniel Levy, headquartered across Palo Alto and Tel Aviv, and raised $1B in its September 2024 Series A from Sequoia, a16z, and DST Global, reaching a $30B+ valuation by March 2025 [108].
+
+No documented public statement by Karpathy about SSI's founding, mission, or Sutskever's departure from OpenAI has been found. Karpathy's February 2024 departure tweet [3] — posted three months before Sutskever's — contains no mention of Sutskever, and his October 2025 Dwarkesh Patel podcast, which covered AGI timelines and current AI limitations at length, contains no mention of Sutskever or SSI [17].
+
+**Confidence: HIGH | Depth: HIGH**
+
+---
+
+#### The AGI Divergence: Timeline and Safety Posture
+
+The most substantive documented contrast between Karpathy and Sutskever is not interpersonal but intellectual: they have both made explicit, public statements about AGI timelines and safety posture that point in different directions.
+
+**Karpathy: decade estimate, pragmatist framing.** In his October 2025 Dwarkesh Patel interview, Karpathy put AGI "about a decade away," using OpenAI's original operational benchmark — a system capable of performing any economically valuable task at human performance or better [17]. On Twitter shortly after, he described himself as "5–10x pessimistic relative to Silicon Valley consensus" and characterized near-term AGI predictions as "hype productivity theater" [38]. His framing is empirical and capability-focused: current models have significant cognitive deficits, improvement is real but bounded by tractable engineering challenges, and the transition to AGI will be gradual rather than discontinuous.
+
+**Sutskever: 5 to 20 years, safety-first framing.** In his November 2025 Dwarkesh Patel interview, Sutskever gave a direct timeline estimate: "I think like 5 to 20" years [106]. He described superintelligence not as a system that already knows every job, but one capable of *learning* to do every job — "a superintelligent 15-year-old" — deployed incrementally. He characterized current models as generalizing "dramatically worse than people," echoing Karpathy's diagnosis of limitations while drawing a more urgent conclusion about the pace of breakthrough. At NeurIPS 2024, he was deliberately noncommittal on specific timing but explicit about direction: "I'm not saying how... and I'm not saying when. I'm saying that it will" [107] — **citation unverified: [107] is a June 2024 article and cannot contain December 2024 NeurIPS remarks; a contemporaneous NeurIPS 2024 source is needed**.
+
+On safety posture, the divergence is structural. Sutskever signed the May 2023 Center for AI Safety statement that "mitigating the risk of extinction from AI should be a global priority alongside other societal-scale risks such as pandemics and nuclear war" [105]. SSI's stated approach treats safety and capabilities as "technical problems to be solved through revolutionary engineering and scientific breakthroughs" [102] — a safety-by-design posture. Karpathy is not a documented signatory of the CAIS statement. His public risk framing is concrete and empirical — focused on current model limitations, misuse vectors, and near-term deployment failures — rather than organized around extinction-level risk scenarios. He has not publicly aligned with effective altruist or longtermist framings of AI safety.
+
+The timelines nominally overlap (Sutskever's lower bound of 5 years and Karpathy's estimate of 10 years are not mutually exclusive), but the framing and urgency differ substantially. Karpathy emphasizes the distance and the engineering difficulty; Sutskever emphasizes the arrival's certainty and the need to build safety-first infrastructure now, regardless of exact timing.
+
+**Confidence: HIGH | Depth: HIGH**
+
+---
+
+#### Scope of the Relationship and Limits of the Record
+
+The Karpathy–Sutskever relationship is primarily structural: they were co-founders and colleagues across two OpenAI stints, share a deep learning intellectual lineage through Hinton, and have publicly staked out contrasting positions on the urgency and framing of AGI. No direct public exchanges between them — no joint interviews, shared panels, or documented Twitter interactions — have been found in indexed sources from 2015 through March 2026. Their intellectual divergence is therefore documented through parallel but non-intersecting public record, not through a documented debate or exchange.
+
+**Confidence: MEDIUM | Depth: MEDIUM**
+
+**Uncertainty:** Whether Karpathy and Sutskever collaborated informally during their OpenAI overlaps (2015–2017, 2023–2024) remains undocumented. Their public silence about each other — no Karpathy comment on SSI, no Sutskever comment on Eureka Labs — may reflect professional discretion, distinct audiences, or simply the absence of direct friction rather than genuine intellectual distance.
+
+---
