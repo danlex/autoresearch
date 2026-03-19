@@ -56,7 +56,7 @@
 - [14] [CNBC — Karpathy leaves Tesla, July 2022](https://www.cnbc.com/2022/07/13/tesla-ai-leader-andrej-karpathy-announces-hes-leaving-the-company.html)
 - [15] [Fortune — Karpathy quits Tesla, July 2022](https://fortune.com/2022/07/14/andrej-karpathy-quits-tesla-ai-chief-trouble-for-elon-musk/)
 - [16] [TechCrunch — Karpathy leaves OpenAI (no drama), Feb 2024](https://techcrunch.com/2024/02/13/andrej-karpathy-is-leaving-openai-again-but-he-says-there-was-no-drama/)
-- [17] [Dwarkesh Patel interview transcript, 2025](https://www.dwarkesh.com/p/andrej-karpathy)
+- [17] [Dwarkesh Patel podcast — "AGI is still a decade away," Andrej Karpathy (Oct 17, 2025)](https://www.dwarkesh.com/p/andrej-karpathy) — Tier 2; full transcript on Substack; approx. 2.5-hour interview covering AGI timelines, RL critique, education philosophy, and Eureka Labs; partial transcript accessible (truncated ~01:07:05); education section confirmed accessed via secondary summaries [78][79]
 - [18] [Lex Fridman Podcast #333](https://lexfridman.com/andrej-karpathy/)
 - [19] [TechCrunch — Tesla hires Karpathy to lead Autopilot Vision, June 2017](https://techcrunch.com/2017/06/20/tesla-hires-deep-learning-expert-andrej-karpathy-to-lead-autopilot-vision/)
 - [20] [StartupArchive — Karpathy on Elon Musk (clips from Lex Fridman #333), 2022](https://www.startuparchive.org/p/andrej-karpathy-explains-what-makes-elon-musk-unique)
@@ -77,6 +77,9 @@
 - [45] [GitHub — karpathy/nanoGPT issue #471 "Citing this project in research" (Apr 2024)](https://github.com/karpathy/nanoGPT/issues/471)
 
 ### Tier 3 (Blogs / Fan Transcripts)
+- [78] [Zvi Mowshowitz — "On Dwarkesh Patel's Podcast with Andrej Karpathy" (Oct 2025)](https://thezvi.substack.com/p/on-dwarkesh-patels-podcast-with-andrej) — Tier 3; detailed episode summary by Zvi Mowshowitz; covers education philosophy, Korean tutor story, Starfleet Academy, Pre-AGI/Post-AGI distinction, and current AI tutoring limitations; used to cross-check [17] claims
+- [79] [Podchemy — "Andrej Karpathy — AGI is still a decade away" podcast notes](https://www.podchemy.com/notes/andrej-karpathy-agi-is-still-a-decade-away-43921620932) — Tier 3; AI-generated podcast notes; covers education section including "eurekas per second," "pain before solution," nanochat learning approach, and Karpathy's Korean tutor reference; used to cross-check [17] claims
+
 - [24] [Elon Musk Interviews — Tesla AI Day 2021 presentation transcript (Part I)](https://elonmuskinterviews.wordpress.com/2021/08/31/tesla-ai-day-the-presentation-i/) — WordPress fan blog; not mainstream press. Quote used in body ("building a synthetic animal...") requires verification against official Tesla AI Day video.
 - [57] [Hacker News — "Software 2.0 (2017)" re-submission (Feb 21, 2023)](https://news.ycombinator.com/item?id=34881881) — Tier 3; community aggregator thread; 422 points, 330 comments; documents reception of the essay five years post-publication including substantive skeptical pushback from practitioners
 - [58] [Hacker News — "Building the Software 2.0 Stack by Andrej Karpathy [video]" (Jun 10, 2018)](https://news.ycombinator.com/item?id=17280454) — Tier 3; community thread on the Spark+AI Summit 2018 keynote; 207 points; links to external video host; cited as evidence of practitioner engagement with the talk
