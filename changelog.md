@@ -99,3 +99,8 @@
 - PR: #103
 - Score: 71
 - Action: merged
+
+### 2026-03-19 — #68: What is Karpathy's 'Software 3.0' thesis and when did he formally articulate it?
+- PR: #106
+- Score: 74
+- Action: merged
