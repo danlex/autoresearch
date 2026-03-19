@@ -45,6 +45,10 @@
 - [68] [arXiv — Karpathy, Johnson, Li, "Visualizing and Understanding Recurrent Networks" (Jun 2015; ICLR 2016 Workshop)](https://arxiv.org/abs/1506.02078) — Tier 1; paper analyzing internal representations of LSTM language models; identifies interpretable cells tracking position within quotes, line counts, and code indentation
 - [69] [X/Twitter — Karpathy announces CVPR 2021 Tesla Autopilot talk (Jun 21, 2021)](https://x.com/karpathy/status/1407017269083865095) — Tier 1; Karpathy's self-posted announcement of his CVPR 2021 workshop keynote; primary source for vision-only approach quote: "estimate very accurate depth, velocity, acceleration with neural nets from vision. Necessary ingredients include: 1M car fleet data engine, strong AI team and a Supercomputer"
 
+- [74] [arXiv — Johnson, Karpathy, Li, "DenseCap: Fully Convolutional Localization Networks for Dense Captioning" (Nov 2015; CVPR 2016 Oral)](https://arxiv.org/abs/1511.07571) — Tier 1; primary source for DenseCap paper; confirms full author list, equal contribution credit for Johnson and Karpathy, CVPR 2016 oral presentation venue
+- [75] [University of Michigan EECS — Justin Johnson faculty page](https://web.eecs.umich.edu/~justincj/) — Tier 1; Johnson's official institutional page; confirms PhD advisor (Fei-Fei Li, Stanford), faculty appointment at Michigan, and research areas
+- [76] [World Labs — company and Justin Johnson co-founder](https://worldlabs.ai/) — Tier 2; official company site; confirms Johnson as co-founder; corroborated by LinkedIn and press coverage
+
 ### Tier 2 (Mainstream press / Wikipedia)
 - [12] [Wikipedia — Andrej Karpathy](https://en.wikipedia.org/wiki/Andrej_Karpathy)
 - [13] [Wikipedia — OpenAI](https://en.wikipedia.org/wiki/OpenAI)
