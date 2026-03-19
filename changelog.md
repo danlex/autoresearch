@@ -94,3 +94,8 @@
 - PR: #102
 - Score: 69
 - Action: merged
+
+### 2026-03-19 — #70: What is the verified influence of Software 2.0 on Andrew Ng's data-centric AI movement?
+- PR: #103
+- Score: 71
+- Action: merged
