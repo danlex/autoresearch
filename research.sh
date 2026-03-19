@@ -574,13 +574,19 @@ post_merge() {
   # 3. Propose follow-up tasks based on what was just researched
   propose_followup_tasks "$issue_num"
 
-  # 4. Commit post-merge updates
-  git add document.md sections/ changelog.md coverage.md 2>/dev/null || true
+  # 4. Regenerate GitHub Pages site
+  if [[ -f "$SCRIPT_DIR/.github/generate-site.js" ]]; then
+    log "Regenerating GitHub Pages..."
+    node "$SCRIPT_DIR/.github/generate-site.js" 2>/dev/null || log "WARNING: site generation failed"
+  fi
+
+  # 5. Commit post-merge updates (header, changelog, docs/)
+  git add document.md sections/ changelog.md coverage.md docs/ 2>/dev/null || true
   if ! git diff --cached --quiet 2>/dev/null; then
     git -c user.name="Autoresearch System" -c user.email="system@autoresearch" \
-      commit -m "chore: post-merge update header + changelog (#${issue_num})" 2>/dev/null || true
+      commit -m "chore: post-merge update + regenerate site (#${issue_num})" 2>/dev/null || true
     git push origin main 2>/dev/null || true
-    log "Post-merge commit pushed"
+    log "Post-merge commit pushed (site regenerated)"
   fi
 }
 
@@ -999,13 +1005,41 @@ main_loop() {
     issue_num=$(get_next_issue)
 
     if [[ -z "$issue_num" ]]; then
-      log "No accepted tasks available. Waiting 60s..."
-      current_task=""
-      current_issue=0
-      last_action="waiting"
-      write_status true
-      sleep 60
-      continue
+      # Auto-accept proposed tasks if AUTO_ACCEPT is set
+      if [[ "${AUTO_ACCEPT:-0}" != "0" ]]; then
+        log "No accepted tasks — auto-accepting proposed tasks (priority: ${AUTO_ACCEPT})..."
+        local accepted_count=0
+        if [[ "$AUTO_ACCEPT" == "all" || "$AUTO_ACCEPT" == "1" ]]; then
+          # Accept all proposed
+          while IFS= read -r proposed_num; do
+            [[ -z "$proposed_num" ]] && continue
+            gh issue edit "$proposed_num" --add-label "accepted" --remove-label "proposed" 2>/dev/null || true
+            accepted_count=$((accepted_count + 1))
+          done < <(gh issue list --label "proposed" --state open --limit 10 --json number --jq '.[].number' 2>/dev/null)
+        else
+          # Accept only matching priority (high, medium, low)
+          while IFS= read -r proposed_num; do
+            [[ -z "$proposed_num" ]] && continue
+            gh issue edit "$proposed_num" --add-label "accepted" --remove-label "proposed" 2>/dev/null || true
+            accepted_count=$((accepted_count + 1))
+          done < <(gh issue list --label "proposed,priority-${AUTO_ACCEPT}" --state open --limit 10 --json number --jq '.[].number' 2>/dev/null)
+        fi
+
+        if [[ $accepted_count -gt 0 ]]; then
+          log "Auto-accepted $accepted_count proposed tasks"
+          issue_num=$(get_next_issue)
+        fi
+      fi
+
+      if [[ -z "$issue_num" ]]; then
+        log "No tasks available. Waiting 60s..."
+        current_task=""
+        current_issue=0
+        last_action="waiting"
+        write_status true
+        sleep 60
+        continue
+      fi
     fi
 
     # 5. Read task details
