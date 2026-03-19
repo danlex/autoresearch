@@ -16,6 +16,7 @@
 - [27] [Eureka Labs official website — eurekalabs.ai](https://eurekalabs.ai/)
 - [29] [GitHub — karpathy/LLM101n repository (README)](https://github.com/karpathy/LLM101n)
 - [30] [GitHub — karpathy/nanochat repository (README, Oct 2025)](https://github.com/karpathy/nanochat)
+- [77] [X/Twitter — Karpathy nanochat announcement thread (Oct 13, 2025)](https://x.com/karpathy/status/1977755427569111362) — Tier 1; announcement thread for nanochat release; contains explicit statement "nanochat will be the capstone project of LLM101n (which is still being developed)" and describes dual purpose as course capstone and potential research harness
 - [31] [karpathy.github.io — "A Short Story on AI: A Cognitive Discontinuity" (Nov 14, 2015)](https://karpathy.github.io/2015/11/14/ai/)
 - [32] [X/Twitter — Karpathy "slopacolypse" / Claude coding thread (Jan 27, 2026)](https://x.com/karpathy/status/2015883857489522876)
 - [33] [X/Twitter — Karpathy Moltbook "dumpster fire" thread (Jan 30, 2026)](https://x.com/karpathy/status/2017442712388309406)
