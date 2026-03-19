@@ -77,6 +77,16 @@
     .score-bar { background: var(--surface); border-radius: 4px; overflow: hidden; height: 8px; margin: 0.5rem 0; }
     .score-fill { height: 100%; background: var(--green); transition: width 0.3s; }
     footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--dim); font-size: 0.8rem; text-align: center; }
+    .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin: 1.5rem 0; }
+    .video-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .video-card iframe { width: 100%; aspect-ratio: 16/9; border: none; display: block; }
+    .video-card .video-info { padding: 0.8rem; }
+    .video-card .video-title { color: var(--text); font-weight: bold; font-size: 0.9rem; }
+    .video-card .video-desc { color: var(--dim); font-size: 0.8rem; margin-top: 0.3rem; }
+    .hero-img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin: 1.5rem 0; border: 1px solid var(--border); }
+    .profile-row { display: flex; gap: 1.5rem; align-items: center; margin: 1.5rem 0; flex-wrap: wrap; }
+    .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--amber); object-fit: cover; }
+    .profile-text { flex: 1; min-width: 200px; }
     footer a { color: var(--dim); }
     @media (max-width: 600px) { body { padding: 1rem; } .stats { grid-template-columns: 1fr 1fr; } }
   </style>
@@ -94,10 +104,24 @@
   
     <h1>Andrej Karpathy — Research Document</h1>
 
-    <p style="font-size: 1.1rem; color: var(--dim); margin: 1rem 0 2rem;">
-      A comprehensive, autonomously researched profile of Andrej Karpathy — AI researcher, educator, and entrepreneur.
-      Founding member of OpenAI, former Director of AI at Tesla, creator of cs231n and nanoGPT, and founder of Eureka Labs.
-      Every claim is backed by sources with inline citations. Score reflects task completion, citation quality, and source reliability.
+    <div class="profile-row">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Andrej_Karpathy_at_AI_Frontiers_2018_%28cropped%29.jpg/440px-Andrej_Karpathy_at_AI_Frontiers_2018_%28cropped%29.jpg" alt="Andrej Karpathy" class="profile-img">
+      <div class="profile-text">
+        <p style="font-size: 1.1rem; margin: 0 0 0.5rem;">
+          <strong>Andrej Karpathy</strong> — AI researcher, educator, and entrepreneur.
+        </p>
+        <p style="color: var(--dim); margin: 0;">
+          Founding member of OpenAI. Former Director of AI at Tesla Autopilot.
+          Creator of cs231n, nanoGPT, and micrograd. Founder of Eureka Labs.
+          Stanford PhD under Fei-Fei Li.
+        </p>
+      </div>
+    </div>
+
+    <p style="font-size: 0.95rem; color: var(--dim); margin: 1rem 0 2rem;">
+      This document was autonomously researched using <a href="https://github.com/danlex/autoresearch">Autoresearch</a> —
+      an AI-powered system that generates research questions, searches the web, writes findings with inline citations,
+      and verifies everything through a three-judge review panel. Built by <strong>Alexandru DAN</strong>, CEO TVL Tech.
     </p>
 
     <div class="stats">
@@ -308,7 +332,31 @@
 <li>The computational overhead of the Newton-Schulz iteration (described as "below 1% of FLOPs") is from Jordan's blog post <sup class="cite">[97]</sup> and was not independently benchmarked in this research pass.</li>
 <li>The exact per-record contributor attributions for the modded-nanogpt leaderboard were not fully traced; the record history shows @kellerjordan0, @bozavlado, @YouJiacheng, @leloykun, @classiclarryd, and others, but the specific records associated with each contributor were not verified in detail.</li>
 <li>Whether Muon has been adopted beyond Moonshot AI in large-scale production training is not confirmed by accessible primary or Tier 2 sources as of March 2026, beyond the arXiv:2505.02222 Essential AI pretraining study (not independently fetched in this research pass).</li>
-<p></ul></p></div><div id="education-and-teaching"><h2>Education and Teaching</h2>
+<p></ul></p><h3 style="color: var(--dim); margin-top: 2rem;">Related Videos</h3><div class="video-grid">
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/Xl0E7FuXj4g" allowfullscreen loading="lazy"></iframe>
+        <div class="video-info">
+          <div class="video-title">Tesla AI Day 2021 — Full Presentation</div>
+          <div class="video-desc">Karpathy presents the Autopilot neural network stack</div>
+        </div>
+      </div>
+    
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/y57wwucbXR8" allowfullscreen loading="lazy"></iframe>
+        <div class="video-info">
+          <div class="video-title">Building the Software 2.0 Stack (Spark+AI 2018)</div>
+          <div class="video-desc">Expanding the Software 2.0 thesis with Tesla examples</div>
+        </div>
+      </div>
+    
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/bZQun8Y4L2A" allowfullscreen loading="lazy"></iframe>
+        <div class="video-info">
+          <div class="video-title">State of GPT — Microsoft Build 2023</div>
+          <div class="video-desc">Karpathy explains the full GPT training pipeline</div>
+        </div>
+      </div>
+    </div></div><hr><div id="education-and-teaching"><h2>Education and Teaching</h2>
 
 <p><strong><span class="badge medium">MEDIUM</span> | <span class="badge medium">MEDIUM</span></strong></p>
 
@@ -358,7 +406,39 @@
 <ul><li>Primary sources for micrograd (GitHub README) and the Zero to Hero YouTube series are not yet cited in this document. The characterizations of those artifacts derive from the task specification rather than independently verified research. cs231n and nanoGPT are fully sourced as of this research pass.</li>
 <li>Lex Fridman Podcast #333 <sup class="cite">[18]</sup> and the Dwarkesh Patel 2025 interview <sup class="cite">[17]</sup> are already-cited sources that likely contain first-person statements about the broader pedagogical principles and should be reviewed to upgrade the overall section confidence to HIGH.</li>
 <li>YouTube view counts for the 2016 cs231n lecture recordings could not be independently verified; the playlist URL is documented but view statistics are not cited.</li>
-<p></ul></p></div><div id="views-on-ai-future"><h2>Views on AI Future</h2>
+<p></ul></p><h3 style="color: var(--dim); margin-top: 2rem;">Related Videos</h3><div class="video-grid">
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/VMj-3S1tku0" allowfullscreen loading="lazy"></iframe>
+        <div class="video-info">
+          <div class="video-title">Let's build GPT: from scratch, in code</div>
+          <div class="video-desc">Building a GPT language model step by step (1h56m)</div>
+        </div>
+      </div>
+    
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/l8pRSuU81PU" allowfullscreen loading="lazy"></iframe>
+        <div class="video-info">
+          <div class="video-title">Let's reproduce GPT-2 (124M)</div>
+          <div class="video-desc">Full GPT-2 reproduction walkthrough (~4h)</div>
+        </div>
+      </div>
+    
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/kCc8FmEb1nY" allowfullscreen loading="lazy"></iframe>
+        <div class="video-info">
+          <div class="video-title">Neural Networks: Zero to Hero — Intro</div>
+          <div class="video-desc">First lecture in the Zero to Hero series</div>
+        </div>
+      </div>
+    
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/vT1JzLTH4G4" allowfullscreen loading="lazy"></iframe>
+        <div class="video-info">
+          <div class="video-title">CS231n Lecture 1 — Intro to CNNs</div>
+          <div class="video-desc">Stanford cs231n with Karpathy (2016)</div>
+        </div>
+      </div>
+    </div></div><hr><div id="views-on-ai-future"><h2>Views on AI Future</h2>
 
 <h3>Overview: Pragmatist with Substantive Safety Concerns</h3>
 
@@ -498,7 +578,23 @@
 <li><strong>Pragmatist with substantive safety concerns.</strong> He believes real risks exist, frames them concretely, and believes the right response is rigorous engineering and calibrated timelines <sup class="cite">[17]</sup><sup class="cite">[31]</sup><sup class="cite">[32]</sup><sup class="cite">[33]</sup>.</li>
 <p></ul></p>
 <p>The 2015 short story is the most revealing data point: Karpathy demonstrated prescient concern about interpretability, emergent behavior, and control failures in fictional form before these became mainstream safety research topics — while simultaneously co-founding OpenAI. This is the foundational tension in his public record: a consistent sense that AI poses serious failure risks, combined with an equally consistent commitment to building it anyway <sup class="cite">[31]</sup>.</p>
-</div><div id="eureka-labs"><h2>Eureka Labs</h2>
+<h3 style="color: var(--dim); margin-top: 2rem;">Related Videos</h3><div class="video-grid">
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/EcWMbk0HuMI" allowfullscreen loading="lazy"></iframe>
+        <div class="video-info">
+          <div class="video-title">Karpathy on Lex Fridman Podcast #333</div>
+          <div class="video-desc">Deep dive on AI future, Tesla, OpenAI, and education</div>
+        </div>
+      </div>
+    
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/hM_h0UA7upI" allowfullscreen loading="lazy"></iframe>
+        <div class="video-info">
+          <div class="video-title">Andrej Karpathy — Dwarkesh Patel 2025</div>
+          <div class="video-desc">AGI timelines, OpenAI reflections, AI safety</div>
+        </div>
+      </div>
+    </div></div><hr><div id="eureka-labs"><h2>Eureka Labs</h2>
 
 <p><strong><span class="badge high">HIGH</span> | <span class="badge medium">MEDIUM</span></strong></p>
 
@@ -593,7 +689,15 @@
 <p>Karpathy described Eureka Labs as "the culmination of my passion in both AI and education over ~2 decades" and noted that all his prior educational work — cs231n, micrograd, nanoGPT, Zero to Hero — had been "part-time, as side quests to my 'real job.'" Eureka Labs represents his first professional full-time commitment to the combination <sup class="cite">[26]</sup>. In October 2025 he released <strong>nanochat</strong>, a minimal end-to-end LLM training and inference pipeline. Secondary sources characterize it as the capstone project for LLM101n based on Karpathy's announcement <sup class="cite">[77]</sup>; the formal designation and structural connection are discussed in the nanochat subsection above.</p>
 
 <blockquote>Note: The July 2024 founding date is confirmed by two Tier 1 sources (Karpathy's announcement tweet <sup class="cite">[26]</sup> and the Eureka Labs website <sup class="cite">[27]</sup>). This resolves the date conflict flagged in Open Questions — the "Eureka Labs 2023" reference in the task issue was incorrect.</blockquote>
-</div><div id="key-relationships"><h2>Key Relationships and Collaborations</h2>
+<h3 style="color: var(--dim); margin-top: 2rem;">Related Videos</h3><div class="video-grid">
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/VMj-3S1tku0" allowfullscreen loading="lazy"></iframe>
+        <div class="video-info">
+          <div class="video-title">Let's build GPT (Eureka Labs precursor)</div>
+          <div class="video-desc">The teaching style that inspired Eureka Labs</div>
+        </div>
+      </div>
+    </div></div><hr><div id="key-relationships"><h2>Key Relationships and Collaborations</h2>
 
 <h3>Karpathy and Elon Musk (2017–2022)</h3>
 
@@ -616,7 +720,15 @@
 <li>Karpathy's stated reason for the 2017 move from OpenAI to Tesla has no Tier 1 explanation. The "Musk recruited him" framing is derived from press sources only <sup class="cite">[15]</sup><sup class="cite">[19]</sup>.</li>
 <li>The December 24, 2025 public exchange: Benzinga <sup class="cite">[21]</sup> and Yahoo Finance <sup class="cite">[22]</sup> both report the substance of the exchange, with Benzinga quoting Musk directly: "Tesla AI software has advanced vastly beyond what it was when he left." The underlying Musk and Karpathy tweets were not directly accessed (X requires authentication for content retrieval), but two independent Tier 2 sources confirm the substance and date of the exchange.</li>
 <li>The Tesla AI Day 2021 quote ("building a synthetic animal from the ground up...") is sourced from <sup class="cite">[24]</sup>, a WordPress fan blog transcript — Tier 3, not Tier 1 or 2. The quote should be verified against the official Tesla AI Day video before treating it as confirmed.</li>
-<p></ul></p></div>
+<p></ul></p><h3 style="color: var(--dim); margin-top: 2rem;">Related Videos</h3><div class="video-grid">
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/Xl0E7FuXj4g" allowfullscreen loading="lazy"></iframe>
+        <div class="video-info">
+          <div class="video-title">Tesla AI Day 2021 — with Musk</div>
+          <div class="video-desc">Karpathy presenting alongside Elon Musk</div>
+        </div>
+      </div>
+    </div></div><hr>
   <footer>
     <p>Built by <strong>Alexandru DAN</strong>, CEO <a href="#">TVL Tech</a></p>
     <p>Powered by <a href="https://github.com/danlex/autoresearch">Autoresearch</a> — Autonomous research with Claude Opus</p>

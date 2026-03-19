@@ -77,6 +77,16 @@
     .score-bar { background: var(--surface); border-radius: 4px; overflow: hidden; height: 8px; margin: 0.5rem 0; }
     .score-fill { height: 100%; background: var(--green); transition: width 0.3s; }
     footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--dim); font-size: 0.8rem; text-align: center; }
+    .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin: 1.5rem 0; }
+    .video-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .video-card iframe { width: 100%; aspect-ratio: 16/9; border: none; display: block; }
+    .video-card .video-info { padding: 0.8rem; }
+    .video-card .video-title { color: var(--text); font-weight: bold; font-size: 0.9rem; }
+    .video-card .video-desc { color: var(--dim); font-size: 0.8rem; margin-top: 0.3rem; }
+    .hero-img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin: 1.5rem 0; border: 1px solid var(--border); }
+    .profile-row { display: flex; gap: 1.5rem; align-items: center; margin: 1.5rem 0; flex-wrap: wrap; }
+    .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--amber); object-fit: cover; }
+    .profile-text { flex: 1; min-width: 200px; }
     footer a { color: var(--dim); }
     @media (max-width: 600px) { body { padding: 1rem; } .stats { grid-template-columns: 1fr 1fr; } }
   </style>

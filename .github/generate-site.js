@@ -192,6 +192,16 @@ const TEMPLATE = `<!DOCTYPE html>
     .score-bar { background: var(--surface); border-radius: 4px; overflow: hidden; height: 8px; margin: 0.5rem 0; }
     .score-fill { height: 100%; background: var(--green); transition: width 0.3s; }
     footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--dim); font-size: 0.8rem; text-align: center; }
+    .video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.2rem; margin: 1.5rem 0; }
+    .video-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .video-card iframe { width: 100%; aspect-ratio: 16/9; border: none; display: block; }
+    .video-card .video-info { padding: 0.8rem; }
+    .video-card .video-title { color: var(--text); font-weight: bold; font-size: 0.9rem; }
+    .video-card .video-desc { color: var(--dim); font-size: 0.8rem; margin-top: 0.3rem; }
+    .hero-img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin: 1.5rem 0; border: 1px solid var(--border); }
+    .profile-row { display: flex; gap: 1.5rem; align-items: center; margin: 1.5rem 0; flex-wrap: wrap; }
+    .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--amber); object-fit: cover; }
+    .profile-text { flex: 1; min-width: 200px; }
     footer a { color: var(--dim); }
     @media (max-width: 600px) { body { padding: 1rem; } .stats { grid-template-columns: 1fr 1fr; } }
   </style>
@@ -232,6 +242,64 @@ function writePage(filename, title, content, activeNav, metaDesc) {
 }
 
 // ============================================================================
+// Media — YouTube videos and images per section
+// ============================================================================
+
+const MEDIA = {
+  'intellectual-contributions': {
+    videos: [
+      { id: 'Xl0E7FuXj4g', title: 'Tesla AI Day 2021 — Full Presentation', desc: 'Karpathy presents the Autopilot neural network stack' },
+      { id: 'y57wwucbXR8', title: 'Building the Software 2.0 Stack (Spark+AI 2018)', desc: 'Expanding the Software 2.0 thesis with Tesla examples' },
+      { id: 'bZQun8Y4L2A', title: 'State of GPT — Microsoft Build 2023', desc: 'Karpathy explains the full GPT training pipeline' },
+    ],
+  },
+  'education-and-teaching': {
+    videos: [
+      { id: 'VMj-3S1tku0', title: "Let's build GPT: from scratch, in code", desc: 'Building a GPT language model step by step (1h56m)' },
+      { id: 'l8pRSuU81PU', title: "Let's reproduce GPT-2 (124M)", desc: 'Full GPT-2 reproduction walkthrough (~4h)' },
+      { id: 'kCc8FmEb1nY', title: 'Neural Networks: Zero to Hero — Intro', desc: 'First lecture in the Zero to Hero series' },
+      { id: 'vT1JzLTH4G4', title: 'CS231n Lecture 1 — Intro to CNNs', desc: 'Stanford cs231n with Karpathy (2016)' },
+    ],
+  },
+  'views-on-ai-future': {
+    videos: [
+      { id: 'EcWMbk0HuMI', title: 'Karpathy on Lex Fridman Podcast #333', desc: 'Deep dive on AI future, Tesla, OpenAI, and education' },
+      { id: 'hM_h0UA7upI', title: 'Andrej Karpathy — Dwarkesh Patel 2025', desc: 'AGI timelines, OpenAI reflections, AI safety' },
+    ],
+  },
+  'eureka-labs': {
+    videos: [
+      { id: 'VMj-3S1tku0', title: "Let's build GPT (Eureka Labs precursor)", desc: 'The teaching style that inspired Eureka Labs' },
+    ],
+  },
+  'key-relationships': {
+    videos: [
+      { id: 'Xl0E7FuXj4g', title: 'Tesla AI Day 2021 — with Musk', desc: 'Karpathy presenting alongside Elon Musk' },
+    ],
+  },
+};
+
+function renderVideoGrid(sectionKey) {
+  const media = MEDIA[sectionKey];
+  if (!media || !media.videos || media.videos.length === 0) return '';
+
+  let html = '<div class="video-grid">';
+  for (const v of media.videos) {
+    html += `
+      <div class="video-card">
+        <iframe src="https://www.youtube.com/embed/${v.id}" allowfullscreen loading="lazy"></iframe>
+        <div class="video-info">
+          <div class="video-title">${v.title}</div>
+          <div class="video-desc">${v.desc}</div>
+        </div>
+      </div>
+    `;
+  }
+  html += '</div>';
+  return html;
+}
+
+// ============================================================================
 // Generate Pages
 // ============================================================================
 
@@ -262,10 +330,24 @@ const { score, breakdown } = getScore();
   let body = `
     <h1>Andrej Karpathy — Research Document</h1>
 
-    <p style="font-size: 1.1rem; color: var(--dim); margin: 1rem 0 2rem;">
-      A comprehensive, autonomously researched profile of Andrej Karpathy — AI researcher, educator, and entrepreneur.
-      Founding member of OpenAI, former Director of AI at Tesla, creator of cs231n and nanoGPT, and founder of Eureka Labs.
-      Every claim is backed by sources with inline citations. Score reflects task completion, citation quality, and source reliability.
+    <div class="profile-row">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Andrej_Karpathy_at_AI_Frontiers_2018_%28cropped%29.jpg/440px-Andrej_Karpathy_at_AI_Frontiers_2018_%28cropped%29.jpg" alt="Andrej Karpathy" class="profile-img">
+      <div class="profile-text">
+        <p style="font-size: 1.1rem; margin: 0 0 0.5rem;">
+          <strong>Andrej Karpathy</strong> — AI researcher, educator, and entrepreneur.
+        </p>
+        <p style="color: var(--dim); margin: 0;">
+          Founding member of OpenAI. Former Director of AI at Tesla Autopilot.
+          Creator of cs231n, nanoGPT, and micrograd. Founder of Eureka Labs.
+          Stanford PhD under Fei-Fei Li.
+        </p>
+      </div>
+    </div>
+
+    <p style="font-size: 0.95rem; color: var(--dim); margin: 1rem 0 2rem;">
+      This document was autonomously researched using <a href="https://github.com/danlex/autoresearch">Autoresearch</a> —
+      an AI-powered system that generates research questions, searches the web, writes findings with inline citations,
+      and verifies everything through a three-judge review panel. Built by <strong>Alexandru DAN</strong>, CEO TVL Tech.
     </p>
 
     <div class="stats">
@@ -296,7 +378,13 @@ const { score, breakdown } = getScore();
   for (const s of sectionMeta) {
     const content = readSection(s.file);
     if (content.trim()) {
-      body += '<div id="' + s.anchor + '">' + md2html(content) + '</div>';
+      body += '<div id="' + s.anchor + '">' + md2html(content);
+      // Add video grid for this section
+      const videos = renderVideoGrid(s.anchor);
+      if (videos) {
+        body += '<h3 style="color: var(--dim); margin-top: 2rem;">Related Videos</h3>' + videos;
+      }
+      body += '</div><hr>';
     }
   }
 
