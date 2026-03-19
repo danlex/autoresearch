@@ -83,50 +83,27 @@ compute_score() {
 # ============================================================================
 
 get_next_issue() {
-  local issue_num=""
-
-  # Priority 1: needs-better-research (rework)
-  issue_num=$(gh issue list \
-    --label "task,accepted,needs-better-research" \
-    --state open \
-    --json number,labels \
-    --jq '[.[] | select(.labels | map(.name) | contains(["in-progress"]) | not)] | .[0].number // empty' \
-    2>/dev/null || true)
-
-  if [[ -n "$issue_num" ]]; then
-    echo "$issue_num"
-    return
-  fi
-
-  # Priority 2: by priority label (high > medium > low)
-  for priority in priority-high priority-medium priority-low; do
-    issue_num=$(gh issue list \
-      --label "task,accepted,$priority" \
-      --state open \
-      --json number,labels \
-      --jq '[.[] | select(.labels | map(.name) | contains(["in-progress"]) | not)] | .[0].number // empty' \
-      2>/dev/null || true)
-
-    if [[ -n "$issue_num" ]]; then
-      echo "$issue_num"
-      return
-    fi
-  done
-
-  # Priority 3: any accepted task without priority label
-  issue_num=$(gh issue list \
+  # Single API call — fetch all accepted tasks, sort by priority locally
+  local all_issues
+  all_issues=$(gh issue list \
     --label "task,accepted" \
     --state open \
+    --limit 100 \
     --json number,labels \
-    --jq '[.[] | select(.labels | map(.name) | contains(["in-progress"]) | not)] | .[0].number // empty' \
-    2>/dev/null || true)
+    2>/dev/null || echo "[]")
 
-  if [[ -n "$issue_num" ]]; then
-    echo "$issue_num"
-    return
-  fi
-
-  echo ""
+  # Filter out in-progress, then sort: needs-better-research > high > medium > low > none
+  echo "$all_issues" | jq -r '
+    [.[] | select(.labels | map(.name) | contains(["in-progress"]) | not)]
+    | sort_by(
+        if (.labels | map(.name) | contains(["needs-better-research"])) then 0
+        elif (.labels | map(.name) | contains(["priority-high"])) then 1
+        elif (.labels | map(.name) | contains(["priority-medium"])) then 2
+        elif (.labels | map(.name) | contains(["priority-low"])) then 3
+        else 4 end
+      )
+    | .[0].number // empty
+  ' 2>/dev/null || true
 }
 
 read_issue() {
