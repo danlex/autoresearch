@@ -551,7 +551,7 @@ const { score, breakdown } = getScore();
     <h1>Andrej Karpathy — Research Document</h1>
 
     <div class="profile-row">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Andrej_Karpathy_at_AI_Frontiers_2018_%28cropped%29.jpg/440px-Andrej_Karpathy_at_AI_Frontiers_2018_%28cropped%29.jpg" alt="Andrej Karpathy" class="profile-img">
+      <img src="karpathy.jpg" alt="Andrej Karpathy" class="profile-img">
       <div class="profile-text">
         <p style="font-size: 1.1rem; margin: 0 0 0.5rem;">
           <strong>Andrej Karpathy</strong> — AI researcher, educator, and entrepreneur.
