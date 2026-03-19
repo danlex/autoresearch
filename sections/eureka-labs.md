@@ -56,6 +56,18 @@ The nanochat README itself contains no explicit reference to Eureka Labs or LLM1
 
 As of March 2026 — approximately 20 months after founding — Eureka Labs has not shipped any commercial product or completed course. The Eureka Labs website continues to describe the platform in aspirational terms and states the team is "heads down building LLM101n" [27]. No beta enrollment, no paying students, no announced partnerships, and no investor disclosures have appeared in any public record [27][29]. The sole concrete publicly released output formally linked to the LLM101n curriculum is nanochat (October 2025): Karpathy explicitly designated it as the course capstone in his announcement tweet [77], though it resides on his personal GitHub account rather than an official Eureka Labs repository [30][77].
 
+### Corporate and Funding Structure
+
+**Confidence: MEDIUM | Depth: MEDIUM**
+
+Eureka Labs was incorporated as a **Delaware LLC on June 21, 2024** — approximately three weeks before Karpathy's public founding announcement on July 16, 2024 [26][71]. The California Secretary of State foreign LLC filing is signed solely by Karpathy; no other officers, directors, or agents appear in any publicly available filing [71]. The entity type (LLC) and sole-signatory filing are consistent with the founding framing of a solo venture: no co-founders have been named in any primary or press source [26][27][28].
+
+**No external funding has been publicly disclosed.** A search of SEC EDGAR for Eureka Labs (which would capture any Form D Regulation D exempt offering) returned no results [80]. Crunchbase and PitchBook profiles for Eureka Labs exist but are paywalled and list no funding rounds in any secondary reporting [81]. No venture capital firms, angel investors, or strategic backers have been named in any press coverage or public record as of March 2026 [28][71].
+
+**Uncertainty:** The absence of a public funding announcement does not confirm self-funding — early-stage rounds are sometimes raised under confidentiality before a product ships. Given Karpathy's compensation history at Tesla and OpenAI, bootstrapping is plausible, but no authoritative source has confirmed this. The AIExpert Network article ([71]) notes explicitly: "it is unclear whether Eureka Labs is self-funded or has secured external investment. There are no public filings of any investments related to the startup." The Eureka Labs website itself contains no investor disclosures, no team page beyond implicit reference to Karpathy, and no legal entity information [27].
+
+**Regarding source [71]:** The AIExpert Network article on Eureka Labs is the primary source documenting the Delaware LLC formation date of June 21, 2024, and the California Secretary of State filing signed solely by Karpathy. It is a Tier 3 source (independent analysis blog). Delaware ICIS and OpenCorporates could not be accessed programmatically (CAPTCHA-gated) to obtain the raw filing record directly.
+
 ### Personal Motivation
 
 Karpathy described Eureka Labs as "the culmination of my passion in both AI and education over ~2 decades" and noted that all his prior educational work — cs231n, micrograd, nanoGPT, Zero to Hero — had been "part-time, as side quests to my 'real job.'" Eureka Labs represents his first professional full-time commitment to the combination [26]. In October 2025 he released **nanochat**, a minimal end-to-end LLM training and inference pipeline, and explicitly designated it as the capstone project for LLM101n in his announcement tweet: "nanochat will be the capstone project of LLM101n (which is still being developed)" [77].

@@ -50,6 +50,9 @@
 - [75] [University of Michigan EECS — Justin Johnson faculty page](https://web.eecs.umich.edu/~justincj/) — Tier 1; Johnson's official institutional page; confirms PhD advisor (Fei-Fei Li, Stanford), faculty appointment at Michigan, and research areas
 - [76] [World Labs — company and Justin Johnson co-founder](https://worldlabs.ai/) — Tier 2; official company site; confirms Johnson as co-founder; corroborated by LinkedIn and press coverage
 
+### Tier 3 — Corporate Registry Analysis
+- [71] [AIExpert Network — "Eureka Labs: Karpathy's AI-Native School" (2024)](https://aiexpert.network/eureka-labs/) — Tier 3; independent analysis; documents Delaware LLC formation date of June 21, 2024, California Secretary of State foreign LLC filing signed solely by Karpathy, and notes absence of any public investment filings; the only accessible source with specific entity registration details (Delaware ICIS and OpenCorporates are CAPTCHA-gated)
+
 ### Tier 2 (Mainstream press / Wikipedia)
 - [12] [Wikipedia — Andrej Karpathy](https://en.wikipedia.org/wiki/Andrej_Karpathy)
 - [13] [Wikipedia — OpenAI](https://en.wikipedia.org/wiki/OpenAI)
@@ -72,6 +75,8 @@
 - [59] [Stanford Hazy Research — "The Road to Software 2.0 or Data-Centric AI" (Jul 19, 2021)](https://hazyresearch.stanford.edu/data-centric-ai) — Tier 2; Stanford academic research group page by Chris Ré; explicitly credits Karpathy's essay as the origin of the group's "Software 2.0" framing; key quote: "Eventually, we turned to others and called this 'Software 2.0' (inspired by Karpathy's post)"
 - [72] [CleanTechnica — "Tesla's Andrej Karpathy Gives A Keynote At CVPR 2021 Workshop On Autonomous Driving" (Jun 21, 2021)](https://cleantechnica.com/2021/06/21/teslas-andrej-karpathy-gives-a-keynote-at-cvpo-2021-workshop-on-autonomous-driving/) — Tier 2; contemporaneous press report on CVPR 2021 keynote; documents Tesla's vision-only strategy and Karpathy's role as keynote speaker at the autonomous driving workshop
 - [73] [TechCrunch — "Top four highlights of Elon Musk's Tesla AI Day" (Aug 19, 2021)](https://techcrunch.com/2021/08/19/top-five-highlights-of-elon-musks-tesla-ai-day/) — Tier 2; contemporaneous mainstream press coverage of Tesla AI Day 2021; documents Karpathy's centerpiece technical presentation on the Autopilot neural network stack. Note: title says "four" but URL slug says "five" — likely a post-publication title edit by TechCrunch.
+- [80] [SEC EDGAR full-text search — "Eureka Labs"](https://efts.sec.gov/LATEST/search-index?q=%22Eureka+Labs%22) — Tier 2; U.S. Securities and Exchange Commission filing database; search returned zero results for "Eureka Labs" as of March 2026; no Form D (Reg D exempt offering) or other securities filings found
+- [81] [Crunchbase — Eureka Labs company profile](https://www.crunchbase.com/organization/eureka-labs-7357) — Tier 2; paywalled; secondary press coverage citing the profile confirms no funding rounds are listed as of March 2026
 
 ### Tier 2.5 (Community — GitHub issues / open-source project records)
 - [45] [GitHub — karpathy/nanoGPT issue #471 "Citing this project in research" (Apr 2024)](https://github.com/karpathy/nanoGPT/issues/471)
