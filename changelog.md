@@ -109,3 +109,8 @@
 - PR: #108
 - Score: 75
 - Action: merged
+
+### 2026-03-19 — #61: What is the Muon optimizer and what role did the nanoGPT speedrun play in its development?
+- PR: #112
+- Score: 77
+- Action: merged
