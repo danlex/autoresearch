@@ -79,3 +79,8 @@
 - PR: #95
 - Score: 64
 - Action: merged
+
+### 2026-03-19 — #80: What is Eureka Labs' corporate and funding structure?
+- PR: #96
+- Score: 66
+- Action: merged
