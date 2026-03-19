@@ -69,3 +69,8 @@
 - PR: #91
 - Score: 59
 - Action: merged
+
+### 2026-03-19 — #82: Is nanochat formally part of the LLM101n curriculum or a separate personal project?
+- PR: #94
+- Score: 62
+- Action: merged
