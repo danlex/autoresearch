@@ -74,3 +74,8 @@
 - PR: #94
 - Score: 62
 - Action: merged
+
+### 2026-03-19 — #81: What does Karpathy's Dwarkesh Patel 2025 interview reveal about the AI teaching assistant design?
+- PR: #95
+- Score: 64
+- Action: merged
