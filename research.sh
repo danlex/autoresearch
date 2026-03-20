@@ -212,6 +212,33 @@ PREVIOUS FEEDBACK ON THIS TASK (from failed attempts):
 ${comments}"
   fi
 
+  # Build conditional prompt sections before the heredoc
+  local hard_block=""
+  local turn_budget=""
+  local max_turn_count=25
+  if [[ "$is_hard" == "true" ]]; then
+    max_turn_count=40
+    hard_block="HARD TASK — This task has failed before. Take a different approach:
+1. Break the question into 2-3 smaller sub-questions
+2. Research each sub-question separately with targeted searches
+3. Write partial findings after each sub-question — do NOT wait for everything
+4. If a source doesn't exist for a claim, note it as unverified rather than searching endlessly
+5. You have 40 turns — use them wisely, not just doing more of the same
+6. Check the PREVIOUS FEEDBACK section below for what went wrong last time
+"
+    turn_budget="- Turns 1-3: Read the section file and existing sources
+- Turns 4-18: Search (MAX 6 web searches) — write after every 2 searches
+- Turns 19-30: Continue writing and refining
+- Turns 31-40: Final sources and cleanup
+DO NOT do more than 7 web searches total. You MUST start writing by turn 10."
+  else
+    turn_budget="- Turns 1-2: Read the section file and existing sources
+- Turns 3-10: Search (MAX 3 web searches, each = WebSearch + WebFetch = 2 turns)
+- Turns 11-18: Write your findings to the section file, write sources
+- Turns 19-25: Buffer for revisions or one extra search if needed
+DO NOT do more than 4 web searches total. You MUST start writing by turn 12."
+  fi
+
   cat <<PROMPTEOF
 You are a research agent investigating a specific question. Your job is to find verifiable facts and update the research document.
 
@@ -231,36 +258,11 @@ ${body}
 CURRENT SCORE: ${score}% (higher is better, 100% = done)
 ${feedback_block}
 ${comment_block}
-
-$(if [[ "$is_hard" == "true" ]]; then cat <<'HARDEOF'
-HARD TASK — This task has failed before. Take a different approach:
-1. Break the question into 2-3 smaller sub-questions
-2. Research each sub-question separately with targeted searches
-3. Write partial findings after each sub-question — do NOT wait for everything
-4. If a source doesn't exist for a claim, explicitly note it as unverified rather than searching endlessly
-5. You have 40 turns — use them wisely, not just doing more of the same searches that failed before
-6. Check the PREVIOUS FEEDBACK section below for what went wrong last time
-
-HARDEOF
-fi)
+${hard_block}
 INSTRUCTIONS:
 
-TURN BUDGET — You have $(if [[ "$is_hard" == "true" ]]; then echo 40; else echo 25; fi) turns. Plan them carefully:
-$(if [[ "$is_hard" == "true" ]]; then cat <<'BUDGETHARD'
-- Turns 1-3: Read the section file and existing sources
-- Turns 4-18: Search (MAX 6 web searches) — write after every 2 searches
-- Turns 19-30: Continue writing and refining
-- Turns 31-40: Final sources and cleanup
-DO NOT do more than 7 web searches total. You MUST start writing by turn 10.
-BUDGETHARD
-else cat <<'BUDGETNORM'
-- Turns 1-2: Read the section file and existing sources
-- Turns 3-10: Search (MAX 3 web searches, each = WebSearch + WebFetch = 2 turns)
-- Turns 11-18: Write your findings to the section file, write sources
-- Turns 19-25: Buffer for revisions or one extra search if needed
-DO NOT do more than 4 web searches total. You MUST start writing by turn 12.
-BUDGETNORM
-fi)
+TURN BUDGET — You have ${max_turn_count} turns. Plan them carefully:
+${turn_budget}
 If you reach turn 15 without having written to the section file, STOP SEARCHING AND WRITE NOW.
 
 SOURCE REQUIREMENTS:
