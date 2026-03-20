@@ -1137,6 +1137,7 @@ const { score, breakdown } = getScore();
     barHtml += '<a href="#' + s.anchor + '">' + s.name + '</a>';
   }
   barHtml += '<a href="#sources-section">Sources</a>';
+  barHtml += '<a href="#about-section">About</a>';
   barHtml += '</div>';
 
   body += barHtml;
@@ -1206,6 +1207,31 @@ const { score, breakdown } = getScore();
     .replace(/^(- \[\d+\].*)(Tier 2)(.*$)/gm, '$1<span class="source-t2">Tier 2</span>$3')
     .replace(/^(- \[\d+\].*)(Tier 3)(.*$)/gm, '$1<span class="source-t3">Tier 3</span>$3');
   body += '<div id="sources-section">' + md2html(sourcesHtml) + '</div>';
+
+  // About section at bottom of index
+  body += `
+    <hr>
+    <div id="about-section">
+      <h2>About This Research</h2>
+      <p>This document was produced autonomously by <a href="https://github.com/danlex/autoresearch">Autoresearch</a> — an open-source AI research system that generates questions, searches the web, writes findings with inline citations, and verifies everything through a three-judge review panel.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+        <div style="background: var(--surface); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border);">
+          <h3 style="color: var(--amber); margin: 0 0 0.5rem; font-size: 1.1rem;">Alexandru DAN</h3>
+          <p style="color: var(--text-secondary); margin: 0 0 0.5rem; font-size: 0.85rem; font-weight: 500;">CEO & Founder, TVL Tech</p>
+          <p style="font-size: 0.9rem;">Building autonomous AI tools that produce verified, citation-backed knowledge.</p>
+          <p style="margin-top: 0.5rem; font-size: 0.85rem;"><a href="https://github.com/danlex">GitHub</a></p>
+        </div>
+        <div style="background: var(--surface); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border);">
+          <h3 style="background: var(--gradient-2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0 0 0.5rem; font-size: 1.1rem;">TVL Tech</h3>
+          <p style="color: var(--text-secondary); margin: 0 0 0.5rem; font-size: 0.85rem; font-weight: 500;">Technology. Vision. Leadership.</p>
+          <p style="font-size: 0.9rem;">AI-first tools and platforms — autonomous research, AI workflows, open source.</p>
+        </div>
+      </div>
+
+      <p style="font-size: 0.9rem; color: var(--text-secondary);">Every claim has inline <sup class="cite">[N]</sup> citations. Three independent judges (Evidence, Consistency, Completeness) review all content. The full research process — every Issue, PR, and judge review — is public on <a href="https://github.com/danlex/autoresearch">GitHub</a>.</p>
+    </div>
+  `;
 
   // Scroll spy: highlight active section in the bar
   body += `
