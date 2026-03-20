@@ -29,13 +29,16 @@ const navItems = [
   <title>Autoresearch on Andrej Karpathy by Alexandru DAN — {title}</title>
   <meta name="description" content={description}>
   <meta name="author" content="Alexandru DAN, CEO TVL Tech">
+  <link rel="canonical" href={`https://danlex.github.io${Astro.url.pathname}`}>
   <meta property="og:title" content={`Autoresearch on Andrej Karpathy — ${title}`}>
   <meta property="og:description" content={description}>
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://danlex.github.io/autoresearch/">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:url" content={`https://danlex.github.io${Astro.url.pathname}`}>
+  <meta property="og:image" content="https://danlex.github.io/autoresearch/karpathy.jpg">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content={`Autoresearch on Andrej Karpathy — ${title}`}>
   <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content="https://danlex.github.io/autoresearch/karpathy.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -45,6 +48,10 @@ const navItems = [
 <body class="max-w-[920px] mx-auto px-4 py-8 sm:px-8 leading-relaxed">
   <!-- Animated mesh gradient background -->
   <div class="mesh-bg" aria-hidden="true"></div>
+  <!-- Particle starfield -->
+  <div class="particles" aria-hidden="true">
+    <span/><span/><span/><span/><span/><span/><span/><span/><span/><span/><span/><span/><span/><span/><span/>
+  </div>
 
   <div id="progress-bar"></div>
 
