@@ -574,10 +574,10 @@ post_merge() {
   # 3. Propose follow-up tasks based on what was just researched
   propose_followup_tasks "$issue_num"
 
-  # 4. Regenerate GitHub Pages site
-  if [[ -f "$SCRIPT_DIR/.github/generate-site.js" ]]; then
+  # 4. Regenerate GitHub Pages site (Astro)
+  if [[ -d "$SCRIPT_DIR/site" ]]; then
     log "Regenerating GitHub Pages..."
-    node "$SCRIPT_DIR/.github/generate-site.js" 2>/dev/null || log "WARNING: site generation failed"
+    (cd "$SCRIPT_DIR/site" && npm run build 2>/dev/null) || log "WARNING: site generation failed"
   fi
 
   # 5. Commit post-merge updates (header, changelog, docs/)

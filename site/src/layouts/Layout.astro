@@ -1,0 +1,273 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  activePage: 'index' | 'progress' | 'sections' | 'sources' | 'about';
+}
+
+const { title, description = 'Autonomous research powered by Claude Opus. Built by Alexandru DAN, CEO TVL Tech.', activePage } = Astro.props;
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
+
+const navItems = [
+  { href: `${base}`, label: 'Research', key: 'index' },
+  { href: `${base}progress/`, label: 'Progress', key: 'progress' },
+  { href: `${base}sections/`, label: 'Sections', key: 'sections' },
+  { href: `${base}sources/`, label: 'Sources', key: 'sources' },
+  { href: `${base}about/`, label: 'About', key: 'about' },
+];
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`}>
+  <title>{title} — Autoresearch by Alexandru DAN</title>
+  <meta name="description" content={description}>
+  <meta name="author" content="Alexandru DAN, CEO TVL Tech">
+  <meta property="og:title" content={`${title} — Autoresearch`}>
+  <meta property="og:description" content={description}>
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://danlex.github.io/autoresearch/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content={`${title} — Autoresearch`}>
+  <meta name="twitter:description" content={description}>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="max-w-[920px] mx-auto px-4 py-8 sm:px-8 leading-relaxed">
+  <div id="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav class="flex items-center gap-1 p-2 mb-12 bg-surface border border-border rounded-xl backdrop-blur-lg sticky top-4 z-50 overflow-x-auto">
+    {navItems.map(item => (
+      <a
+        href={item.href}
+        class:list={[
+          'whitespace-nowrap text-text-secondary no-underline font-sans text-[0.85rem] font-medium px-4 py-2 rounded-lg transition-all duration-200',
+          'hover:text-text-primary hover:bg-surface-hover',
+          activePage === item.key && 'text-text-primary bg-white/10 font-semibold',
+        ]}
+      >{item.label}</a>
+    ))}
+    <button class="theme-toggle ml-auto shrink-0 bg-surface border border-border text-text-secondary text-[0.85rem] px-2.5 py-1.5 rounded-lg cursor-pointer transition-all hover:text-text-primary hover:bg-surface-hover leading-none" id="theme-toggle" aria-label="Toggle theme">&#9790;</button>
+    <div class="search-box relative ml-1 shrink-0">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Search... (⌘K)"
+        aria-label="Search content"
+        class="font-sans text-[0.8rem] bg-surface border border-border text-text-primary px-3 py-1.5 rounded-lg w-[160px] outline-none transition-all focus:border-ar-amber focus:w-[220px]"
+      />
+      <div class="search-results hidden absolute top-full mt-1.5 right-0 w-[360px] max-h-[340px] overflow-y-auto bg-surface border border-border rounded-xl backdrop-blur-xl shadow-2xl z-[300] p-1" id="search-results"></div>
+    </div>
+  </nav>
+
+  <slot />
+
+  <!-- Footer -->
+  <footer class="mt-16 pt-8 border-t border-border text-dim text-[0.8rem] text-center">
+    <p>Built by <strong class="text-text-secondary">Alexandru DAN</strong>, CEO <a href="#" class="text-text-secondary hover:text-text-primary">TVL Tech</a></p>
+    <p class="mt-1">Powered by <a href="https://github.com/danlex/autoresearch" class="text-text-secondary hover:text-text-primary">Autoresearch</a> — Autonomous research with Claude Opus</p>
+    <p class="mt-1"><a href="https://github.com/danlex/autoresearch" class="text-text-secondary hover:text-text-primary">GitHub Repository</a></p>
+  </footer>
+
+  <!-- Back to top -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">&uarr;</button>
+
+  <!-- Citation popover container -->
+  <div id="cite-popover" class="fixed z-[1000] bg-[#1e1e2e] text-[#e0e0e0] border border-white/10 rounded-lg px-3.5 py-2.5 text-[0.8rem] leading-relaxed max-w-xs shadow-2xl pointer-events-none opacity-0 transition-all duration-150 translate-y-1"></div>
+
+  <script is:inline>
+  (function() {
+    // Reading progress
+    var pb = document.getElementById('progress-bar');
+    function updateProgress() {
+      var st = window.scrollY, dh = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      pb.style.width = (dh > 0 ? (st / dh) * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // Theme toggle
+    var toggle = document.getElementById('theme-toggle');
+    var root = document.documentElement;
+    var stored = localStorage.getItem('ar-theme');
+    if (stored) root.setAttribute('data-theme', stored);
+    function updateIcon() { toggle.innerHTML = root.getAttribute('data-theme') === 'light' ? '&#9728;' : '&#9790;'; }
+    updateIcon();
+    toggle.addEventListener('click', function() {
+      var next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      if (next === 'dark') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', next);
+      localStorage.setItem('ar-theme', next);
+      updateIcon();
+    });
+
+    // Citation popovers
+    var pop = document.getElementById('cite-popover');
+    var hideT = null;
+    function showPop(el) {
+      clearTimeout(hideT);
+      var num = el.textContent.replace(/[\[\]]/g, '');
+      var srcEl = null;
+      var all = document.querySelectorAll('#sources-section li, #sources-section p');
+      for (var i = 0; i < all.length; i++) {
+        if (all[i].textContent.match(new RegExp('^\\s*\\[?' + num + '\\]?[\\s.:\\-]'))) { srcEl = all[i]; break; }
+      }
+      pop.textContent = srcEl ? srcEl.textContent.substring(0, 200) : 'Source [' + num + ']';
+      pop.style.opacity = '1';
+      pop.style.transform = 'translateY(0)';
+      var r = el.getBoundingClientRect();
+      var pw = pop.offsetWidth;
+      var l = r.left + r.width / 2 - pw / 2;
+      if (l < 8) l = 8;
+      if (l + pw > window.innerWidth - 8) l = window.innerWidth - pw - 8;
+      pop.style.left = l + 'px';
+      pop.style.top = (r.top + window.scrollY - pop.offsetHeight - 8) + 'px';
+    }
+    function hidePop() { hideT = setTimeout(function() { pop.style.opacity = '0'; pop.style.transform = 'translateY(4px)'; }, 200); }
+    document.querySelectorAll('sup.cite').forEach(function(c) {
+      c.addEventListener('mouseenter', function() { showPop(c); });
+      c.addEventListener('mouseleave', hidePop);
+    });
+
+    // Search with Cmd+K
+    var si = document.getElementById('search-input');
+    var sr = document.getElementById('search-results');
+    var st2 = null;
+    document.addEventListener('keydown', function(e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); si.focus(); }
+      if (e.key === 'Escape') { sr.classList.add('hidden'); si.blur(); }
+    });
+    si.addEventListener('input', function() { clearTimeout(st2); st2 = setTimeout(doSearch, 200); });
+    si.addEventListener('focus', function() { if (si.value.trim().length >= 2) doSearch(); });
+    document.addEventListener('click', function(e) { if (!e.target.closest('.search-box')) sr.classList.add('hidden'); });
+    function findSection(el) {
+      var node = el;
+      while (node && node !== document.body) {
+        if (node.id && document.querySelector('.section-bar a[href="#' + node.id + '"]')) return node.id;
+        node = node.parentElement;
+      }
+      var h2s = document.querySelectorAll('h2');
+      var closest = null;
+      for (var i = 0; i < h2s.length; i++) {
+        if (h2s[i].compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) closest = h2s[i];
+      }
+      return closest ? closest.textContent : '';
+    }
+    function doSearch() {
+      var q = si.value.trim().toLowerCase();
+      if (q.length < 2) { sr.classList.add('hidden'); return; }
+      var els = document.querySelectorAll('.prose p, .prose li, .prose h2, .prose h3');
+      var results = [];
+      for (var i = 0; i < els.length && results.length < 12; i++) {
+        var txt = els[i].textContent;
+        if (txt.toLowerCase().indexOf(q) !== -1) {
+          results.push({ el: els[i], text: txt.substring(0, 150), section: findSection(els[i]) });
+        }
+      }
+      sr.innerHTML = '';
+      if (results.length === 0) {
+        sr.innerHTML = '<div class="px-3 py-3 text-[0.8rem] text-center" style="color: var(--color-dim)">No results found</div>';
+      } else {
+        results.forEach(function(r) {
+          var div = document.createElement('div');
+          div.className = 'px-3 py-2 text-[0.8rem] rounded-md cursor-pointer transition-colors hover:bg-surface-hover leading-snug';
+          div.style.color = 'var(--color-text-secondary)';
+          var sectionLabel = r.section ? '<span style="color: var(--color-ar-amber); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">' + r.section.replace(/-/g, ' ') + '</span><br>' : '';
+          var escaped = r.text.replace(/</g, '&lt;');
+          var esc = q.replace(/[-.*+?^$|()[\]\\]/g, '\\$&');
+          div.innerHTML = sectionLabel + escaped.replace(new RegExp('(' + esc + ')', 'gi'), '<mark style="background: rgba(245,158,11,0.3); color: var(--color-ar-amber); border-radius: 2px; padding: 0 2px;">$1</mark>');
+          div.addEventListener('click', function() {
+            r.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            sr.classList.add('hidden');
+            r.el.style.outline = '2px solid var(--color-ar-amber)';
+            setTimeout(function() { r.el.style.outline = ''; }, 2000);
+          });
+          sr.appendChild(div);
+        });
+      }
+      sr.classList.remove('hidden');
+    }
+
+    // Back to top
+    var btt = document.getElementById('back-to-top');
+    window.addEventListener('scroll', function() {
+      btt.classList.toggle('visible', window.scrollY > 600);
+    }, { passive: true });
+    btt.addEventListener('click', function() { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+    // Section bar scroll spy
+    var barLinks = document.querySelectorAll('.section-bar a[href^="#"]');
+    var sects = [];
+    barLinks.forEach(function(link) {
+      var id = link.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) sects.push({ el: el, link: link });
+    });
+    function updateBar() {
+      if (sects.length === 0) return;
+      var current = sects[0];
+      for (var i = 0; i < sects.length; i++) {
+        if (sects[i].el.getBoundingClientRect().top <= 150) current = sects[i];
+      }
+      barLinks.forEach(function(l) { l.classList.remove('active-section'); });
+      if (current) current.link.classList.add('active-section');
+    }
+    window.addEventListener('scroll', updateBar, { passive: true });
+    updateBar();
+
+    // TOC sidebar scroll spy
+    var tocLinks = document.querySelectorAll('.toc-sidebar a[href^="#"]');
+    var tocSects = [];
+    tocLinks.forEach(function(link) {
+      var id = link.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) tocSects.push({ el: el, link: link });
+    });
+    function updateToc() {
+      if (tocSects.length === 0) return;
+      var current = tocSects[0];
+      for (var i = 0; i < tocSects.length; i++) {
+        if (tocSects[i].el.getBoundingClientRect().top <= 150) current = tocSects[i];
+      }
+      tocLinks.forEach(function(l) { l.classList.remove('active'); });
+      if (current) current.link.classList.add('active');
+    }
+    window.addEventListener('scroll', updateToc, { passive: true });
+    updateToc();
+
+    // Lite YouTube — click to load iframe
+    document.querySelectorAll('.lite-youtube').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var id = el.getAttribute('data-id');
+        var iframe = document.createElement('iframe');
+        iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        el.innerHTML = '';
+        el.appendChild(iframe);
+        el.style.cursor = 'default';
+      });
+    });
+
+    // Heading anchor — copy link on click
+    document.querySelectorAll('.heading-anchor').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        var url = window.location.origin + window.location.pathname + a.getAttribute('href');
+        navigator.clipboard.writeText(url).then(function() {
+          a.textContent = '✓';
+          setTimeout(function() { a.textContent = '#'; }, 1500);
+        });
+        document.getElementById(a.getAttribute('href').slice(1)).scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

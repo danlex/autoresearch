@@ -1,0 +1,218 @@
+---
+import Layout from '../layouts/Layout.astro';
+import LiteYouTube from '../components/LiteYouTube.svelte';
+import SourceDashboard from '../components/SourceDashboard.svelte';
+import { SECTIONS, getHeader, getScore, getSectionStats, parseSources, getSourceDashboard, MEDIA } from '../lib/data';
+import { md2html } from '../lib/markdown';
+
+const _b = import.meta.env.BASE_URL;
+const base = _b.endsWith('/') ? _b : _b + '/';
+const header = getHeader();
+const { score } = getScore();
+const allStats = SECTIONS.map(s => getSectionStats(s));
+const totalWords = allStats.reduce((sum, s) => sum + s.words, 0);
+const totalReadingMin = Math.ceil(totalWords / 230);
+const dashboard = getSourceDashboard();
+
+// Build TOC entries
+const tocEntries: { id: string; label: string; level: 'h2' | 'h3' }[] = [];
+for (const stats of allStats) {
+  tocEntries.push({ id: stats.slug, label: stats.name, level: 'h2' });
+  for (const sub of stats.subsections) {
+    const anchor = sub.toLowerCase().replace(/<[^>]+>/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 60);
+    tocEntries.push({ id: anchor, label: sub.replace(/\*\*/g, ''), level: 'h3' });
+  }
+}
+tocEntries.push({ id: 'sources-section', label: 'Sources', level: 'h2' });
+tocEntries.push({ id: 'about-section', label: 'About', level: 'h2' });
+
+// Process sources HTML
+let sourcesRaw = parseSources().raw;
+sourcesRaw = sourcesRaw
+  .replace(/^(- \[\d+\].*)(Tier 1)(.*$)/gm, '$1<span class="source-t1">Tier 1</span>$3')
+  .replace(/^(- \[\d+\].*)(Tier 2)(.*$)/gm, '$1<span class="source-t2">Tier 2</span>$3')
+  .replace(/^(- \[\d+\].*)(Tier 3)(.*$)/gm, '$1<span class="source-t3">Tier 3</span>$3');
+
+const metaDesc = `Comprehensive autonomous research on Andrej Karpathy — AI researcher, educator, OpenAI founding member, Tesla AI Director, Eureka Labs founder. ${score}% complete with ${header.sources} verified sources.`;
+
+const jsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "name": "Andrej Karpathy — Research Document",
+  "author": { "@type": "Person", "name": "Alexandru DAN", "jobTitle": "CEO", "affiliation": { "@type": "Organization", "name": "TVL Tech" } },
+  "description": metaDesc,
+  "url": "https://danlex.github.io/autoresearch/",
+  "about": { "@type": "Person", "name": "Andrej Karpathy" },
+  "dateModified": header.updated,
+  "isAccessibleForFree": true,
+});
+
+const timelineItems = [
+  { year: '2011', title: 'Stanford PhD', anchor: 'intellectual-contributions', color: 'var(--color-ar-amber)' },
+  { year: '2015', title: 'OpenAI', anchor: 'intellectual-contributions', color: 'var(--color-ar-green)' },
+  { year: '2017', title: 'Tesla AI', anchor: 'intellectual-contributions', color: 'var(--color-ar-red)' },
+  { year: '2022', title: 'nanoGPT', anchor: 'education-and-teaching', color: 'var(--color-ar-cyan)' },
+  { year: '2023', title: 'OpenAI #2', anchor: 'intellectual-contributions', color: 'var(--color-ar-green)' },
+  { year: '2024', title: 'Eureka Labs', anchor: 'eureka-labs', color: 'var(--color-ar-purple)' },
+];
+---
+
+<Layout title="Research Document" description={metaDesc} activePage="index">
+  <script type="application/ld+json" set:html={jsonLd} />
+
+  <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight my-6 bg-gradient-to-br from-ar-amber to-ar-red bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">
+    Andrej Karpathy — Research Document
+  </h1>
+
+  <div class="flex gap-8 items-center my-8 flex-wrap">
+    <img src={`${base}karpathy.jpg`} alt="Andrej Karpathy" class="w-[130px] h-[130px] rounded-full border-[3px] border-transparent object-cover shadow-[0_0_30px_rgba(245,158,11,0.15)]" style="background-image: linear-gradient(135deg, #f59e0b, #ef4444); background-origin: border-box; background-clip: content-box, border-box;">
+    <div class="flex-1 min-w-[250px]">
+      <p class="text-lg m-0 mb-2"><strong class="text-text-primary">Andrej Karpathy</strong> — AI researcher, educator, and entrepreneur.</p>
+      <p class="text-dim m-0 text-[0.95rem]">Founding member of OpenAI. Former Director of AI at Tesla Autopilot. Creator of cs231n, nanoGPT, and micrograd. Founder of Eureka Labs. Stanford PhD under Fei-Fei Li.</p>
+    </div>
+  </div>
+
+  <p class="text-[0.95rem] text-dim my-4 mb-8">
+    This document was autonomously researched using <a href="https://github.com/danlex/autoresearch" class="text-ar-blue hover:text-ar-cyan no-underline hover:underline">Autoresearch</a> —
+    an AI-powered system that generates research questions, searches the web, writes findings with inline citations,
+    and verifies everything through a three-judge review panel. Built by <strong class="text-text-primary">Alexandru DAN</strong>, CEO TVL Tech.
+  </p>
+
+  <!-- Stats -->
+  <div class="stats-grid grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-4 my-8">
+    <div class="bg-surface p-5 rounded-xl border border-border text-center transition-all hover:border-white/15 hover:-translate-y-0.5">
+      <div class="text-4xl font-extrabold font-mono tracking-tight text-ar-green">{score}%</div>
+      <div class="text-dim text-xs mt-1.5 uppercase tracking-[0.1em] font-medium">Research Score</div>
+    </div>
+    <div class="bg-surface p-5 rounded-xl border border-border text-center transition-all hover:border-white/15 hover:-translate-y-0.5">
+      <div class="text-4xl font-extrabold font-mono tracking-tight">{header.tasks}</div>
+      <div class="text-dim text-xs mt-1.5 uppercase tracking-[0.1em] font-medium">Tasks</div>
+    </div>
+    <div class="bg-surface p-5 rounded-xl border border-border text-center transition-all hover:border-white/15 hover:-translate-y-0.5">
+      <div class="text-4xl font-extrabold font-mono tracking-tight">{header.sources}</div>
+      <div class="text-dim text-xs mt-1.5 uppercase tracking-[0.1em] font-medium">Sources</div>
+    </div>
+    <div class="bg-surface p-5 rounded-xl border border-border text-center transition-all hover:border-white/15 hover:-translate-y-0.5">
+      <div class="text-4xl font-extrabold font-mono tracking-tight">{header.updated}</div>
+      <div class="text-dim text-xs mt-1.5 uppercase tracking-[0.1em] font-medium">Last Updated</div>
+    </div>
+  </div>
+  <div class="bg-white/5 rounded-full overflow-hidden h-1.5 my-4">
+    <div class="h-full bg-gradient-to-r from-ar-green to-ar-cyan rounded-full transition-[width] duration-1000" style={`width: ${score}%`}></div>
+  </div>
+
+  <!-- Timeline -->
+  <div class="timeline flex items-center p-3 px-4 my-2 mb-8 bg-surface border border-border rounded-xl overflow-x-auto gap-0">
+    {timelineItems.map((item, i) => (
+      <>
+        <div class="timeline-item flex-1 min-w-0">
+          <a href={`#${item.anchor}`} class="flex items-center gap-2 no-underline text-text-primary p-2 px-2.5 rounded-lg transition-colors hover:bg-surface-hover whitespace-nowrap">
+            <span class="w-2.5 h-2.5 rounded-full shrink-0 transition-transform hover:scale-[1.4]" style={`background: ${item.color}`}></span>
+            <span class="font-mono text-[0.7rem] font-bold shrink-0" style={`color: ${item.color}`}>{item.year}</span>
+            <span class="tl-title text-[0.78rem] text-text-secondary font-medium">{item.title}</span>
+          </a>
+        </div>
+        {i < timelineItems.length - 1 && <span class="tl-connector w-5 h-0.5 bg-border shrink-0"></span>}
+      </>
+    ))}
+  </div>
+
+  <!-- Section cards -->
+  <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">Sections</h2>
+  <div class="section-grid grid grid-cols-2 gap-3 my-6 mb-10">
+    {SECTIONS.map(s => (
+      <a href={`#${s.slug}`} class="bg-surface p-5 rounded-xl border border-border no-underline text-text-primary transition-all hover:border-ar-amber hover:-translate-y-0.5 hover:bg-surface-hover block">
+        <strong class="text-ar-amber text-[0.95rem]">{s.name}</strong>
+        <p class="text-dim text-[0.8rem] mt-1 mb-0">{s.desc}</p>
+      </a>
+    ))}
+  </div>
+
+  <!-- Section bar -->
+  <div class="section-bar flex gap-1 p-1.5 bg-surface border border-border rounded-xl mb-10 overflow-x-auto sticky top-[4.5rem] z-40 backdrop-blur-lg" id="section-bar" style="-webkit-overflow-scrolling: touch;">
+    {SECTIONS.map(s => (
+      <a href={`#${s.slug}`} class="whitespace-nowrap text-dim no-underline text-[0.8rem] font-medium py-2 px-3.5 rounded-lg transition-all shrink-0 hover:text-text-secondary hover:bg-surface-hover [&.active-section]:text-ar-amber [&.active-section]:bg-[rgba(245,158,11,0.1)] [&.active-section]:font-semibold">{s.name}</a>
+    ))}
+    <a href="#sources-section" class="whitespace-nowrap text-dim no-underline text-[0.8rem] font-medium py-2 px-3.5 rounded-lg transition-all shrink-0 hover:text-text-secondary hover:bg-surface-hover [&.active-section]:text-ar-amber [&.active-section]:bg-[rgba(245,158,11,0.1)] [&.active-section]:font-semibold">Sources</a>
+    <a href="#about-section" class="whitespace-nowrap text-dim no-underline text-[0.8rem] font-medium py-2 px-3.5 rounded-lg transition-all shrink-0 hover:text-text-secondary hover:bg-surface-hover [&.active-section]:text-ar-amber [&.active-section]:bg-[rgba(245,158,11,0.1)] [&.active-section]:font-semibold">About</a>
+  </div>
+
+  <p class="inline-block font-mono text-[0.7rem] font-medium text-dim bg-surface border border-border px-3 py-1 rounded-full tracking-wide mb-6">
+    {totalReadingMin} min read · {totalWords.toLocaleString()} words
+  </p>
+
+  <!-- Research content -->
+  <div class="prose">
+    {allStats.map(stats => {
+      const sectionHtml = md2html(stats.content);
+      const media = MEDIA[stats.slug];
+      const paragraphs = stats.content.split('\n').filter((l: string) => l.trim() && !l.startsWith('#') && !l.startsWith('**Confidence') && !l.startsWith('**Uncertainty') && !l.startsWith('>') && l.length > 80);
+      const calloutText = paragraphs.length > 0 ? paragraphs[0].substring(0, 300).replace(/\[\d+\]/g, '') + '...' : '';
+      return (
+        <div id={stats.slug}>
+          <div class="flex gap-1.5 flex-wrap my-1.5">
+            <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-dim">{stats.words} words</span>
+            <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-dim">{stats.citations.length} citations</span>
+            <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-dim">{stats.subsections.length} subsections</span>
+            <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-dim">{stats.readingMinutes} min read</span>
+            {stats.highConf > 0 && <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-ar-green">{stats.highConf} HIGH</span>}
+            {stats.medConf > 0 && <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-ar-amber">{stats.medConf} MED</span>}
+            {stats.lowConf > 0 && <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-ar-red">{stats.lowConf} LOW</span>}
+          </div>
+
+          {calloutText && <div class="callout" set:html={calloutText} />}
+
+          <Fragment set:html={sectionHtml} />
+
+          {media?.videos?.length > 0 && (
+            <div>
+              <h3 style="color: var(--color-dim); margin-top: 2rem;">Related Videos</h3>
+              <div class="video-grid grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5 my-6">
+                {media.videos.map(v => (
+                  <LiteYouTube videoId={v.id} title={v.title} desc={v.desc} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          <hr class="border-0 border-t border-border my-12" />
+        </div>
+      );
+    })}
+  </div>
+
+  <!-- Sources -->
+  <div id="sources-section" class="prose">
+    <SourceDashboard total={dashboard.total} bySection={dashboard.bySection} client:visible />
+    <Fragment set:html={md2html(sourcesRaw)} />
+  </div>
+
+  <!-- About section -->
+  <hr class="border-0 border-t border-border my-12" />
+  <div id="about-section">
+    <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">About This Research</h2>
+    <p class="text-[0.95rem] text-text-secondary leading-relaxed">This document was produced autonomously by <a href="https://github.com/danlex/autoresearch" class="text-ar-blue hover:text-ar-cyan no-underline hover:underline">Autoresearch</a> — an open-source AI research system that generates questions, searches the web, writes findings with inline citations, and verifies everything through a three-judge review panel.</p>
+    <div class="grid grid-cols-2 gap-4 my-6 max-md:grid-cols-1">
+      <div class="bg-surface p-6 rounded-xl border border-border">
+        <h3 class="text-ar-amber mt-0 mb-1 text-lg font-semibold">Alexandru DAN</h3>
+        <p class="text-text-secondary m-0 mb-2 text-[0.85rem] font-medium">CEO & Founder, TVL Tech</p>
+        <p class="text-[0.9rem] text-[#d4d4d8]">Building autonomous AI tools that produce verified, citation-backed knowledge.</p>
+        <p class="mt-2 text-[0.85rem]"><a href="https://github.com/danlex" class="text-ar-blue hover:text-ar-cyan no-underline hover:underline">GitHub</a></p>
+      </div>
+      <div class="bg-surface p-6 rounded-xl border border-border">
+        <h3 class="mt-0 mb-1 text-lg font-semibold bg-gradient-to-br from-ar-blue to-ar-purple bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">TVL Tech</h3>
+        <p class="text-text-secondary m-0 mb-2 text-[0.85rem] font-medium">Technology. Vision. Leadership.</p>
+        <p class="text-[0.9rem] text-[#d4d4d8]">AI-first tools and platforms — autonomous research, AI workflows, open source.</p>
+      </div>
+    </div>
+    <p class="text-[0.9rem] text-text-secondary leading-relaxed">Every claim has inline <sup class="cite">[N]</sup> citations. Three independent judges (Evidence, Consistency, Completeness) review all content. The full research process is public on <a href="https://github.com/danlex/autoresearch" class="text-ar-blue hover:text-ar-cyan no-underline hover:underline">GitHub</a>.</p>
+  </div>
+
+  <!-- TOC sidebar -->
+  <aside class="toc-sidebar">
+    <div class="toc-title">Contents</div>
+    {tocEntries.map(entry => (
+      <a href={`#${entry.id}`} class={entry.level === 'h2' ? 'toc-h2' : 'toc-h3'}>{entry.label}</a>
+    ))}
+  </aside>
+</Layout>

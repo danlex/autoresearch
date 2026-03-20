@@ -1,0 +1,114 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const metaDesc = 'Autoresearch — autonomous research system by Alexandru DAN, CEO TVL Tech. Open source, powered by Claude Opus.';
+---
+
+<Layout title="About" description={metaDesc} activePage="about">
+  <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight my-6 bg-gradient-to-br from-ar-amber to-ar-red bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">
+    About Autoresearch
+  </h1>
+
+  <!-- Author card -->
+  <div class="bg-surface p-8 rounded-2xl border border-border my-8">
+    <h3 class="text-ar-amber mt-0 mb-1 text-xl font-bold">Alexandru DAN</h3>
+    <p class="text-text-secondary m-0 mb-4 font-medium">CEO & Founder, TVL Tech</p>
+    <p class="text-[#d4d4d8] text-[0.95rem] leading-relaxed">Creator of the Autoresearch system. Building autonomous AI-powered research tools that produce verified, citation-backed knowledge with zero human intervention.</p>
+    <p class="mt-3">
+      <a href="https://github.com/danlex" class="text-ar-blue hover:text-ar-cyan no-underline hover:underline mr-6">GitHub</a>
+      <a href="https://github.com/danlex/autoresearch" class="text-ar-blue hover:text-ar-cyan no-underline hover:underline">Autoresearch Repository</a>
+    </p>
+  </div>
+
+  <!-- TVL Tech card -->
+  <div class="bg-surface p-8 rounded-2xl border border-border my-8">
+    <h3 class="mt-0 mb-2 text-xl font-bold bg-gradient-to-br from-ar-blue to-ar-purple bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">TVL Tech</h3>
+    <p class="text-text-secondary m-0 mb-4 font-medium">Technology. Vision. Leadership.</p>
+    <p class="text-[#d4d4d8] text-[0.95rem] leading-relaxed">TVL Tech builds AI-first tools and platforms that augment human capabilities. Our focus areas:</p>
+    <ul class="text-[#d4d4d8] text-[0.95rem] leading-relaxed pl-6 my-3">
+      <li class="my-2"><strong class="text-text-primary">Autonomous Research</strong> — AI systems that research, verify, and publish knowledge independently, with human oversight at every stage</li>
+      <li class="my-2"><strong class="text-text-primary">AI-Powered Workflows</strong> — Integrating large language models into real business processes — not chatbots, but autonomous agents that do actual work</li>
+      <li class="my-2"><strong class="text-text-primary">Open Source AI Tools</strong> — Contributing to the ecosystem with production-grade tools like Autoresearch that anyone can use and extend</li>
+    </ul>
+    <p class="text-[#d4d4d8] text-[0.95rem] leading-relaxed mt-4">TVL Tech believes the most impactful AI applications are not consumer chat products but <strong class="text-text-primary">infrastructure that makes knowledge workers more effective</strong> — automating the research, verification, and synthesis steps that consume 80% of knowledge work.</p>
+    <p class="text-dim text-[0.9rem] mt-3 leading-relaxed">Autoresearch is TVL Tech's first open-source release — a proof that autonomous AI research is possible, auditable, and trustworthy when built with the right guardrails.</p>
+  </div>
+
+  <!-- What is Autoresearch -->
+  <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">What is Autoresearch?</h2>
+  <p class="text-[#d4d4d8] text-[0.95rem] leading-relaxed">Autoresearch is a single-subject autonomous research system. You define a research goal, and the system does everything else: generates research questions, searches the web, writes findings with inline citations, and verifies everything through a three-judge review panel.</p>
+  <p class="text-[#d4d4d8] text-[0.95rem] leading-relaxed">The entire research process is transparent and auditable. Every finding has numbered citations <sup class="cite">[N]</sup> linking to verified sources. Three independent Claude Opus judges review every piece of content before it's published.</p>
+
+  <!-- How it works -->
+  <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">How It Works</h2>
+  <div class="bg-surface p-5 rounded-lg font-mono text-[0.85rem] leading-[2.2] border border-border my-4">
+    <span class="text-ar-amber">goal.md</span> defines the subject<br>
+    &nbsp;&nbsp;&darr;<br>
+    <span class="text-ar-cyan">explode-goal.sh</span> generates 30-50 research tasks<br>
+    &nbsp;&nbsp;&darr;<br>
+    <span class="text-ar-green">research.sh</span> picks tasks, runs Claude Code (web search + write)<br>
+    &nbsp;&nbsp;&darr;<br>
+    <span class="text-ar-blue">3 judges</span> review: Evidence, Consistency, Completeness<br>
+    &nbsp;&nbsp;&darr;<br>
+    <span class="text-ar-green">PR merged</span> &rarr; findings published &rarr; new tasks proposed<br>
+    &nbsp;&nbsp;&darr;<br>
+    Score climbs toward <span class="text-ar-green">100%</span>
+  </div>
+
+  <!-- The Score -->
+  <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">The Score</h2>
+  <p class="text-[#d4d4d8] text-[0.95rem] leading-relaxed">The research score (0-100%) is computed from three components:</p>
+  <ul class="text-[#d4d4d8] text-[0.95rem] leading-relaxed pl-6 my-3">
+    <li class="my-2"><strong class="text-text-primary">Task completion (60%)</strong> — percentage of research Issues completed</li>
+    <li class="my-2"><strong class="text-text-primary">Citation quality (30%)</strong> — percentage of content paragraphs with inline [N] citations</li>
+    <li class="my-2"><strong class="text-text-primary">Confidence (10%)</strong> — penalizes LOW confidence sections</li>
+  </ul>
+
+  <!-- The Three Judges -->
+  <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">The Three Judges</h2>
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse my-4">
+      <thead>
+        <tr class="border-b border-border">
+          <th class="text-left p-3 text-ar-amber text-[0.85rem] font-semibold uppercase tracking-wider">Judge</th>
+          <th class="text-left p-3 text-ar-amber text-[0.85rem] font-semibold uppercase tracking-wider">Focus</th>
+          <th class="text-left p-3 text-ar-amber text-[0.85rem] font-semibold uppercase tracking-wider">Checks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-border">
+          <td class="p-3 text-[0.9rem] text-[#d4d4d8]">Judge 1</td>
+          <td class="p-3 text-ar-green font-medium text-[0.9rem]">Evidence</td>
+          <td class="p-3 text-[0.9rem] text-[#d4d4d8]">Fabricated facts, phantom citations, unsourced claims</td>
+        </tr>
+        <tr class="border-b border-border">
+          <td class="p-3 text-[0.9rem] text-[#d4d4d8]">Judge 2</td>
+          <td class="p-3 text-ar-blue font-medium text-[0.9rem]">Consistency</td>
+          <td class="p-3 text-[0.9rem] text-[#d4d4d8]">Contradictions, date mismatches, style, confidence levels</td>
+        </tr>
+        <tr>
+          <td class="p-3 text-[0.9rem] text-[#d4d4d8]">Judge 3</td>
+          <td class="p-3 text-ar-cyan font-medium text-[0.9rem]">Completeness</td>
+          <td class="p-3 text-[0.9rem] text-[#d4d4d8]">Coverage gaps, missing perspectives, skeptical outsider view</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Technology -->
+  <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">Technology</h2>
+  <ul class="text-[#d4d4d8] text-[0.95rem] leading-relaxed pl-6 my-3">
+    <li class="my-2"><strong class="text-text-primary">Research engine:</strong> Claude Opus via Claude Code CLI (<code class="font-mono bg-white/5 px-2 py-0.5 rounded border border-border text-[0.85em]">claude -p</code>)</li>
+    <li class="my-2"><strong class="text-text-primary">Orchestration:</strong> <code class="font-mono bg-white/5 px-2 py-0.5 rounded border border-border text-[0.85em]">research.sh</code> — bash loop managing branches, PRs, judges</li>
+    <li class="my-2"><strong class="text-text-primary">Task management:</strong> GitHub Issues with labels for type, priority, status</li>
+    <li class="my-2"><strong class="text-text-primary">Backend:</strong> NestJS with hourly cron scheduler</li>
+    <li class="my-2"><strong class="text-text-primary">Quality:</strong> ShellCheck + automated tests (bash + Jest)</li>
+  </ul>
+
+  <!-- Source Code -->
+  <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">Source Code</h2>
+  <p class="text-[#d4d4d8] text-[0.95rem] leading-relaxed">Autoresearch is open source. The full code, research history, and all Issues are public.</p>
+  <p class="my-4">
+    <a href="https://github.com/danlex/autoresearch" class="inline-block bg-ar-amber text-bg px-5 py-2.5 rounded font-mono font-bold no-underline transition-colors hover:bg-ar-amber/90 text-[0.9rem]">View on GitHub</a>
+  </p>
+</Layout>

@@ -9,3 +9,5 @@ node_modules/
 backend.log
 backend/dist/
 backend/node_modules/
+site/node_modules/
+site/.astro/

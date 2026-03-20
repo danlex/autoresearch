@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SECTIONS, getSectionStats } from '../lib/data';
+
+const allStats = SECTIONS.map(s => getSectionStats(s));
+---
+
+<Layout title="Sections" activePage="sections">
+  <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight my-6 bg-gradient-to-br from-ar-amber to-ar-red bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">
+    Research Sections
+  </h1>
+
+  <div class="space-y-4 my-8">
+    {allStats.map(stats => {
+      const paragraphs = stats.content.split('\n').filter((l: string) => l.trim() && !l.startsWith('#') && !l.startsWith('**Confidence') && l.length > 50);
+      const preview = paragraphs[0] ? paragraphs[0].substring(0, 200).replace(/\[\d+\]/g, '').replace(/\*\*/g, '') + '...' : 'No content yet.';
+      return (
+        <a href={`${(import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/')}#${stats.slug}`} class="block bg-surface p-5 rounded-xl border border-border transition-all hover:border-ar-amber hover:-translate-y-0.5 hover:bg-surface-hover no-underline">
+          <h3 class="text-text-primary font-semibold text-[1.05rem] mt-0 mb-2">{stats.name}</h3>
+          <div class="flex gap-2 flex-wrap mb-3">
+            <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-dim">{stats.words} words</span>
+            <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-dim">{stats.citations.length} citations</span>
+            <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-dim">{stats.subsections.length} subsections</span>
+            <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-dim">{stats.readingMinutes} min read</span>
+          </div>
+          <p class="text-[0.9rem] text-[#d4d4d8] m-0 leading-relaxed">{preview}</p>
+        </a>
+      );
+    })}
+  </div>
+</Layout>

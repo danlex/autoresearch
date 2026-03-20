@@ -1,0 +1,90 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SECTIONS, getHeader, getScore, getStatus, getChangelog, getSectionStats } from '../lib/data';
+import { md2html } from '../lib/markdown';
+
+const header = getHeader();
+const { score, breakdown } = getScore();
+const status = getStatus();
+const changelog = getChangelog();
+const allStats = SECTIONS.map(s => getSectionStats(s));
+const totalCitations = allStats.reduce((sum, s) => sum + s.citations.length, 0);
+---
+
+<Layout title="Progress" activePage="progress">
+  <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight my-6 bg-gradient-to-br from-ar-amber to-ar-red bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">
+    Research Progress
+  </h1>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-4 my-8">
+    <div class="bg-surface p-5 rounded-xl border border-border text-center transition-all hover:border-white/15 hover:-translate-y-0.5">
+      <div class="text-4xl font-extrabold font-mono tracking-tight text-ar-green">{score}%</div>
+      <div class="text-dim text-xs mt-1.5 uppercase tracking-[0.1em] font-medium">Score</div>
+    </div>
+    <div class="bg-surface p-5 rounded-xl border border-border text-center transition-all hover:border-white/15 hover:-translate-y-0.5">
+      <div class="text-4xl font-extrabold font-mono tracking-tight">{header.tasks}</div>
+      <div class="text-dim text-xs mt-1.5 uppercase tracking-[0.1em] font-medium">Tasks Done</div>
+    </div>
+    <div class="bg-surface p-5 rounded-xl border border-border text-center transition-all hover:border-white/15 hover:-translate-y-0.5">
+      <div class="text-4xl font-extrabold font-mono tracking-tight">{header.sources}</div>
+      <div class="text-dim text-xs mt-1.5 uppercase tracking-[0.1em] font-medium">Sources</div>
+    </div>
+    <div class="bg-surface p-5 rounded-xl border border-border text-center transition-all hover:border-white/15 hover:-translate-y-0.5">
+      <div class="text-4xl font-extrabold font-mono tracking-tight">{status.iteration || '?'}</div>
+      <div class="text-dim text-xs mt-1.5 uppercase tracking-[0.1em] font-medium">Iterations</div>
+    </div>
+  </div>
+
+  <div class="bg-white/5 rounded-full overflow-hidden h-1.5 my-4">
+    <div class="h-full bg-gradient-to-r from-ar-green to-ar-cyan rounded-full" style={`width: ${score}%`}></div>
+  </div>
+  <p class="text-dim font-mono text-[0.8rem]">{breakdown}</p>
+
+  <!-- Section completion -->
+  <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">Section Completion</h2>
+  <div class="space-y-3 my-6">
+    {allStats.map(stats => {
+      const completeness = Math.min(100, Math.round((stats.citations.length / Math.max(1, stats.words / 150)) * 100));
+      return (
+        <div class="bg-surface p-4 rounded-xl border border-border">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-semibold text-[0.9rem]">{stats.name}</span>
+            <div class="flex gap-2 items-center">
+              <span class="font-mono text-[0.7rem] text-dim">{stats.words} words · {stats.citations.length} citations · {stats.readingMinutes} min</span>
+              <div class="flex gap-1">
+                {stats.highConf > 0 && <span class="badge-high text-[0.6rem] px-1.5 py-0">{stats.highConf}</span>}
+                {stats.medConf > 0 && <span class="badge-med text-[0.6rem] px-1.5 py-0">{stats.medConf}</span>}
+                {stats.lowConf > 0 && <span class="badge-low text-[0.6rem] px-1.5 py-0">{stats.lowConf}</span>}
+              </div>
+            </div>
+          </div>
+          <div class="bg-white/5 rounded-full overflow-hidden h-1">
+            <div class="h-full bg-gradient-to-r from-ar-green to-ar-cyan rounded-full" style={`width: ${completeness}%`}></div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
+  <!-- GitHub links -->
+  <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">GitHub</h2>
+  <div class="flex gap-3 flex-wrap my-4">
+    <a href="https://github.com/danlex/autoresearch/issues?q=is%3Aissue+label%3Atask" class="bg-surface border border-border px-4 py-2.5 rounded-lg text-text-secondary no-underline transition-all hover:border-ar-amber hover:text-text-primary text-[0.85rem] font-medium">
+      All Tasks
+    </a>
+    <a href="https://github.com/danlex/autoresearch/issues?q=is%3Aissue+is%3Aopen+label%3Aaccepted" class="bg-surface border border-border px-4 py-2.5 rounded-lg text-text-secondary no-underline transition-all hover:border-ar-green hover:text-text-primary text-[0.85rem] font-medium">
+      In Progress
+    </a>
+    <a href="https://github.com/danlex/autoresearch/issues?q=is%3Aissue+is%3Aclosed+label%3Aimplemented" class="bg-surface border border-border px-4 py-2.5 rounded-lg text-text-secondary no-underline transition-all hover:border-ar-cyan hover:text-text-primary text-[0.85rem] font-medium">
+      Completed
+    </a>
+    <a href="https://github.com/danlex/autoresearch/pulls?q=is%3Apr" class="bg-surface border border-border px-4 py-2.5 rounded-lg text-text-secondary no-underline transition-all hover:border-ar-purple hover:text-text-primary text-[0.85rem] font-medium">
+      Pull Requests
+    </a>
+  </div>
+
+  <!-- Changelog -->
+  <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">Changelog</h2>
+  <div class="prose" set:html={md2html(changelog)} />
+</Layout>

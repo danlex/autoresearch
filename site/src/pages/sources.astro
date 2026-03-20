@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SourceDashboard from '../components/SourceDashboard.svelte';
+import { parseSources, getSourceDashboard } from '../lib/data';
+import { md2html } from '../lib/markdown';
+
+const dashboard = getSourceDashboard();
+let sourcesRaw = parseSources().raw;
+sourcesRaw = sourcesRaw
+  .replace(/^(- \[\d+\].*)(Tier 1)(.*$)/gm, '$1<span class="source-t1">Tier 1</span>$3')
+  .replace(/^(- \[\d+\].*)(Tier 2)(.*$)/gm, '$1<span class="source-t2">Tier 2</span>$3')
+  .replace(/^(- \[\d+\].*)(Tier 3)(.*$)/gm, '$1<span class="source-t3">Tier 3</span>$3');
+---
+
+<Layout title="Sources" activePage="sources">
+  <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight my-6 bg-gradient-to-br from-ar-amber to-ar-red bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">
+    Sources
+  </h1>
+
+  <SourceDashboard total={dashboard.total} bySection={dashboard.bySection} client:visible />
+
+  <div class="prose" set:html={md2html(sourcesRaw)} />
+</Layout>
