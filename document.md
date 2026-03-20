@@ -1,5 +1,5 @@
 # Andrej Karpathy — Research Document
-Coverage: 75% | Tasks: 40/90 | Sources: 72 | Last updated: 2026-03-20
+Coverage: 77% | Tasks: 41/90 | Sources: 79 | Last updated: 2026-03-20
 
 ## Sections
 - [Intellectual Contributions](sections/intellectual-contributions.md)

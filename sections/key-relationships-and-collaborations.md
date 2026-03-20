@@ -147,3 +147,63 @@ The Karpathy–Sutskever relationship is primarily structural: they were co-foun
 **Uncertainty:** Whether Karpathy and Sutskever collaborated informally during their OpenAI overlaps (2015–2017, 2023–2024) remains undocumented. Their public silence about each other — no Karpathy comment on SSI, no Sutskever comment on Eureka Labs — may reflect professional discretion, distinct audiences, or simply the absence of direct friction rather than genuine intellectual distance.
 
 ---
+
+### The Formal AI Safety Research Community
+
+The most precise characterization of Karpathy's relationship with the formal AI safety research community is documented non-engagement: no co-authorship, no signed statements, no named public interactions, and no appearances alongside canonical safety researchers in any indexed source from 2015 through March 2026. This finding is not a research gap but a structural feature of his public record — and it is meaningful given that Karpathy was physically co-located with the AI safety research community at OpenAI during both of his stints there.
+
+**Confidence: HIGH | Depth: HIGH**
+
+---
+
+#### The CAIS Extinction Risk Statement: A Structural Absence
+
+In May 2023, the Center for AI Safety released a one-sentence public statement — "Mitigating the risk of extinction from AI should be a global priority alongside other societal-scale risks such as pandemics and nuclear war" — that attracted signatures from hundreds of AI researchers and executives [105]. Among the signatories were several of Karpathy's closest OpenAI co-founders and colleagues: Ilya Sutskever, Sam Altman, John Schulman, and Wojciech Zaremba [105][128]. Karpathy's name is absent from the full public signatory list [128].
+
+The absence is structurally significant in context. Karpathy was during his second OpenAI stint when the statement circulated — he had rejoined in February 2023 [2] and would not depart until February 2024 [3]. He was therefore an active OpenAI employee when the statement was published and when his immediate colleagues were signing it. No Tier 1 source documents his decision not to sign or any public comment on the statement itself.
+
+**Confidence: HIGH | Depth: HIGH**
+
+---
+
+#### "Concrete Problems in AI Safety": Parallel but Separate
+
+The 2016 paper "Concrete Problems in AI Safety" (arXiv:1606.06565), authored by Dario Amodei, Chris Olah, Jacob Steinhardt, Paul Christiano, John Schulman, and Dan Mané, is the canonical technical document of the OpenAI-era safety research program [130]. All six authors were affiliated with OpenAI or Stanford at the time of publication; Schulman was a colleague of Karpathy's at OpenAI during his first stint [13]. Karpathy is neither an author nor named in the acknowledgments of the paper [130]. No co-authored work between Karpathy and any of the six authors has been found in the public record.
+
+**Confidence: HIGH | Depth: HIGH**
+
+---
+
+#### The Interpretability Genealogy: Intellectual Connection Without Personal Engagement
+
+The one domain where a documented intellectual thread connects Karpathy to the formal safety research community is neural network interpretability — and it runs through the research record rather than any personal relationship.
+
+Karpathy's 2015 paper "Visualizing and Understanding Recurrent Networks" (arXiv:1506.02078, co-authored with Johnson and Li) analyzed trained LSTM character models and found that approximately 5% of cells had developed interpretable, humanly-describable functions: tracking position within quotation marks, line length, and code indentation depth [68]. The "unreasonable effectiveness" blog post [82] popularized the finding. The paper is cited in the interpretability literature — a 2024 EMNLP survey on NLP interpretability research includes it as historical precedent [131] — and the question it posed (can we identify what individual neurons have learned?) is the empirical foundation of the mechanistic interpretability research program associated with Chris Olah and Anthropic's interpretability team.
+
+However, the connection is intellectual-genealogical rather than collaborative. Olah's major interpretability papers — including the Distill.pub "Zoom In" article (2020), "Toy Models of Superposition" (Anthropic, 2022) [84], and "Towards Monosemanticity" (Anthropic, 2023) [85] — do not cite Karpathy's 2015 LSTM paper [84][85]. Karpathy's blog posts and podcast appearances from 2022 through early 2026 contain no mentions of Olah, "mechanistic interpretability," circuits-style analysis, or Anthropic's interpretability program. No documented acknowledgment from either direction has been found.
+
+**Confidence: HIGH | Depth: MEDIUM**
+
+**Uncertainty:** It is not established whether this mutual non-acknowledgment reflects deliberate distance, simple parallel development, or the typical citation gaps that emerge between adjacent sub-fields that share a question but not a methodology. Karpathy's interpretability work used direct visualization and probing; Olah's subsequent work developed the circuits hypothesis and sparse autoencoders — different methodological commitments even if the underlying empirical question overlaps.
+
+---
+
+#### Departure Contrast: Karpathy vs. Jan Leike
+
+A structurally informative data point is the contrast between Karpathy's second OpenAI departure (February 2024) and Jan Leike's departure three months later (May 2024). Leike, who led OpenAI's alignment team, published an explicit public statement criticizing OpenAI's safety culture: "safety culture and processes have taken a backseat to shiny products" [133]. Karpathy's February 2024 departure tweet made no mention of safety culture, organizational values, or alignment priorities — it cited personal project goals and characterized the parting as undramatic [3][16]. The contrast between the two departures — one a safety-culture protest, one a career pivot — is consistent with the broader pattern: Karpathy's engagement with OpenAI was oriented around capabilities and education, not safety advocacy.
+
+**Confidence: HIGH | Depth: HIGH**
+
+---
+
+#### Scope of the Relationship and Limits of the Record
+
+The absence of documented engagement between Karpathy and the formal AI safety community is not the same as documented opposition. Karpathy has not publicly criticized the alignment research program, MIRI, the EA-adjacent safety community, or the extinction-risk framing. His public statements distinguish him by omission — empirical focus on concrete failure modes, no named engagement with safety researchers, no signed statements — rather than by any documented rejection of that community's framing.
+
+No indexed source documents Karpathy exchanging ideas with Paul Christiano, Stuart Russell, Eliezer Yudkowsky, or any researcher primarily associated with MIRI or the Alignment Forum. Karpathy has no posts on LessWrong or the Alignment Forum. No shared panels, joint interviews, or documented Twitter interactions with safety-community figures have been found across the period covered by this research (2012–March 2026).
+
+**Confidence: HIGH | Depth: HIGH**
+
+**Uncertainty:** The limits here are those of indexed public record. OpenAI's internal research discussions — spanning two stints that overlap precisely with the most productive period of OpenAI safety research — are not publicly documented. Whether Karpathy engaged informally with safety researchers during those periods, whether he read and commented on alignment papers in internal forums, or whether his apparent non-engagement reflects deliberate choice or simply different research focus cannot be determined from the public record.
+
+---
