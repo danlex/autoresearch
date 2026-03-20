@@ -80,6 +80,59 @@ More pointed security-oriented statements came during the Moltbook episode in la
 
 His explanation for the reversal was substantive: "With increasing capability and increasing proliferation, the second order effects of agent networks that share scratchpads are very difficult to anticipate." [33] He explicitly declined to predict coordinated "skynet" behavior, but described the current state as "a complete mess of a computer security nightmare at scale." [33] His conclusion was notably calibrated: "sure maybe I am 'overhyping' what you see today, but I am not overhyping large networks of autonomous LLM agents in principle, that I'm pretty sure." [33]
 
+### Technical Recommendations: From Diagnosis to Deployment Discipline (2023–2026)
+
+**Confidence: HIGH | Depth: HIGH**
+
+The record establishes Karpathy as a precise diagnostician of near-term AI risks. Whether he also proposes technical solutions has a qualified answer: yes, but at the architectural and operational layer, not the security hardening or policy layer. Across three primary sources — the State of GPT talk (May 2023), the YC AI Startup School keynote (June 2025), and the autoresearch methodology (March 2026) — he articulates a coherent framework for responsible deployment that evolved from a binary stance into a design principle, without at any point proposing technical mitigations for the specific attack vectors he named.
+
+**"Copilots Not Agents": The Initial Deployment Stance (May 2023)**
+
+The earliest and most explicit prescription appears in State of GPT (Microsoft Build, May 23, 2023): "My recommendation right now is use LLMs in low stakes applications, combine them always with human oversight... and think copilots instead of completely autonomous agents that are just performing a task somewhere. It's just not clear that the models are there right now." [8][110] He named AutoGPT by example: "I don't think this currently works very well, and I would not advise people to use it in practical applications." [110] The recommendation establishes human oversight and scope limitation as the operative guardrails — without specifying the engineering that makes those guardrails work.
+
+**The Autonomy Slider: Binary Becomes a Spectrum (June 2025)**
+
+Two years later, the binary copilot/agent distinction had evolved into a continuous design principle. In his YC AI Startup School keynote "Software Is Changing (Again)" (June 18, 2025), Karpathy introduced the **autonomy slider** as a required element of any LLM application: "You are in charge of the autonomy slider. And depending on the complexity of the task at hand, you can tune the amount of autonomy that you're willing to give up for that task." [63][126] He illustrated through Cursor — tab completion for highest human control through to full-repo agent mode — and Perplexity — quick search through to ten-minute deep research — as product examples where autonomy gradations are legible and user-controlled rather than fixed [63][126].
+
+His prescription for builders: "you should be thinking about how you can slide that autonomy slider and make your product sort of more autonomous over time." [126] This reconceives the safety question from "how autonomous should this system be?" to "how do we build systems whose autonomy level is legible, user-configurable, and incrementally expandable?" The autonomy slider concept is a design specification rather than a caution — it describes what to build, not merely what to avoid.
+
+**"Iron Man Suits, Not Robots": Augmentation as the Right Category (June 2025)**
+
+The most vivid formulation from the YC talk: "It's less Iron Man robots and more Iron Man suits that you want to build. It's less like building flashy demos of autonomous agents and more building partial autonomy products." [63][126] He elaborated the design implications: "These products have custom GUIs and UI UX... done so that the generation verification loop of the human is very, very fast. But we are not losing the sight of the fact that it is in principle possible to automate this work." [126] The analogy frames current-capability-appropriate deployment (augmentation, human in control) and the eventual target (autonomous operation) as points on a single continuum, with the appropriate current position determined by model reliability. He was explicit about the current moment: "When I see things like, '2025 is the year of agents,' I get very concerned... I kind of feel like, you know, this is the decade of agents... We need humans in the loop. We need to do this carefully. This is software. Let's be serious here." [126]
+
+**The Generation-Verification Loop: Core Operating Architecture**
+
+Underlying all his deployment formulations is a single structural commitment: human verification as the primary countermeasure to LLM fallibility. From the YC talk: "We're now kind of like cooperating with AIs. And usually they are doing the generation, and we as humans are doing the verification. It is in our interest to make this loop go as fast as possible." [63][126] He identifies two engineering requirements for velocity in this loop:
+
+1. **Application-specific GUIs**: "GUI allows a human to audit the work of these fallible systems and to go faster." Reading raw text output is cognitively effortful; GUIs displaying diffs in red/green with keyboard shortcuts for accept/reject leverage human visual processing to accelerate verification [63][126].
+2. **Concrete prompts**: "If your prompt is vague, then the AI might not do exactly what you wanted. And in that case, verification will fail... It makes a lot more sense to spend a bit more time to be more concrete in your prompts, which increases the probability of successful verification." [126] This frames prompt engineering as a verification failure prevention practice.
+
+His own workflow embodies the loop: "I'm always scared to get way too big diffs. I always go in small incremental chunks. I want to make sure that everything is good." [126]
+
+**"Keep AI on the Leash": Structured Scope as Control**
+
+A complementary technique Karpathy calls "keeping AI on the leash" involves constraining the agent's operating domain through structured intermediate artifacts rather than open-ended prompting. In the education context: "The AI is kept on the leash with respect to a certain syllabus, a certain like progression of projects and so on... the AI is not getting lost in the woods." [63][126] The underlying principle: an auditable intermediate artifact — a course structure, a file diff, a training metric — constrains agent degrees of freedom and makes its outputs verifiable before they are acted on.
+
+He applied this principle most precisely in his autoresearch methodology (documented by Fortune, March 2026): an autonomous agent run for two days optimizing small language model training, structured around a single modifiable file, an objectively testable training metric, a fixed time limit per iteration, and "clear directives, constraints, and stopping criteria." [127] The operating parameters instantiate the "leash" principle at a concrete engineering level: constraint structure serves simultaneously as a safety mechanism and as a research validity mechanism.
+
+**Limits: What Karpathy Does Not Prescribe**
+
+His deployment prescriptions are notable for what they exclude. He has named prompt injection, jailbreaks, data poisoning, and agent network security vulnerabilities as real failure modes across multiple sources [8][33][63][109][110] — but proposes no technical defenses for any of them. In the YC talk: "LLMs are quite gullible. They are susceptible to prompt injection risks. They might leak your data, et cetera. And there's many other considerations security related." [63][126] — grouped under LLM limitations without mitigations. The Moltbook "dumpster fire" analysis concluded with "don't run this" and "I ran mine in an isolated computing environment" [33] — isolation by personal practice, not architectural specification. His slopacolypse warning named no filtering tools, detection systems, or content-provenance frameworks.
+
+This selectivity is structurally consistent: Karpathy's recommendations address the deployment architecture layer (how autonomous, how auditable, how scoped) rather than the security hardening layer (how to defend against adversarial inputs). The "careful engineering" he endorses as the appropriate response to near-term AI risk [17] is deployment discipline — human verification loops, structured scope, legible autonomy gradations — rather than security engineering against specific threat vectors.
+
+| Recommendation | Date | Source |
+|---|---|---|
+| "Copilots not agents"; human oversight; low-stakes scope-limiting | May 2023 | [8][110] |
+| Autonomy slider — user-configurable autonomy level as design requirement | Jun 2025 | [63][126] |
+| "Iron Man suits not robots" — partial autonomy products over full-autonomy demos | Jun 2025 | [63][126] |
+| Generation-verification loop — human verification as core safety mechanism | Jun 2025 | [63][126] |
+| Application-specific GUIs for rapid human auditing of AI output | Jun 2025 | [63][126] |
+| "Keep AI on the leash" — structured intermediate artifacts to constrain scope | Jun 2025 | [63][126] |
+| Autoresearch methodology — objectively testable metric + fixed limits + clear constraints | Mar 2026 | [127] |
+
+**Uncertainty:** Verbatim quotes attributed to the YC AI Startup School keynote [63] are drawn from a third-party transcript at singjupost.com [126] — Tier 3. The underlying YC talk is Tier 1 but its official transcript is not independently accessible (YC library page renders via JavaScript). Content is consistent across multiple secondary sources; verbatim text has not been checked against the video (YouTube ID: LCEmiRjPEtQ). All content attributed to the Fortune "Karpathy Loop" article [127] — including both verbatim phrases and paraphrased factual details such as the "two days," "small language model training" characterization — is based on partial web extraction from a paywalled article; full text could not be retrieved. These specific details could not be verified against the complete article.
+
 ### Capability Jumps and Safety Views: GPT-4 and o1
 
 **Confidence: MEDIUM | Depth: HIGH**
