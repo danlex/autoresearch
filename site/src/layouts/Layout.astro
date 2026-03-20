@@ -51,10 +51,8 @@ const navItems = [
 <body class="max-w-[920px] mx-auto px-4 py-8 sm:px-8 leading-relaxed">
   <!-- Animated mesh gradient background -->
   <div class="mesh-bg" aria-hidden="true"></div>
-  <!-- Particle starfield -->
-  <div class="particles" aria-hidden="true">
-    <span/><span/><span/><span/><span/><span/><span/><span/><span/><span/><span/><span/><span/><span/><span/>
-  </div>
+  <!-- Interactive particle canvas -->
+  <canvas id="particles" class="fixed inset-0 z-[-1] pointer-events-none" aria-hidden="true"></canvas>
 
   <div id="progress-bar"></div>
 
@@ -288,6 +286,157 @@ const navItems = [
         document.getElementById(a.getAttribute('href').slice(1)).scrollIntoView({ behavior: 'smooth' });
       });
     });
+  })();
+  </script>
+  <script is:inline>
+  // === WebGL Particle System — orbital, swirling, mouse-reactive ===
+  (function() {
+    var canvas = document.getElementById('particles');
+    if (!canvas) return;
+    var gl = canvas.getContext('webgl2');
+    if (!gl) return; // fallback: no particles on old browsers
+
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    function resize() {
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var NUM = 120;
+    var mouse = { x: 0.5, y: 0.5 };
+    document.addEventListener('mousemove', function(e) {
+      mouse.x = e.clientX / window.innerWidth;
+      mouse.y = e.clientY / window.innerHeight;
+    });
+
+    // Vertex shader — positions particles, sizes, colors
+    var vsrc = `#version 300 es
+    uniform float u_time;
+    uniform vec2 u_mouse;
+    uniform vec2 u_res;
+    in vec4 a_data; // x: angle, y: radius, z: speed, w: orbit
+    in vec3 a_color;
+    out vec3 v_color;
+    out float v_alpha;
+    void main() {
+      float t = u_time * a_data.z;
+      // Orbital motion with figure-8 / lissajous patterns
+      float orbitType = a_data.w;
+      float cx, cy;
+      if (orbitType < 0.33) {
+        // Circle orbit
+        cx = cos(t + a_data.x) * a_data.y;
+        cy = sin(t + a_data.x) * a_data.y;
+      } else if (orbitType < 0.66) {
+        // Figure-8
+        cx = sin(t + a_data.x) * a_data.y;
+        cy = sin(2.0 * t + a_data.x) * a_data.y * 0.5;
+      } else {
+        // Spiral drift
+        float r = a_data.y * (0.5 + 0.5 * sin(t * 0.3));
+        cx = cos(t + a_data.x) * r;
+        cy = sin(t * 0.7 + a_data.x) * r;
+      }
+      // Mouse attraction — particles drift toward cursor
+      vec2 mPos = (u_mouse - 0.5) * 2.0;
+      float dist = length(vec2(cx, cy) - mPos);
+      float attract = 0.15 / (dist + 0.5);
+      cx += (mPos.x - cx) * attract * 0.3;
+      cy += (mPos.y - cy) * attract * 0.3;
+      // Aspect ratio correction
+      float aspect = u_res.x / u_res.y;
+      gl_Position = vec4(cx / aspect, cy, 0.0, 1.0);
+      // Size varies with distance and pulse
+      float pulse = 0.7 + 0.3 * sin(t * 3.0 + a_data.x * 10.0);
+      gl_PointSize = (2.0 + a_data.y * 4.0) * pulse * (u_res.y / 800.0);
+      v_color = a_color;
+      v_alpha = (0.4 + 0.4 * pulse) * smoothstep(0.0, 0.1, abs(sin(t * 0.5)));
+    }`;
+
+    // Fragment shader — soft glowing circles
+    var fsrc = `#version 300 es
+    precision mediump float;
+    in vec3 v_color;
+    in float v_alpha;
+    out vec4 fragColor;
+    void main() {
+      vec2 c = gl_PointCoord - 0.5;
+      float d = length(c);
+      float glow = exp(-d * d * 8.0); // soft gaussian glow
+      fragColor = vec4(v_color, glow * v_alpha);
+    }`;
+
+    function compileShader(src, type) {
+      var s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return s;
+    }
+    var prog = gl.createProgram();
+    gl.attachShader(prog, compileShader(vsrc, gl.VERTEX_SHADER));
+    gl.attachShader(prog, compileShader(fsrc, gl.FRAGMENT_SHADER));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    // Colors: amber, cyan, purple, green, white
+    var palette = [
+      [1.0, 0.62, 0.04],  // amber
+      [0.02, 0.71, 0.83],  // cyan
+      [0.66, 0.33, 0.97],  // purple
+      [0.13, 0.77, 0.37],  // green
+      [1.0, 1.0, 1.0],     // white
+    ];
+
+    // Generate particle data
+    var data = new Float32Array(NUM * 4);
+    var colors = new Float32Array(NUM * 3);
+    for (var i = 0; i < NUM; i++) {
+      data[i*4+0] = Math.random() * Math.PI * 2;  // angle offset
+      data[i*4+1] = 0.1 + Math.random() * 0.8;    // radius
+      data[i*4+2] = 0.1 + Math.random() * 0.4;    // speed
+      data[i*4+3] = Math.random();                  // orbit type
+      var c = palette[Math.floor(Math.random() * palette.length)];
+      colors[i*3+0] = c[0];
+      colors[i*3+1] = c[1];
+      colors[i*3+2] = c[2];
+    }
+
+    var dataBuf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, dataBuf);
+    gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+    var aData = gl.getAttribLocation(prog, 'a_data');
+    gl.enableVertexAttribArray(aData);
+    gl.vertexAttribPointer(aData, 4, gl.FLOAT, false, 0, 0);
+
+    var colorBuf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuf);
+    gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+    var aColor = gl.getAttribLocation(prog, 'a_color');
+    gl.enableVertexAttribArray(aColor);
+    gl.vertexAttribPointer(aColor, 3, gl.FLOAT, false, 0, 0);
+
+    var uTime = gl.getUniformLocation(prog, 'u_time');
+    var uMouse = gl.getUniformLocation(prog, 'u_mouse');
+    var uRes = gl.getUniformLocation(prog, 'u_res');
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE); // additive blending for glow
+
+    function frame(t) {
+      gl.clearColor(0, 0, 0, 0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform1f(uTime, t * 0.001);
+      gl.uniform2f(uMouse, mouse.x, 1.0 - mouse.y);
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.drawArrays(gl.POINTS, 0, NUM);
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
   })();
   </script>
 </body>
