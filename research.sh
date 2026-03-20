@@ -13,7 +13,7 @@ if [[ -f "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.env" ]]; then
 fi
 
 # --- Configuration ---
-MAX_ITERATIONS="${MAX_ITERATIONS:-50}"
+MAX_ITERATIONS="${MAX_ITERATIONS:-100}"
 RESEARCH_MODEL="${RESEARCH_MODEL:-claude-opus-4-5}"
 HARD_RESEARCH_MODEL="${HARD_RESEARCH_MODEL:-claude-opus-4-5}"
 NO_JUDGES="${NO_JUDGES:-0}"
@@ -179,6 +179,7 @@ build_research_prompt() {
   local body="$2"
   local section="$3"
   local comments="$4"
+  local is_hard="${5:-false}"
   local goal_content
   goal_content=$(cat "$SCRIPT_DIR/goal.md")
 
@@ -231,49 +232,56 @@ CURRENT SCORE: ${score}% (higher is better, 100% = done)
 ${feedback_block}
 ${comment_block}
 
+$(if [[ "$is_hard" == "true" ]]; then cat <<'HARDEOF'
+HARD TASK — This task has failed before. Take a different approach:
+1. Break the question into 2-3 smaller sub-questions
+2. Research each sub-question separately with targeted searches
+3. Write partial findings after each sub-question — do NOT wait for everything
+4. If a source doesn't exist for a claim, explicitly note it as unverified rather than searching endlessly
+5. You have 40 turns — use them wisely, not just doing more of the same searches that failed before
+6. Check the PREVIOUS FEEDBACK section below for what went wrong last time
+
+HARDEOF
+fi)
 INSTRUCTIONS:
 
-WORKFLOW — Write incrementally, not at the end:
-1. Read document.md first to see existing content
-2. Search for ONE aspect of the question
-3. WRITE what you found to document.md immediately
-4. Search for the NEXT aspect
-5. WRITE again (append/update your section)
-6. Repeat until done or running low on turns
+TURN BUDGET — You have $(if [[ "$is_hard" == "true" ]]; then echo 40; else echo 25; fi) turns. Plan them carefully:
+$(if [[ "$is_hard" == "true" ]]; then cat <<'BUDGETHARD'
+- Turns 1-3: Read the section file and existing sources
+- Turns 4-18: Search (MAX 6 web searches) — write after every 2 searches
+- Turns 19-30: Continue writing and refining
+- Turns 31-40: Final sources and cleanup
+DO NOT do more than 7 web searches total. You MUST start writing by turn 10.
+BUDGETHARD
+else cat <<'BUDGETNORM'
+- Turns 1-2: Read the section file and existing sources
+- Turns 3-10: Search (MAX 3 web searches, each = WebSearch + WebFetch = 2 turns)
+- Turns 11-18: Write your findings to the section file, write sources
+- Turns 19-25: Buffer for revisions or one extra search if needed
+DO NOT do more than 4 web searches total. You MUST start writing by turn 12.
+BUDGETNORM
+fi)
+If you reach turn 15 without having written to the section file, STOP SEARCHING AND WRITE NOW.
 
-NEVER save all writing for the end. Write after every 2-3 searches.
-You have 25 tool calls. If you reach turn 20 without writing, STOP and WRITE.
+SOURCE REQUIREMENTS:
+- Minimum 2 sources, at least 1 Tier 1
+  - Tier 1: Self-published (subject's blog/tweets/talks), official docs, institutional pages
+  - Tier 2: Mainstream press, Wikipedia with citations
+  - Tier 3: Blogs, aggregators — never rely on Tier 3 alone
 
-1. Use WebSearch and WebFetch to find information about this specific question.
-2. Find at minimum 2 sources, with at least 1 Tier 1 source.
-   - Tier 1: Self-published content (subject's own blog/tweets/talks), official docs, institutional pages
-   - Tier 2: Mainstream press, Wikipedia with citations
-   - Tier 3: Blogs, aggregators — never rely on Tier 3 alone
+CITATION FORMAT — MANDATORY:
+Every factual claim MUST have an inline citation: "Karpathy joined OpenAI in December 2015 [1][2]."
+Add each source to sections/sources.md as: - [N] Description (Tier X) — URL
+EVERY paragraph must have at least one [N] citation.
 
-3. CITATION FORMAT — MANDATORY:
-   Every factual claim MUST have an inline citation using numbered references.
-   Format: "Karpathy joined OpenAI in December 2015 [1][2]."
-   Add each source to the ## Sources section as:
-   - [N] Description (Tier X) — URL
+METADATA — For each subsection add:
+**Confidence: HIGH/MEDIUM/LOW | Depth: HIGH/MEDIUM/LOW**
 
-   Example paragraph:
-   "Karpathy completed his PhD at Stanford under Fei-Fei Li [1]. His thesis
-   focused on visual recognition using convolutional neural networks [1][2].
-   He later joined OpenAI as a founding research scientist in December 2015 [3]."
-
-   EVERY paragraph of findings must have at least one [N] citation.
-   Paragraphs without citations will be flagged and scored as unreliable.
-
-4. For each subsection, add a metadata line:
-   **Confidence: HIGH/MEDIUM/LOW | Depth: HIGH/MEDIUM/LOW**
-   - HIGH confidence = 2+ Tier 1 sources agree
-   - MEDIUM confidence = 1 Tier 1 + Tier 2 sources
-   - LOW confidence = only Tier 2/3 sources
-
-5. Be precise. Only state what sources confirm. Flag uncertainties with **Uncertainty:** blocks.
-6. Do NOT modify sections outside your assigned area unless adding to Sources.
-7. Write findings as clear, factual prose — not bullet dumps.
-8. Never fabricate sources. If you cannot find a source, say so explicitly.
+RULES:
+- Be precise. Only state what sources confirm. Flag uncertainties with **Uncertainty:** blocks.
+- Do NOT modify sections outside your assigned area unless adding to Sources.
+- Write clear, factual prose — not bullet dumps.
+- Never fabricate sources. If you cannot find a source, say so.
 
 WORKING DIRECTORY: ${SCRIPT_DIR}
 Edit the SECTION file: ${section_file:-sections/general.md}
@@ -378,13 +386,18 @@ PROMPTEOF
 run_research() {
   local task_type="$1"
   local prompt="$2"
+  local hard="${3:-false}"
   local tools=""
   local max_turns=0
 
   case "$task_type" in
     research)
       tools="Bash,Read,Write,WebSearch,WebFetch"
-      max_turns=25
+      if [[ "$hard" == "true" ]]; then
+        max_turns=40
+      else
+        max_turns=25
+      fi
       ;;
     document)
       tools="Bash,Read,Write"
@@ -538,14 +551,13 @@ cleanup_failed() {
   attempts=$((attempts + 1))
   gh issue comment "$issue_num" --body "Attempt #${attempts}: Score did not improve. Reverting." 2>/dev/null || true
 
-  if [[ $attempts -ge 5 ]]; then
-    log "Issue #${issue_num} failed $attempts times — marking unanswerable"
+  if [[ $attempts -ge 3 ]]; then
+    log "Issue #${issue_num} failed $attempts times — closing as unanswerable"
     gh issue edit "$issue_num" --add-label "unanswerable" --remove-label "accepted" 2>/dev/null || true
-    gh issue close "$issue_num" --comment "Marked unanswerable after $attempts failed attempts." 2>/dev/null || true
-  elif [[ $attempts -ge 3 ]]; then
+    gh issue close "$issue_num" --comment "Closed after $attempts failed attempts. Reopen manually if needed." 2>/dev/null || true
+  elif [[ $attempts -ge 2 ]]; then
     log "Issue #${issue_num} failed $attempts times — marking hard-task"
     gh issue edit "$issue_num" --add-label "hard-task" 2>/dev/null || true
-    gh issue comment "$issue_num" --body "Hard task: $attempts attempts. Retrying with extended search." 2>/dev/null || true
   fi
 
   last_action="no_change"
@@ -787,34 +799,38 @@ judge_review_loop() {
   while [[ $round -le $max_rounds ]]; do
     log "Judge review round $round/$max_rounds for Issue #${issue_num}..."
 
-    local added_lines
-    added_lines=$(git diff -- sections/ document.md 2>/dev/null | grep "^+" | grep -v "^+++" | sed 's/^+//')
-    local doc_content
-    doc_content=$(cat "$SCRIPT_DIR/document.md")
-    local sources
-    sources=$(sed -n '/^## Sources/,$ p' "$SCRIPT_DIR/document.md")
+    local diff_lines
+    diff_lines=$(git diff -- sections/ 2>/dev/null || echo "")
+    local changed_files
+    changed_files=$(git diff --name-only -- sections/ 2>/dev/null | head -5)
+    local section_file
+    section_file=$(echo "$changed_files" | head -1)
+    local sources_content=""
+    if [[ -f "$SCRIPT_DIR/sections/sources.md" ]]; then
+      sources_content=$(<"$SCRIPT_DIR/sections/sources.md")
+    fi
 
     local base_context="
-NEW/CHANGED CONTENT:
-${added_lines}
+DIFF (changes made by researcher):
+${diff_lines}
 
-SOURCES SECTION:
-${sources}
+CHANGED FILES: ${changed_files}
 
-FULL DOCUMENT:
-${doc_content}
+SOURCES:
+${sources_content}
 
 WORKING DIRECTORY: ${SCRIPT_DIR}
-You may edit: document.md"
+Edit the section files directly (e.g. ${section_file}). Do NOT edit document.md — it is just an index.
+You have 8 turns. Be concise: read the file, make fixes, done. Do not search the web."
 
     # --- Judge 1: Evidence ---
     local j1_result
     j1_result=$(run_judge "Judge 1" "Evidence" "You are an evidence judge. Be strict about facts.
 ${base_context}
 
-CHECK: Are any facts, dates, quotes likely fabricated? Do [N] citations point to real sources?
-If you find issues, fix them in document.md (add citations, mark unverified, remove fabrications).
-OUTPUT: APPROVE, FIXED: [summary], or FEEDBACK: [what needs fixing]")
+CHECK: Are any facts, dates, quotes likely fabricated? Do [N] citations match real sources in the sources list?
+If you find issues, fix them in the section file (${section_file}). Add citations, mark unverified, remove fabrications.
+Start your response with: APPROVE, FIXED: [summary], or FEEDBACK: [what needs fixing]")
 
     # --- Judge 2: Consistency ---
     local j2_result
@@ -822,8 +838,8 @@ OUTPUT: APPROVE, FIXED: [summary], or FEEDBACK: [what needs fixing]")
 ${base_context}
 
 CHECK: Does new content contradict existing content? Are dates/names consistent? Is confidence level appropriate?
-If you find issues, fix them in document.md.
-OUTPUT: APPROVE, FIXED: [summary], or FEEDBACK: [what needs fixing]")
+If you find issues, fix them in the section file (${section_file}).
+Start your response with: APPROVE, FIXED: [summary], or FEEDBACK: [what needs fixing]")
 
     # --- Judge 3: Completeness ---
     local j3_result
@@ -831,9 +847,9 @@ OUTPUT: APPROVE, FIXED: [summary], or FEEDBACK: [what needs fixing]")
 TASK: ${title}
 ${base_context}
 
-CHECK: Does the content answer the question? Obvious gaps? Sources diverse? What would a skeptic question?
-If you find issues, fix them in document.md.
-OUTPUT: APPROVE, FIXED: [summary], or FEEDBACK: [what needs fixing]")
+CHECK: Does the content answer the question? Obvious gaps? Sources diverse enough? What would a skeptic question?
+If you find issues, fix them in the section file (${section_file}).
+Start your response with: APPROVE, FIXED: [summary], or FEEDBACK: [what needs fixing]")
 
     # --- Count votes ---
     local approvals=0
@@ -862,13 +878,13 @@ $(echo "$result_var" | head -10)"
       local fix_file
       fix_file=$(mktemp)
       cat > "$fix_file" <<FIXEOF
-You are the researcher. The judges reviewed your work and gave feedback. Fix the issues in document.md.
+You are the researcher. The judges reviewed your work and gave feedback. Fix the issues.
 
 JUDGE FEEDBACK:
 ${feedback}
 
 WORKING DIRECTORY: ${SCRIPT_DIR}
-Edit document.md to address the feedback. Be precise.
+Edit the section files in sections/ to address the feedback. Do NOT edit document.md (it's just an index). Be precise and concise.
 FIXEOF
       local -a fix_args=(-p --permission-mode acceptEdits --allowedTools "Bash,Read,Write" --max-turns 5)
       cat "$fix_file" | claude "${fix_args[@]}" 2>/dev/null || true
@@ -951,6 +967,16 @@ startup() {
     git branch -D "$orphan_branch" 2>/dev/null || true
     log "  Deleted orphaned branch $orphan_branch"
   done
+
+  # Resume iteration counter from status.json if available
+  if [[ -f "$SCRIPT_DIR/status.json" ]]; then
+    local prev_iter
+    prev_iter=$(jq -r '.iteration // 0' "$SCRIPT_DIR/status.json" 2>/dev/null || echo 0)
+    if [[ "$prev_iter" =~ ^[0-9]+$ ]] && [[ "$prev_iter" -gt 0 ]]; then
+      iteration=$prev_iter
+      log "Resuming from iteration $iteration (from status.json)"
+    fi
+  fi
 
   # Compute initial score
   starting_score=$(compute_score)
@@ -1055,10 +1081,12 @@ main_loop() {
     current_task="$title"
     current_issue="$issue_num"
 
-    # Check if hard task
+    # Check if hard task — give more budget and rethink approach
+    local is_hard=false
     if is_hard_task "$issue_json"; then
+      is_hard=true
       model="$HARD_RESEARCH_MODEL"
-      log "Hard task detected — using $model"
+      log "Hard task detected — using $model with extended budget"
     else
       model="$RESEARCH_MODEL"
     fi
@@ -1085,7 +1113,7 @@ main_loop() {
     local prompt=""
     case "$task_type" in
       research)
-        prompt=$(build_research_prompt "$title" "$body" "$section" "$comments")
+        prompt=$(build_research_prompt "$title" "$body" "$section" "$comments" "$is_hard")
         ;;
       document)
         prompt=$(build_document_prompt "$title" "$body" "$section")
@@ -1098,7 +1126,7 @@ main_loop() {
     local old_score=$score
     write_status true
 
-    run_research "$task_type" "$prompt"
+    run_research "$task_type" "$prompt" "$is_hard"
 
     # 10. Compute new score
     local new_score
