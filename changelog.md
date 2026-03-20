@@ -144,3 +144,8 @@
 - PR: #125
 - Score: 88
 - Action: merged
+
+### 2026-03-20 — #50: What is Karpathy's Stanford PhD timeline and who was his academic advisor?
+- PR: #126
+- Score: 91
+- Action: merged
