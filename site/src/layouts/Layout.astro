@@ -5,7 +5,7 @@ import { ClientRouter } from 'astro:transitions';
 interface Props {
   title: string;
   description?: string;
-  activePage: 'index' | 'progress' | 'sections' | 'sources' | 'about';
+  activePage: 'index' | 'progress' | 'sections' | 'sources' | 'about' | 'clone';
   jsonLd?: Record<string, unknown>;
 }
 
@@ -19,6 +19,7 @@ const navItems = [
   { href: `${base}sections/`, label: 'Sections', key: 'sections' },
   { href: `${base}sources/`, label: 'Sources', key: 'sources' },
   { href: `${base}about/`, label: 'About', key: 'about' },
+  { href: `${base}clone/`, label: 'Clone', key: 'clone' },
 ];
 ---
 <!DOCTYPE html>
