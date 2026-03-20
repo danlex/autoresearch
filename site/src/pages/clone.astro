@@ -87,12 +87,83 @@ const cloneDesc = 'Clone Autoresearch and run autonomous AI research on any subj
 
   <!-- Requirements -->
   <h2 class="text-2xl font-bold tracking-tight mt-12 mb-6 pb-2 border-b border-border">Requirements</h2>
-  <div class="glass-card rounded-2xl p-6 my-6">
-    <ul class="text-[#d4d4d8] text-[0.95rem] leading-relaxed pl-6 my-0">
-      <li class="my-2"><strong class="text-text-primary">Anthropic API key</strong> — get one at <a href="https://console.anthropic.com" target="_blank" rel="noopener" class="text-ar-blue hover:text-ar-cyan no-underline hover:underline">console.anthropic.com</a></li>
-      <li class="my-2"><strong class="text-text-primary">GitHub account</strong> — for task management and website hosting</li>
-      <li class="my-2"><strong class="text-text-primary">macOS or Linux</strong> — the installer handles the rest (Node.js, GitHub CLI, Claude Code)</li>
-    </ul>
+
+  <div class="space-y-4 my-6">
+    <!-- Claude Authentication -->
+    <div class="glass-card rounded-2xl p-6">
+      <h3 class="text-ar-amber mt-0 mb-3 text-[1rem] font-semibold">Claude Authentication (pick one)</h3>
+
+      <div class="space-y-4">
+        <div class="bg-black/20 rounded-xl p-5">
+          <h4 class="text-text-primary font-semibold text-[0.9rem] mt-0 mb-2">Option A: OAuth Token (recommended)</h4>
+          <p class="text-dim text-[0.85rem] m-0 mb-3">Free with your Claude account. No API billing needed.</p>
+          <div class="bg-black/30 rounded-lg p-3 font-mono text-[0.8rem]">
+            <p class="text-dim m-0">$ <span class="text-ar-green">npm install -g</span> @anthropic-ai/claude-code</p>
+            <p class="text-dim m-0">$ <span class="text-ar-green">claude auth login</span></p>
+            <p class="text-dim m-0 mt-1 text-[0.75rem]"># Opens browser → sign in → token saved automatically</p>
+            <p class="text-dim m-0 mt-2">$ <span class="text-ar-green">claude auth status</span></p>
+            <p class="text-dim m-0 text-[0.75rem]"># Shows: Authenticated as your@email.com</p>
+          </div>
+          <p class="text-dim text-[0.8rem] mt-3 mb-0">Or set manually in <code class="font-mono bg-white/5 px-1.5 py-0.5 rounded border border-white/10 text-[0.8em]">.env</code>:</p>
+          <div class="bg-black/30 rounded-lg p-3 font-mono text-[0.8rem] mt-2">
+            <p class="text-dim m-0">CLAUDE_CODE_OAUTH_TOKEN=sk-ant-oat01-...</p>
+          </div>
+        </div>
+
+        <div class="bg-black/20 rounded-xl p-5">
+          <h4 class="text-text-primary font-semibold text-[0.9rem] mt-0 mb-2">Option B: API Key</h4>
+          <p class="text-dim text-[0.85rem] m-0 mb-3">Pay-per-use. Best for heavy research sessions.</p>
+          <ol class="text-dim text-[0.85rem] pl-5 my-0">
+            <li class="my-1.5">Go to <a href="https://console.anthropic.com" target="_blank" rel="noopener" class="text-ar-blue hover:text-ar-cyan no-underline hover:underline">console.anthropic.com</a></li>
+            <li class="my-1.5">Sign up or log in</li>
+            <li class="my-1.5">Go to <strong class="text-text-primary">API Keys</strong> in the left sidebar</li>
+            <li class="my-1.5">Click <strong class="text-text-primary">Create Key</strong>, copy it</li>
+            <li class="my-1.5">Add to <code class="font-mono bg-white/5 px-1.5 py-0.5 rounded border border-white/10 text-[0.8em]">.env</code>:</li>
+          </ol>
+          <div class="bg-black/30 rounded-lg p-3 font-mono text-[0.8rem] mt-2">
+            <p class="text-dim m-0">ANTHROPIC_API_KEY=sk-ant-api03-...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GitHub -->
+    <div class="glass-card rounded-2xl p-6">
+      <h3 class="text-ar-cyan mt-0 mb-3 text-[1rem] font-semibold">GitHub Account</h3>
+      <p class="text-dim text-[0.85rem] m-0 mb-3">Required for task management (Issues), code history (PRs), and website hosting (Pages).</p>
+      <div class="bg-black/20 rounded-xl p-4">
+        <p class="text-dim text-[0.85rem] m-0 mb-2">Install and authenticate the GitHub CLI:</p>
+        <div class="bg-black/30 rounded-lg p-3 font-mono text-[0.8rem]">
+          <p class="text-dim m-0">$ <span class="text-ar-green">brew install</span> gh &nbsp;&nbsp;&nbsp;<span class="text-dim text-[0.7rem]"># macOS</span></p>
+          <p class="text-dim m-0">$ <span class="text-ar-green">gh auth login</span> &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-dim text-[0.7rem]"># opens browser</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- System -->
+    <div class="glass-card rounded-2xl p-6">
+      <h3 class="text-ar-green mt-0 mb-3 text-[1rem] font-semibold">System</h3>
+      <p class="text-dim text-[0.85rem] m-0 mb-3">macOS or Linux. The installer handles all dependencies automatically:</p>
+      <div class="grid grid-cols-2 gap-3 max-md:grid-cols-1">
+        <div class="bg-black/20 rounded-xl p-4">
+          <p class="text-text-primary font-semibold text-[0.85rem] m-0 mb-1">Auto-installed</p>
+          <ul class="text-dim text-[0.8rem] pl-4 my-0">
+            <li>Node.js 22+</li>
+            <li>GitHub CLI (gh)</li>
+            <li>Claude Code CLI</li>
+            <li>jq (JSON processor)</li>
+          </ul>
+        </div>
+        <div class="bg-black/20 rounded-xl p-4">
+          <p class="text-text-primary font-semibold text-[0.85rem] m-0 mb-1">Optional</p>
+          <ul class="text-dim text-[0.8rem] pl-4 my-0">
+            <li>ShellCheck (linting)</li>
+            <li>VS Code (editing)</li>
+            <li>Custom domain (SEO)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Example subjects -->
