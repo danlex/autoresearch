@@ -23,7 +23,7 @@ export function md2html(md: string): string {
     .replace(/Depth: HIGH/g, '<span class="badge-high">HIGH</span>')
     .replace(/Depth: MEDIUM/g, '<span class="badge-med">MEDIUM</span>')
     .replace(/Depth: LOW/g, '<span class="badge-low">LOW</span>')
-    .replace(/\*\*Uncertainty:\*\*/g, '<div class="uncertainty-header">⚠ Uncertainty:</div><div class="uncertainty-body">')
+    .replace(/\*\*Uncertainty:\*\*/g, '<div class="unc-header">⚠ Uncertainty:</div><div class="unc-content">')
     .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
 
   html = html.split('\n').map(line => {

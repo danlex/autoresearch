@@ -118,8 +118,8 @@ sup.cite:hover { color: var(--color-ar-amber); }
 .badge-low { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 9999px; letter-spacing: 0.05em; background: rgba(239, 68, 68, 0.15); color: var(--color-ar-red); border: 1px solid rgba(239, 68, 68, 0.2); }
 
 /* Uncertainty blocks */
-.uncertainty-header { color: var(--color-ar-amber); margin-top: 1.5rem; font-weight: 600; }
-.uncertainty-body {
+.unc-header { color: var(--color-ar-amber); margin-top: 1.5rem; font-weight: 600; }
+.unc-content {
   background: rgba(245, 158, 11, 0.05);
   padding: 1rem 1.25rem;
   border-radius: 8px;
