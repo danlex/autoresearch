@@ -129,3 +129,8 @@
 - PR: #117
 - Score: 83
 - Action: merged
+
+### 2026-03-20 — #54: How did specific AI capability jumps (GPT-4, o1) shape Karpathy's safety views?
+- PR: #118
+- Score: 87
+- Action: merged
