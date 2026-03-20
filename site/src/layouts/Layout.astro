@@ -59,18 +59,19 @@ const navItems = [
   <div id="progress-bar"></div>
 
   <!-- Glass navigation -->
-  <nav transition:name="nav" transition:persist class="glass-nav flex items-center gap-1 p-2 mb-12 rounded-2xl sticky top-4 z-50 overflow-x-auto">
+  <nav transition:name="nav" class="glass-nav flex items-center gap-1 p-2 mb-12 rounded-2xl sticky top-4 z-50 overflow-x-auto">
     {navItems.map(item => (
       <a
         href={item.href}
+        data-nav-key={item.key}
         class:list={[
-          'whitespace-nowrap text-text-secondary no-underline font-sans text-[0.85rem] font-medium px-4 py-2 rounded-lg transition-all duration-200',
+          'nav-link whitespace-nowrap text-text-secondary no-underline font-sans text-[0.85rem] font-medium px-4 py-2 rounded-lg transition-all duration-200',
           'hover:text-text-primary hover:bg-white/8',
-          activePage === item.key && 'text-text-primary bg-white/10 font-semibold',
+          activePage === item.key && 'active text-text-primary bg-white/10 font-semibold',
         ]}
       >{item.label}</a>
     ))}
-    <button class="theme-toggle ml-auto shrink-0 bg-white/5 border border-white/10 text-text-secondary text-[0.85rem] px-2.5 py-1.5 rounded-lg cursor-pointer transition-all hover:text-text-primary hover:bg-white/10 leading-none" id="theme-toggle" aria-label="Toggle theme" transition:persist>&#9790;</button>
+    <button class="theme-toggle ml-auto shrink-0 bg-white/5 border border-white/10 text-text-secondary text-[0.85rem] px-2.5 py-1.5 rounded-lg cursor-pointer transition-all hover:text-text-primary hover:bg-white/10 leading-none" id="theme-toggle" aria-label="Toggle theme">&#9790;</button>
     <div class="search-box relative ml-1 shrink-0">
       <input
         type="text"
@@ -98,7 +99,7 @@ const navItems = [
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">&uarr;</button>
 
   <!-- Citation popover -->
-  <div id="cite-popover" class="fixed z-[1000] glass-panel rounded-lg px-3.5 py-2.5 text-[0.8rem] leading-relaxed max-w-xs shadow-2xl pointer-events-none opacity-0 transition-all duration-150 translate-y-1" transition:persist></div>
+  <div id="cite-popover" class="fixed z-[1000] glass-panel rounded-lg px-3.5 py-2.5 text-[0.8rem] leading-relaxed max-w-xs shadow-2xl pointer-events-none opacity-0 transition-all duration-150 translate-y-1"></div>
 
   <script is:inline>
   (function() {
