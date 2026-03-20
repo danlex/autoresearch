@@ -134,3 +134,8 @@
 - PR: #118
 - Score: 87
 - Action: merged
+
+### 2026-03-20 — #53: Has Karpathy proposed any technical solutions for the near-term risks he identified?
+- PR: #121
+- Score: 88
+- Action: merged
