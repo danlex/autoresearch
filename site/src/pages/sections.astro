@@ -3,9 +3,22 @@ import Layout from '../layouts/Layout.astro';
 import { SECTIONS, getSectionStats } from '../lib/data';
 
 const allStats = SECTIONS.map(s => getSectionStats(s));
+const totalWords = allStats.reduce((sum, s) => sum + s.words, 0);
+
+const sectionsDesc = `${SECTIONS.length} research sections on Andrej Karpathy: ${SECTIONS.map(s => s.name).join(', ')}. ${totalWords.toLocaleString()} words of autonomous research by Alexandru DAN, TVL Tech.`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Research Sections — Andrej Karpathy",
+  "description": sectionsDesc,
+  "url": "https://danlex.github.io/autoresearch/sections/",
+  "isPartOf": { "@type": "WebSite", "name": "Autoresearch", "url": "https://danlex.github.io/autoresearch/" },
+  "numberOfItems": SECTIONS.length,
+};
 ---
 
-<Layout title="Sections" activePage="sections">
+<Layout title="Sections" description={sectionsDesc} activePage="sections" jsonLd={jsonLd}>
   <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight my-6 bg-gradient-to-br from-ar-amber to-ar-red bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">
     Research Sections
   </h1>

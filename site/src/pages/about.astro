@@ -1,10 +1,26 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-const metaDesc = 'Autoresearch — autonomous research system by Alexandru DAN, CEO TVL Tech. Open source, powered by Claude Opus.';
+const metaDesc = 'Autoresearch — autonomous AI research system by Alexandru DAN, CEO TVL Tech. Generates questions, searches the web, writes with citations, verifies via three-judge panel. Open source, powered by Claude Opus.';
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "About Autoresearch",
+  "description": metaDesc,
+  "url": "https://danlex.github.io/autoresearch/about/",
+  "mainEntity": {
+    "@type": "SoftwareApplication",
+    "name": "Autoresearch",
+    "applicationCategory": "Research Tool",
+    "operatingSystem": "Linux, macOS",
+    "author": { "@type": "Person", "name": "Alexandru DAN", "jobTitle": "CEO", "affiliation": { "@type": "Organization", "name": "TVL Tech", "url": "https://www.tvl.tech" } },
+    "url": "https://github.com/danlex/autoresearch",
+    "isAccessibleForFree": true,
+  },
+};
 ---
 
-<Layout title="About" description={metaDesc} activePage="about">
+<Layout title="About" description={metaDesc} activePage="about" jsonLd={jsonLd}>
   <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight my-6 bg-gradient-to-br from-ar-amber to-ar-red bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">
     About Autoresearch
   </h1>

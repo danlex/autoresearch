@@ -35,17 +35,20 @@ sourcesRaw = sourcesRaw
 
 const metaDesc = `Comprehensive autonomous research on Andrej Karpathy — AI researcher, educator, OpenAI founding member, Tesla AI Director, Eureka Labs founder. ${score}% complete with ${header.sources} verified sources.`;
 
-const jsonLd = JSON.stringify({
+const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ScholarlyArticle",
   "name": "Andrej Karpathy — Research Document",
-  "author": { "@type": "Person", "name": "Alexandru DAN", "jobTitle": "CEO", "affiliation": { "@type": "Organization", "name": "TVL Tech" } },
+  "author": { "@type": "Person", "name": "Alexandru DAN", "jobTitle": "CEO", "affiliation": { "@type": "Organization", "name": "TVL Tech", "url": "https://www.tvl.tech" } },
+  "publisher": { "@type": "Organization", "name": "TVL Tech", "url": "https://www.tvl.tech" },
   "description": metaDesc,
   "url": "https://danlex.github.io/autoresearch/",
-  "about": { "@type": "Person", "name": "Andrej Karpathy" },
+  "about": { "@type": "Person", "name": "Andrej Karpathy", "jobTitle": "AI Researcher", "sameAs": ["https://karpathy.ai", "https://github.com/karpathy", "https://x.com/karpathy"] },
+  "image": "https://danlex.github.io/autoresearch/karpathy.jpg",
   "dateModified": header.updated,
   "isAccessibleForFree": true,
-});
+  "citation": allStats.reduce((sum, s) => sum + s.citations.length, 0) + " inline citations from " + header.sources + " verified sources",
+};
 
 const timelineItems = [
   { year: '2011', title: 'Stanford PhD', anchor: 'intellectual-contributions', color: 'var(--color-ar-amber)' },
@@ -57,15 +60,14 @@ const timelineItems = [
 ];
 ---
 
-<Layout title="Research Document" description={metaDesc} activePage="index">
-  <script type="application/ld+json" set:html={jsonLd} />
+<Layout title="Research Document" description={metaDesc} activePage="index" jsonLd={jsonLd}>
 
   <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight my-6 bg-gradient-to-br from-ar-amber to-ar-red bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">
     Andrej Karpathy — Research Document
   </h1>
 
   <div class="flex gap-8 items-center my-8 flex-wrap">
-    <img src={`${base}karpathy.jpg`} alt="Andrej Karpathy" class="w-[130px] h-[130px] rounded-full border-[3px] border-transparent object-cover shadow-[0_0_30px_rgba(245,158,11,0.15)]" style="background-image: linear-gradient(135deg, #f59e0b, #ef4444); background-origin: border-box; background-clip: content-box, border-box;">
+    <img src={`${base}karpathy.jpg`} alt="Andrej Karpathy — AI researcher, educator, OpenAI founding member, Tesla AI Director, Eureka Labs founder" fetchpriority="high" width="130" height="130" class="w-[130px] h-[130px] rounded-full border-[3px] border-transparent object-cover shadow-[0_0_30px_rgba(245,158,11,0.15)]" style="background-image: linear-gradient(135deg, #f59e0b, #ef4444); background-origin: border-box; background-clip: content-box, border-box;">
     <div class="flex-1 min-w-[250px]">
       <p class="text-lg m-0 mb-2"><strong class="text-text-primary">Andrej Karpathy</strong> — AI researcher, educator, and entrepreneur.</p>
       <p class="text-dim m-0 text-[0.95rem]">Founding member of OpenAI. Former Director of AI at Tesla Autopilot. Creator of cs231n, nanoGPT, and micrograd. Founder of Eureka Labs. Stanford PhD under Fei-Fei Li.</p>

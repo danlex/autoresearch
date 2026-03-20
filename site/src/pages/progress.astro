@@ -9,9 +9,21 @@ const status = getStatus();
 const changelog = getChangelog();
 const allStats = SECTIONS.map(s => getSectionStats(s));
 const totalCitations = allStats.reduce((sum, s) => sum + s.citations.length, 0);
+
+const progressDesc = `Research progress on Andrej Karpathy: ${score}% complete, ${header.tasks} tasks done, ${header.sources} verified sources, ${status.iteration || '?'} iterations. Autonomous research by Alexandru DAN, TVL Tech.`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Research Progress — Andrej Karpathy",
+  "description": progressDesc,
+  "url": "https://danlex.github.io/autoresearch/progress/",
+  "isPartOf": { "@type": "WebSite", "name": "Autoresearch", "url": "https://danlex.github.io/autoresearch/" },
+  "author": { "@type": "Person", "name": "Alexandru DAN" },
+};
 ---
 
-<Layout title="Progress" activePage="progress">
+<Layout title="Progress" description={progressDesc} activePage="progress" jsonLd={jsonLd}>
   <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight my-6 bg-gradient-to-br from-ar-amber to-ar-red bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">
     Research Progress
   </h1>
@@ -87,4 +99,10 @@ const totalCitations = allStats.reduce((sum, s) => sum + s.citations.length, 0);
   <!-- Changelog -->
   <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">Changelog</h2>
   <div class="prose" set:html={md2html(changelog)} />
+
+  <!-- Cross-links -->
+  <div class="flex gap-3 flex-wrap mt-12 pt-6 border-t border-border">
+    <a href={`${import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/'}`} class="text-ar-blue hover:text-ar-cyan no-underline hover:underline text-[0.85rem]">&larr; Research Document</a>
+    <a href={`${import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/'}sources/`} class="text-ar-blue hover:text-ar-cyan no-underline hover:underline text-[0.85rem]">View Sources &rarr;</a>
+  </div>
 </Layout>

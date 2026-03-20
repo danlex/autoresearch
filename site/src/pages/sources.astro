@@ -5,14 +5,25 @@ import { parseSources, getSourceDashboard } from '../lib/data';
 import { md2html } from '../lib/markdown';
 
 const dashboard = getSourceDashboard();
+const totalSources = dashboard.total.t1 + dashboard.total.t2 + dashboard.total.t3;
 let sourcesRaw = parseSources().raw;
 sourcesRaw = sourcesRaw
   .replace(/^(- \[\d+\].*)(Tier 1)(.*$)/gm, '$1<span class="source-t1">Tier 1</span>$3')
   .replace(/^(- \[\d+\].*)(Tier 2)(.*$)/gm, '$1<span class="source-t2">Tier 2</span>$3')
   .replace(/^(- \[\d+\].*)(Tier 3)(.*$)/gm, '$1<span class="source-t3">Tier 3</span>$3');
+
+const sourcesDesc = `${totalSources} verified sources for Andrej Karpathy research: ${dashboard.total.t1} Tier 1, ${dashboard.total.t2} Tier 2, ${dashboard.total.t3} Tier 3. Every claim backed by citations.`;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Sources — Andrej Karpathy Research",
+  "description": sourcesDesc,
+  "url": "https://danlex.github.io/autoresearch/sources/",
+  "isPartOf": { "@type": "WebSite", "name": "Autoresearch", "url": "https://danlex.github.io/autoresearch/" },
+};
 ---
 
-<Layout title="Sources" activePage="sources">
+<Layout title="Sources" description={sourcesDesc} activePage="sources" jsonLd={jsonLd}>
   <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight my-6 bg-gradient-to-br from-ar-amber to-ar-red bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">
     Sources
   </h1>
