@@ -124,3 +124,8 @@
 - PR: #116
 - Score: 81
 - Action: merged
+
+### 2026-03-20 — #73: What is the actual academic citation impact of the dissertation's key papers?
+- PR: #117
+- Score: 83
+- Action: merged
