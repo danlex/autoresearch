@@ -139,3 +139,8 @@
 - PR: #121
 - Score: 88
 - Action: merged
+
+### 2026-03-20 — #52: Has Karpathy engaged professionally with AI safety researchers or organizations?
+- PR: #125
+- Score: 88
+- Action: merged
