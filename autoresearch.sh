@@ -15,11 +15,11 @@ fi
 DOC_DIR="$SCRIPT_DIR/sections"
 
 # --- Task completion ---
-total_tasks=$(gh issue list --label "task" --state all --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
+total_tasks=$(gh issue list --label "task" --state all --limit 500 --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
 total_tasks=${total_tasks:-0}
-done_tasks=$(gh issue list --label "task,implemented" --state closed --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
+done_tasks=$(gh issue list --label "task,implemented" --state closed --limit 500 --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
 done_tasks=${done_tasks:-0}
-rework=$(gh issue list --label "needs-better-research" --state open --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
+rework=$(gh issue list --label "needs-better-research" --state open --limit 500 --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
 rework=${rework:-0}
 
 # Task completion: what % of tasks are done (penalize rework)
@@ -36,7 +36,10 @@ low_confidence=0
 total_paragraphs=0
 
 # Scan all section files (excluding sources and open-questions)
-for section_file in "$DOC_DIR"/intellectual-contributions.md "$DOC_DIR"/education-and-teaching.md "$DOC_DIR"/views-on-ai-future.md "$DOC_DIR"/eureka-labs.md "$DOC_DIR"/key-relationships.md; do
+# Scan all section files except sources.md and open-questions.md
+for section_file in "$DOC_DIR"/*.md; do
+  [[ "$(basename "$section_file")" == "sources.md" ]] && continue
+  [[ "$(basename "$section_file")" == "open-questions.md" ]] && continue
   [[ -f "$section_file" ]] || continue
   while IFS= read -r line; do
     # Skip empty lines, headers, metadata
