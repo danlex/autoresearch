@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title: string;
@@ -38,39 +39,46 @@ const navItems = [
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- View Transitions -->
+  <ClientRouter />
 </head>
 <body class="max-w-[920px] mx-auto px-4 py-8 sm:px-8 leading-relaxed">
+  <!-- Animated mesh gradient background -->
+  <div class="mesh-bg" aria-hidden="true"></div>
+
   <div id="progress-bar"></div>
 
-  <!-- Navigation -->
-  <nav class="flex items-center gap-1 p-2 mb-12 bg-surface border border-border rounded-xl backdrop-blur-lg sticky top-4 z-50 overflow-x-auto">
+  <!-- Glass navigation -->
+  <nav transition:name="nav" transition:persist class="glass-nav flex items-center gap-1 p-2 mb-12 rounded-2xl sticky top-4 z-50 overflow-x-auto">
     {navItems.map(item => (
       <a
         href={item.href}
         class:list={[
           'whitespace-nowrap text-text-secondary no-underline font-sans text-[0.85rem] font-medium px-4 py-2 rounded-lg transition-all duration-200',
-          'hover:text-text-primary hover:bg-surface-hover',
+          'hover:text-text-primary hover:bg-white/8',
           activePage === item.key && 'text-text-primary bg-white/10 font-semibold',
         ]}
       >{item.label}</a>
     ))}
-    <button class="theme-toggle ml-auto shrink-0 bg-surface border border-border text-text-secondary text-[0.85rem] px-2.5 py-1.5 rounded-lg cursor-pointer transition-all hover:text-text-primary hover:bg-surface-hover leading-none" id="theme-toggle" aria-label="Toggle theme">&#9790;</button>
+    <button class="theme-toggle ml-auto shrink-0 bg-white/5 border border-white/10 text-text-secondary text-[0.85rem] px-2.5 py-1.5 rounded-lg cursor-pointer transition-all hover:text-text-primary hover:bg-white/10 leading-none" id="theme-toggle" aria-label="Toggle theme" transition:persist>&#9790;</button>
     <div class="search-box relative ml-1 shrink-0">
       <input
         type="text"
         id="search-input"
         placeholder="Search... (⌘K)"
         aria-label="Search content"
-        class="font-sans text-[0.8rem] bg-surface border border-border text-text-primary px-3 py-1.5 rounded-lg w-[160px] outline-none transition-all focus:border-ar-amber focus:w-[220px]"
+        class="font-sans text-[0.8rem] bg-white/5 border border-white/10 text-text-primary px-3 py-1.5 rounded-lg w-[160px] outline-none transition-all focus:border-ar-amber focus:w-[220px]"
       />
-      <div class="search-results hidden absolute top-full mt-1.5 right-0 w-[360px] max-h-[340px] overflow-y-auto bg-surface border border-border rounded-xl backdrop-blur-xl shadow-2xl z-[300] p-1" id="search-results"></div>
+      <div class="search-results hidden absolute top-full mt-1.5 right-0 w-[360px] max-h-[340px] overflow-y-auto glass-panel rounded-xl shadow-2xl z-[300] p-1" id="search-results"></div>
     </div>
   </nav>
 
-  <slot />
+  <main transition:animate="fade">
+    <slot />
+  </main>
 
   <!-- Footer -->
-  <footer class="mt-16 pt-8 border-t border-border text-dim text-[0.8rem] text-center">
+  <footer class="mt-16 pt-8 border-t border-white/8 text-dim text-[0.8rem] text-center">
     <p>Built by <strong class="text-text-secondary">Alexandru DAN</strong>, CEO <a href="#" class="text-text-secondary hover:text-text-primary">TVL Tech</a></p>
     <p class="mt-1">Powered by <a href="https://github.com/danlex/autoresearch" class="text-text-secondary hover:text-text-primary">Autoresearch</a> — Autonomous research with Claude Opus</p>
     <p class="mt-1"><a href="https://github.com/danlex/autoresearch" class="text-text-secondary hover:text-text-primary">GitHub Repository</a></p>
@@ -79,8 +87,8 @@ const navItems = [
   <!-- Back to top -->
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">&uarr;</button>
 
-  <!-- Citation popover container -->
-  <div id="cite-popover" class="fixed z-[1000] bg-[#1e1e2e] text-[#e0e0e0] border border-white/10 rounded-lg px-3.5 py-2.5 text-[0.8rem] leading-relaxed max-w-xs shadow-2xl pointer-events-none opacity-0 transition-all duration-150 translate-y-1"></div>
+  <!-- Citation popover -->
+  <div id="cite-popover" class="fixed z-[1000] glass-panel rounded-lg px-3.5 py-2.5 text-[0.8rem] leading-relaxed max-w-xs shadow-2xl pointer-events-none opacity-0 transition-all duration-150 translate-y-1" transition:persist></div>
 
   <script is:inline>
   (function() {
@@ -176,8 +184,10 @@ const navItems = [
       } else {
         results.forEach(function(r) {
           var div = document.createElement('div');
-          div.className = 'px-3 py-2 text-[0.8rem] rounded-md cursor-pointer transition-colors hover:bg-surface-hover leading-snug';
+          div.className = 'px-3 py-2 text-[0.8rem] rounded-md cursor-pointer transition-colors leading-snug';
           div.style.color = 'var(--color-text-secondary)';
+          div.onmouseenter = function() { div.style.background = 'rgba(255,255,255,0.06)'; };
+          div.onmouseleave = function() { div.style.background = ''; };
           var sectionLabel = r.section ? '<span style="color: var(--color-ar-amber); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">' + r.section.replace(/-/g, ' ') + '</span><br>' : '';
           var escaped = r.text.replace(/</g, '&lt;');
           var esc = q.replace(/[-.*+?^$|()[\]\\]/g, '\\$&');
@@ -241,7 +251,7 @@ const navItems = [
     window.addEventListener('scroll', updateToc, { passive: true });
     updateToc();
 
-    // Lite YouTube — click to load iframe
+    // Lite YouTube
     document.querySelectorAll('.lite-youtube').forEach(function(el) {
       el.addEventListener('click', function() {
         var id = el.getAttribute('data-id');
@@ -255,7 +265,7 @@ const navItems = [
       });
     });
 
-    // Heading anchor — copy link on click
+    // Heading anchor copy
     document.querySelectorAll('.heading-anchor').forEach(function(a) {
       a.addEventListener('click', function(e) {
         e.preventDefault();

@@ -78,31 +78,31 @@ const timelineItems = [
     and verifies everything through a three-judge review panel. Built by <strong class="text-text-primary">Alexandru DAN</strong>, CEO TVL Tech.
   </p>
 
-  <!-- Stats -->
-  <div class="stats-grid grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-4 my-8">
-    <div class="bg-surface p-5 rounded-xl border border-border text-center transition-all hover:border-white/15 hover:-translate-y-0.5">
-      <div class="text-4xl font-extrabold font-mono tracking-tight text-ar-green">{score}%</div>
-      <div class="text-dim text-xs mt-1.5 uppercase tracking-[0.1em] font-medium">Research Score</div>
+  <!-- Bento Stats Grid -->
+  <div class="bento-stats my-8 stagger-reveal">
+    <div class="glass-card glow-border rounded-2xl p-6 flex flex-col items-center justify-center text-center scroll-reveal">
+      <div class="text-6xl font-extrabold font-mono tracking-tight text-ar-green">{score}%</div>
+      <div class="text-dim text-xs mt-2 uppercase tracking-[0.1em] font-medium">Research Score</div>
+      <div class="w-full bg-white/5 rounded-full overflow-hidden h-1.5 mt-4">
+        <div class="h-full bg-gradient-to-r from-ar-green to-ar-cyan rounded-full transition-[width] duration-1000" style={`width: ${score}%`}></div>
+      </div>
     </div>
-    <div class="bg-surface p-5 rounded-xl border border-border text-center transition-all hover:border-white/15 hover:-translate-y-0.5">
-      <div class="text-4xl font-extrabold font-mono tracking-tight">{header.tasks}</div>
+    <div class="glass-card glow-border rounded-2xl p-5 flex flex-col items-center justify-center text-center scroll-reveal">
+      <div class="text-3xl font-extrabold font-mono tracking-tight">{header.tasks}</div>
       <div class="text-dim text-xs mt-1.5 uppercase tracking-[0.1em] font-medium">Tasks</div>
     </div>
-    <div class="bg-surface p-5 rounded-xl border border-border text-center transition-all hover:border-white/15 hover:-translate-y-0.5">
-      <div class="text-4xl font-extrabold font-mono tracking-tight">{header.sources}</div>
+    <div class="glass-card glow-border rounded-2xl p-5 flex flex-col items-center justify-center text-center scroll-reveal">
+      <div class="text-3xl font-extrabold font-mono tracking-tight">{header.sources}</div>
       <div class="text-dim text-xs mt-1.5 uppercase tracking-[0.1em] font-medium">Sources</div>
     </div>
-    <div class="bg-surface p-5 rounded-xl border border-border text-center transition-all hover:border-white/15 hover:-translate-y-0.5">
-      <div class="text-4xl font-extrabold font-mono tracking-tight">{header.updated}</div>
+    <div class="glass-card glow-border rounded-2xl p-5 flex flex-col items-center justify-center text-center scroll-reveal">
+      <div class="text-xl font-extrabold font-mono tracking-tight">{header.updated}</div>
       <div class="text-dim text-xs mt-1.5 uppercase tracking-[0.1em] font-medium">Last Updated</div>
     </div>
   </div>
-  <div class="bg-white/5 rounded-full overflow-hidden h-1.5 my-4">
-    <div class="h-full bg-gradient-to-r from-ar-green to-ar-cyan rounded-full transition-[width] duration-1000" style={`width: ${score}%`}></div>
-  </div>
 
   <!-- Timeline -->
-  <div class="timeline flex items-center p-3 px-4 my-2 mb-8 bg-surface border border-border rounded-xl overflow-x-auto gap-0">
+  <div class="timeline flex items-center p-3 px-4 my-2 mb-8 glass-panel rounded-2xl overflow-x-auto gap-0 scroll-reveal">
     {timelineItems.map((item, i) => (
       <>
         <div class="timeline-item flex-1 min-w-0">
@@ -119,9 +119,9 @@ const timelineItems = [
 
   <!-- Section cards -->
   <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">Sections</h2>
-  <div class="section-grid grid grid-cols-2 gap-3 my-6 mb-10">
+  <div class="bento-sections my-6 mb-10 stagger-reveal">
     {SECTIONS.map(s => (
-      <a href={`#${s.slug}`} class="bg-surface p-5 rounded-xl border border-border no-underline text-text-primary transition-all hover:border-ar-amber hover:-translate-y-0.5 hover:bg-surface-hover block">
+      <a href={`#${s.slug}`} class="glass-card glow-border rounded-2xl p-5 no-underline text-text-primary block scroll-reveal">
         <strong class="text-ar-amber text-[0.95rem]">{s.name}</strong>
         <p class="text-dim text-[0.8rem] mt-1 mb-0">{s.desc}</p>
       </a>
@@ -129,7 +129,7 @@ const timelineItems = [
   </div>
 
   <!-- Section bar -->
-  <div class="section-bar flex gap-1 p-1.5 bg-surface border border-border rounded-xl mb-10 overflow-x-auto sticky top-[4.5rem] z-40 backdrop-blur-lg" id="section-bar" style="-webkit-overflow-scrolling: touch;">
+  <div class="section-bar flex gap-1 p-1.5 glass-panel rounded-2xl mb-10 overflow-x-auto sticky top-[4.5rem] z-40" id="section-bar" style="-webkit-overflow-scrolling: touch;">
     {SECTIONS.map(s => (
       <a href={`#${s.slug}`} class="whitespace-nowrap text-dim no-underline text-[0.8rem] font-medium py-2 px-3.5 rounded-lg transition-all shrink-0 hover:text-text-secondary hover:bg-surface-hover [&.active-section]:text-ar-amber [&.active-section]:bg-[rgba(245,158,11,0.1)] [&.active-section]:font-semibold">{s.name}</a>
     ))}
@@ -149,7 +149,7 @@ const timelineItems = [
       const paragraphs = stats.content.split('\n').filter((l: string) => l.trim() && !l.startsWith('#') && !l.startsWith('**Confidence') && !l.startsWith('**Uncertainty') && !l.startsWith('>') && l.length > 80);
       const calloutText = paragraphs.length > 0 ? paragraphs[0].substring(0, 300).replace(/\[\d+\]/g, '') + '...' : '';
       return (
-        <div id={stats.slug}>
+        <div id={stats.slug} class="scroll-reveal">
           <div class="flex gap-1.5 flex-wrap my-1.5">
             <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-dim">{stats.words} words</span>
             <span class="font-mono text-[0.65rem] font-medium px-2 py-0.5 rounded-full bg-surface border border-border text-dim">{stats.citations.length} citations</span>
@@ -193,13 +193,13 @@ const timelineItems = [
     <h2 class="text-2xl font-bold tracking-tight mt-12 mb-4 pb-2 border-b border-border">About This Research</h2>
     <p class="text-[0.95rem] text-text-secondary leading-relaxed">This document was produced autonomously by <a href="https://github.com/danlex/autoresearch" class="text-ar-blue hover:text-ar-cyan no-underline hover:underline">Autoresearch</a> — an open-source AI research system that generates questions, searches the web, writes findings with inline citations, and verifies everything through a three-judge review panel.</p>
     <div class="grid grid-cols-2 gap-4 my-6 max-md:grid-cols-1">
-      <div class="bg-surface p-6 rounded-xl border border-border">
+      <div class="glass-card rounded-2xl p-6">
         <h3 class="text-ar-amber mt-0 mb-1 text-lg font-semibold">Alexandru DAN</h3>
         <p class="text-text-secondary m-0 mb-2 text-[0.85rem] font-medium">CEO & Founder, TVL Tech</p>
         <p class="text-[0.9rem] text-[#d4d4d8]">Building autonomous AI tools that produce verified, citation-backed knowledge.</p>
         <p class="mt-2 text-[0.85rem]"><a href="https://github.com/danlex" class="text-ar-blue hover:text-ar-cyan no-underline hover:underline">GitHub</a></p>
       </div>
-      <div class="bg-surface p-6 rounded-xl border border-border">
+      <div class="glass-card rounded-2xl p-6">
         <h3 class="mt-0 mb-1 text-lg font-semibold bg-gradient-to-br from-ar-blue to-ar-purple bg-clip-text text-transparent [-webkit-text-fill-color:transparent]">TVL Tech</h3>
         <p class="text-text-secondary m-0 mb-2 text-[0.85rem] font-medium">Technology. Vision. Leadership.</p>
         <p class="text-[0.9rem] text-[#d4d4d8]">AI-first tools and platforms — autonomous research, AI workflows, open source.</p>
