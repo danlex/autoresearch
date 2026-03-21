@@ -625,16 +625,16 @@ update_doc_header() {
   local doc="$SCRIPT_DIR/document.md"
   [[ -f "$doc" ]] || return
 
-  # Count sources
+  # Count sources from sections/sources.md
   local source_count
-  source_count=$(grep -c '^\- \[' "$doc" 2>/dev/null || echo 0)
+  source_count=$(grep -c '^\- \[' "$SCRIPT_DIR/sections/sources.md" 2>/dev/null || echo 0)
 
-  # Count total tasks and completed tasks
+  # Count total tasks and completed tasks (--limit 500 to avoid pagination)
   local total_tasks
-  total_tasks=$(gh issue list --label "task" --state all --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
+  total_tasks=$(gh issue list --label "task" --state all --limit 500 --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
   total_tasks=${total_tasks:-0}
   local done_tasks
-  done_tasks=$(gh issue list --label "task,implemented" --state closed --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
+  done_tasks=$(gh issue list --label "task,implemented" --state closed --limit 500 --json number | jq 'length' 2>/dev/null | tr -d '[:space:]')
   done_tasks=${done_tasks:-0}
 
   # Compute coverage percentage
