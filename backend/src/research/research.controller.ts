@@ -44,7 +44,7 @@ export class ResearchController {
 
   @Get('log')
   getLog(@Query('lines') lines?: string) {
-    const n = parseInt(lines, 10) || 20;
+    const n = Math.min(Math.max(parseInt(lines, 10) || 20, 1), 1000);
     return { lines: this.researchService.getLog(n) };
   }
 

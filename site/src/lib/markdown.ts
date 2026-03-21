@@ -1,9 +1,30 @@
-/** Zero-dependency Markdown-like → HTML converter, matching the original generate-site.js */
+/** Zero-dependency Markdown-like → HTML converter with XSS protection */
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function sanitizeUrl(url: string): string {
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith('#') || trimmed.startsWith('/')) {
+    return trimmed;
+  }
+  return '#'; // block javascript:, data:, and other dangerous protocols
+}
+
 export function md2html(md: string): string {
-  let html = md
+  // First, escape all HTML in the raw markdown to prevent injection
+  let html = escapeHtml(md);
+
+  // Now apply markdown transformations on the escaped content
+  html = html
     .replace(/^#### (.+)$/gm, '<h4>$1</h4>')
     .replace(/^### (.+)$/gm, (_, title) => {
-      const id = title.toLowerCase().replace(/<[^>]+>/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 60);
+      const id = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').substring(0, 60);
       return `<h3 id="${id}"><a href="#${id}" class="heading-anchor" aria-label="Link to this section">#</a>${title}</h3>`;
     })
     .replace(/^## (.+)$/gm, '<h2>$1</h2>')
@@ -12,9 +33,11 @@ export function md2html(md: string): string {
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
     .replace(/`(.+?)`/g, '<code>$1</code>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => {
+      return `<a href="${sanitizeUrl(url)}" target="_blank" rel="noopener">${text}</a>`;
+    })
     .replace(/\[(\d+)\]/g, '<sup class="cite" data-num="$1">[$1]</sup>')
-    .replace(/^>\s*(.+)$/gm, '<blockquote>$1</blockquote>')
+    .replace(/^&gt;\s*(.+)$/gm, '<blockquote>$1</blockquote>') // escaped > from escapeHtml
     .replace(/^---$/gm, '<hr>')
     .replace(/^- (.+)$/gm, '<li>$1</li>')
     .replace(/Confidence: HIGH/g, '<span class="badge-high">HIGH</span>')

@@ -120,7 +120,7 @@ get_issue_field() {
 has_label() {
   local json="$1"
   local label="$2"
-  echo "$json" | jq -r ".labels[]?.name" | grep -q "^${label}$" 2>/dev/null
+  echo "$json" | jq -r ".labels[]?.name" | grep -qxF "$label" 2>/dev/null
 }
 
 is_hard_task() {
@@ -150,16 +150,33 @@ section_to_file() {
   local section="$1"
   local slug
   slug=$(echo "$section" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//')
+
+  # Security: reject slugs with path traversal or empty slugs
+  if [[ -z "$slug" ]] || [[ "$slug" == *".."* ]] || [[ "$slug" == *"/"* ]]; then
+    log "ERROR: Invalid section name: $section"
+    echo "$SCRIPT_DIR/sections/general.md"
+    return
+  fi
+
   local file="$SCRIPT_DIR/sections/${slug}.md"
+
+  # Security: verify the resolved path is inside sections/
+  local real_dir
+  real_dir=$(cd "$SCRIPT_DIR/sections" && pwd)
+  case "$file" in
+    "${real_dir}/"*) ;; # safe
+    *) log "ERROR: Path traversal blocked: $file"; echo "$SCRIPT_DIR/sections/general.md"; return ;;
+  esac
+
   # Check if file exists, fallback to partial match
   if [[ -f "$file" ]]; then
     echo "$file"
   else
-    # Try to find a match
+    # Try to find a match using fixed-string grep
     local found
     # shellcheck disable=SC2012
     found=$(ls "$SCRIPT_DIR/sections/"*.md 2>/dev/null | while read -r f; do
-      if echo "$f" | grep -qi "$slug"; then echo "$f"; break; fi
+      if echo "$(basename "$f")" | grep -qiF "$slug"; then echo "$f"; break; fi
     done)
     if [[ -n "$found" ]]; then
       echo "$found"
