@@ -125,7 +125,7 @@ const TEMPLATE = `<!DOCTYPE html>
   <meta property="og:title" content="{{title}} — Autoresearch">
   <meta property="og:description" content="{{meta_description}}">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://danlex.github.io/autoresearch/">
+  <meta property="og:url" content="https://autoresearch.alexandrudan.com/">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="{{title}} — Autoresearch">
   <meta name="twitter:description" content="{{meta_description}}">
@@ -1422,4 +1422,4 @@ const { score, breakdown } = getScore();
 }
 
 console.log('\nDone! Site generated in docs/');
-console.log('Enable GitHub Pages: Settings → Pages → Source: Deploy from branch → /docs');
+console.log('GitHub Pages: Settings → Pages → Source: Deploy from branch → /docs → Custom domain: autoresearch.alexandrudan.com');
