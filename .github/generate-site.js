@@ -794,7 +794,7 @@ const TEMPLATE = `<!DOCTYPE html>
   </nav>
   {{content}}
   <footer>
-    <p>Built by <strong>Alexandru DAN</strong>, CEO <a href="#">TVL Tech</a></p>
+    <p>Built by <strong><a href="https://alexandrudan.com">Alexandru DAN</a></strong>, CEO <a href="https://tvl.tech">TVL Tech</a></p>
     <p>Powered by <a href="https://github.com/danlex/autoresearch">Autoresearch</a> — Autonomous research with Claude Opus</p>
     <p><a href="https://github.com/danlex/autoresearch">GitHub Repository</a></p>
   </footer>
